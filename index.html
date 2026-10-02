@@ -145,13 +145,14 @@ function list(){
 async function detail(){
   const el=$('dt'),p=S.find(x=>x.id===sel);el.classList.toggle('hm',!mob);
   if(!p){el.innerHTML='<div class="panel empty">Chọn một bệnh nhân để xem chi tiết.</div>';return}
-  const d=pod(p),ph=p.ph||[],vm=ph.filter(x=>x.loai!=='cls'),cl=ph.filter(x=>x.loai==='cls');
+  const d=pod(p),ph=p.ph||[],vm=ph.filter(x=>x.loai!=='cls'&&x.loai!=='tt'),cl=ph.filter(x=>x.loai==='cls'),tr=ph.filter(x=>x.loai==='tt');
   const th=x=>`<button data-ph="${x.id}"><img alt="Ảnh"><small><b>${esc(x.nhan||'Vết mổ')}</b><br>${fmt(x.ng)}${p.ngayMo&&x.loai!=='cls'?' · N'+diff(p.ngayMo,x.ng):''}</small></button>`;
   el.innerHTML=`<button class="btn" id="back" style="margin-bottom:10px;${innerWidth>800?'display:none':''}">← Danh sách</button><div class="panel">
   <div class="ph0"><div class="av big ${p.hd==='Nội khoa'?'noi':''}">${esc(ini(p.ten))}</div><div><h2>${esc(p.ten)}</h2><div class="sub">${p.tuoi||'?'} tuổi · ${p.gioi} · ASA ${esc(p.asa)}</div><div>${p.mayte?`<span class="chip">Mã YT: ${esc(p.mayte)}</span>`:''}${p.sdt?`<button class="chip" data-tel="${esc(p.sdt)}" style="border:0;cursor:pointer">☎ ${esc(p.sdt)}</button>`:''}</div></div></div>
   <div class="grid"><div><span>Chẩn đoán</span>${esc(p.cd)}</div><div><span>Hướng điều trị</span>${p.hd}${p.pp?': '+esc(p.pp):''}</div><div><span>Ngày mổ</span>${fmt(p.ngayMo)}${d!==null&&d>=0?` (ngày ${d})`:''}</div><div><span>Tình trạng</span>${p.tt}</div><div><span>Hẹn tái khám</span>${fmt(p.hen)}</div></div>
   <h3>Ghi chú chung</h3><div>${esc(p.ghi)||'<span class="sub">Chưa có.</span>'}</div>
   <h3>Ảnh vết mổ</h3><div class="row" style="margin-top:0"><button class="btn" data-shot="vetmo" data-src="cam">Chụp vết mổ</button><button class="btn" data-shot="vetmo" data-src="pick">Chọn ảnh</button></div><div class="sub" style="margin-top:4px">"Chọn ảnh" lấy từ thư viện máy, nên xóa bản gốc trong thư viện sau khi lưu.</div><div class="ph">${vm.map(th).join('')}</div>
+  <h3>Tường trình phẫu thuật</h3><div class="row" style="margin-top:0"><button class="btn" data-shot="tt" data-src="cam">Chụp tường trình</button><button class="btn" data-shot="tt" data-src="pick">Chọn ảnh</button></div><div class="sub" style="margin-top:4px">"Chọn ảnh" lấy từ thư viện máy, nên xóa bản gốc trong thư viện sau khi lưu.</div><div class="ph">${tr.map(th).join('')}</div>
   <h3>Ảnh cận lâm sàng</h3><div class="row" style="margin-top:0"><select class="sel" id="clsType" style="width:auto"><option>X-quang</option><option>CT</option><option>MRI</option><option>Siêu âm</option><option>Xét nghiệm</option><option>Nội soi</option><option>Khác</option></select><button class="btn" data-shot="cls" data-src="cam">Chụp</button><button class="btn" data-shot="cls" data-src="pick">Chọn ảnh</button></div><div class="sub" style="margin-top:4px">"Chọn ảnh" lấy từ thư viện máy, nên xóa bản gốc trong thư viện sau khi lưu.</div><div class="ph">${cl.map(th).join('')}</div>
   <h3>Nhật ký theo dõi</h3><div class="two" style="grid-template-columns:130px 1fr auto;align-items:end"><label>Ngày<input type="date" id="nd" value="${today()}"></label><label>Nội dung<input id="nt" placeholder="Sinh hiệu, đau, dẫn lưu, xét nghiệm"></label><button class="btn pri" id="addn">Lưu</button></div>
   ${(p.nhat||[]).slice().sort((a,b)=>b.ng.localeCompare(a.ng)).map(n=>`<div class="note"><small>${fmt(n.ng)}${p.ngayMo&&diff(p.ngayMo,n.ng)>=0?' · hậu phẫu ngày '+diff(p.ngayMo,n.ng):''}</small><br>${esc(n.t)}</div>`).join('')||'<div class="sub">Chưa có ghi chú.</div>'}
@@ -176,7 +177,7 @@ function form(p){
 }
 async function addPhoto(file){
   const p=S.find(x=>x.id===sel);if(!p||!file)return;
-  try{const cls=pend.loai==='cls',M=cls?1800:1280,bm=await createImageBitmap(file),k=Math.min(1,M/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=bm.width*k;c.height=bm.height*k;c.getContext('2d').drawImage(bm,0,0,c.width,c.height);
+  try{const cls=pend.loai==='cls'||pend.loai==='tt',M=cls?1800:1280,bm=await createImageBitmap(file),k=Math.min(1,M/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=bm.width*k;c.height=bm.height*k;c.getContext('2d').drawImage(bm,0,0,c.width,c.height);
     const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',cls?.82:.75)),id=crypto.randomUUID();
     const sealed=await seal(new Uint8Array(await blob.arrayBuffer()));
     await tx('readwrite',s=>s.put({id,d:sealed}));
@@ -210,7 +211,7 @@ document.addEventListener('click',async e=>{
   else if(id==='edit')form(S.find(x=>x.id===sel));
   else if(id==='del'){if(confirm('Xóa bệnh nhân này và toàn bộ ảnh?')){const p=S.find(x=>x.id===sel);for(const x of p.ph||[])await tx('readwrite',s=>s.delete(x.id));S=S.filter(x=>x!==p);sel=null;mob=false;await save();render()}}
   else if(id==='addn'){const t=$('nt').value.trim();if(!t)return;S.find(x=>x.id===sel).nhat.push({ng:$('nd').value||today(),t});await save();render()}
-  else if(b.dataset.shot){pend={loai:b.dataset.shot,nhan:b.dataset.shot==='cls'?$('clsType').value:'Vết mổ'};busy=true;$(b.dataset.src==='pick'?'pick':'cam').click();setTimeout(()=>busy=false,6e4)}
+  else if(b.dataset.shot){pend={loai:b.dataset.shot,nhan:b.dataset.shot==='cls'?$('clsType').value:b.dataset.shot==='tt'?'Tường trình PT':'Vết mổ'};busy=true;$(b.dataset.src==='pick'?'pick':'cam').click();setTimeout(()=>busy=false,6e4)}
   else if(id==='bk')backup();
   else if(id==='imp1'){busy=true;$('imp').click()}
   else if(id==='lk')lockScreen();
