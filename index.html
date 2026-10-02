@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sổ BN">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#0e6b6e">
+<title>Sổ bệnh nhân</title>
+<style>
+:root{--bg:#f2f6f6;--card:#fff;--ink:#12262c;--mute:#5b7078;--line:#d7e2e4;--teal:#0e6b6e;--ts:#dcefef;--red:#c2402c;--rs:#f9e3de;--amb:#9a6700;--as:#fbf0d2;--on:#fff}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1b1f;--card:#16272c;--ink:#e6f0f1;--mute:#93aab0;--line:#264047;--teal:#4fc1c4;--ts:#18393c;--red:#ff8f7b;--rs:#3d201b;--amb:#f0c25a;--as:#392d10;--on:#06201f}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,"Segoe UI",Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.wrap{max-width:1100px;margin:0 auto;padding:16px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+h1{font-size:20px;margin:0}
+.sub{color:var(--mute);font-size:13px}
+.btn{border:1px solid var(--line);background:var(--card);padding:9px 14px;border-radius:8px;cursor:pointer;font-weight:500}
+.btn.pri{background:var(--teal);border-color:var(--teal);color:var(--on)}
+.btn.del{color:var(--red)}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px}
+.stat b{font-size:19px;margin-right:6px}.stat.al b{color:var(--red)}
+.cols{display:grid;grid-template-columns:330px 1fr;gap:16px}
+@media(max-width:800px){.cols{grid-template-columns:1fr}.hm{display:none}}
+.bar{display:flex;gap:8px;margin-bottom:10px}
+.bar input,.bar select,label input,label select,label textarea{padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);width:100%}
+.bar input{flex:1}.bar select{width:auto}
+.pt{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
+.pt.noi{border-left-color:var(--amb)}.pt.sel{outline:2px solid var(--teal)}
+.d{font-size:13px;color:var(--mute)}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px;background:var(--ts);color:var(--teal);margin:4px 4px 0 0}
+.tag.r{background:var(--rs);color:var(--red)}.tag.a{background:var(--as);color:var(--amb)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.panel h2{margin:0;font-size:19px}h3{font-size:15px;margin:18px 0 6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.grid span{display:block;font-size:12px;color:var(--mute)}
+.note{border-top:1px solid var(--line);padding:8px 0}.note small{color:var(--mute)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.ph{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:8px}
+.ph button{padding:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg);cursor:pointer;text-align:left}
+.ph img{width:100%;height:96px;object-fit:cover;display:block}
+.ph small{display:block;padding:2px 6px;color:var(--mute);font-size:11px}
+.empty{color:var(--mute);padding:24px;text-align:center}
+.lock{max-width:380px;margin:12vh auto 0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px}
+label{display:block;font-size:13px;color:var(--mute);margin-top:10px}label input,label select,label textarea{margin-top:3px;background:var(--bg)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.err{color:var(--red);min-height:22px;margin-top:8px;font-size:14px}
+.warn{background:var(--as);color:var(--amb);padding:8px 12px;border-radius:8px;font-size:13px;margin-top:10px}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);width:min(520px,94vw);padding:16px}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog img.big{width:100%;border-radius:8px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<dialog id="dlg"></dialog>
+<input type="file" id="cam" accept="image/*" capture="environment" hidden>
+<input type="file" id="imp" accept=".sobn,application/json" hidden>
+<script>
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const E=new TextEncoder(),D=new TextDecoder();
+const b64=u=>{u=new Uint8Array(u);let s='';for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)};
+const unb=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const LG=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const LS=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){alert('Không lưu được dữ liệu. Hãy kiểm tra dung lượng máy.')}};
+const day=n=>{const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)},today=()=>day(0);
+const diff=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5),fmt=d=>d?d.split('-').reverse().join('/'):'—';
+let K=null,S=[],sel=null,mob=false,busy=false,idle;
+
+/* ---- mã hóa ---- */
+async function derive(pw,salt){const m=await crypto.subtle.importKey('raw',E.encode(pw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:250000,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function seal(b){const iv=crypto.getRandomValues(new Uint8Array(12)),c=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},K,b)),o=new Uint8Array(12+c.length);o.set(iv);o.set(c,12);return o}
+async function open(b){b=new Uint8Array(b);return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:b.slice(0,12)},K,b.slice(12)))}
+const save=async()=>LS('sobn_data',b64(await seal(E.encode(JSON.stringify(S)))));
+/* ---- kho ảnh (IndexedDB) ---- */
+const idb=()=>new Promise((ok,no)=>{const r=indexedDB.open('sobn',1);r.onupgradeneeded=()=>r.result.createObjectStore('ph',{keyPath:'id'});r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+const tx=async(m,f)=>{const d=await idb();return new Promise((ok,no)=>{const t=d.transaction('ph',m),r=f(t.objectStore('ph'));t.oncomplete=()=>ok(r&&r.result);t.onerror=()=>no(t.error)})};
+
+/* ---- màn hình khóa ---- */
+function lockScreen(note){
+  K=null;S=[];sel=null;mob=false;clearTimeout(idle);$('dlg').open&&$('dlg').close();
+  const first=!LG('sobn_meta');
+  $('app').innerHTML=`<form class="lock" id="lf"><h1>Sổ bệnh nhân</h1><p class="sub">${first?'Tạo mật khẩu để bảo vệ dữ liệu':'Nhập mật khẩu để mở'}</p>
+  <label>Mật khẩu<input id="pw" type="password" autocomplete="${first?'new-password':'current-password'}"></label>
+  ${first?'<label>Nhập lại mật khẩu<input id="pw2" type="password" autocomplete="new-password"></label><div class="warn">Mật khẩu này dùng để mã hóa dữ liệu. Nếu quên, không ai khôi phục được, kể cả người làm app. Hãy ghi lại ở nơi an toàn.</div>':''}
+  <div class="err" id="msg">${note||''}</div><button class="btn pri" style="width:100%">${first?'Tạo và mở':'Mở khóa'}</button>
+  ${first?'<p class="sub" style="text-align:center"><a href="#" id="imp0">Đã có file sao lưu? Nhập tại đây</a></p>':''}</form>`;
+  $('lf').onsubmit=e=>{e.preventDefault();go()};
+  const i=$('imp0');if(i)i.onclick=e=>{e.preventDefault();$('imp').click()};
+}
+async function go(){
+  const pw=$('pw').value,say=t=>{$('msg').textContent=t};let meta=JSON.parse(LG('sobn_meta')||'null');
+  say('Đang xử lý...');
+  try{
+    if(!meta){
+      if(pw.length<8)return say('Mật khẩu cần ít nhất 8 ký tự.');
+      if(pw!==$('pw2').value)return say('Hai mật khẩu chưa giống nhau.');
+      const salt=crypto.getRandomValues(new Uint8Array(16));K=await derive(pw,salt);
+      LS('sobn_meta',JSON.stringify({salt:b64(salt),chk:b64(await seal(E.encode('ok')))}));S=[];await save();
+    }else{
+      K=await derive(pw,unb(meta.salt));
+      try{await open(unb(meta.chk))}catch(e){K=null;return say('Sai mật khẩu.')}
+      const d=LG('sobn_data');S=d?JSON.parse(D.decode(await open(unb(d)))):[];
+    }
+    start();
+  }catch(e){K=null;say('Có lỗi: '+e.message)}
+}
+function bump(){clearTimeout(idle);if(K)idle=setTimeout(()=>lockScreen('Đã khóa do không dùng trong 5 phút.'),3e5)}
+['click','keydown','touchstart'].forEach(e=>addEventListener(e,bump));
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&K&&!busy)lockScreen()});
+
+/* ---- giao diện chính ---- */
+const pod=p=>p.ngayMo?diff(p.ngayMo,today()):null;
+const hs=p=>{if(!p.hen||p.tt==='Đã ra viện')return'';const d=diff(today(),p.hen);return d<0?'late':d<=1?'soon':''};
+function start(){
+  $('app').innerHTML=`<div class="top"><div><h1>Sổ bệnh nhân</h1><div class="sub">Dữ liệu được mã hóa, chỉ nằm trong máy này</div></div><div class="row" style="margin:0"><button class="btn" id="bk">Sao lưu</button><button class="btn" id="imp1">Nhập</button><button class="btn" id="lk">Khóa</button></div></div>
+  <div class="stats" id="st"></div>
+  <div class="cols"><section id="ls"><div class="bar"><input id="q" placeholder="Tìm tên, chẩn đoán"><select id="f"><option value="">Tất cả</option><option>Đang điều trị</option><option>Ngoại trú</option><option>Đã ra viện</option></select></div><button class="btn pri" id="add" style="width:100%;margin-bottom:10px">Thêm bệnh nhân</button><div id="it"></div></section><section id="dt" class="hm"></section></div>`;
+  $('q').oninput=list;$('f').onchange=list;bump();render();
+}
+function render(){
+  const a=S.filter(p=>p.tt==='Đang điều trị').length,h=S.filter(p=>hs(p)).length,hp=S.filter(p=>{const d=pod(p);return d!==null&&d>=0&&d<=3&&p.tt!=='Đã ra viện'}).length;
+  $('st').innerHTML=`<div class="stat"><b>${a}</b>đang điều trị</div><div class="stat"><b>${hp}</b>hậu phẫu ≤ 3 ngày</div><div class="stat ${h?'al':''}"><b>${h}</b>cần tái khám</div><div class="stat"><b>${S.length}</b>tổng số</div>`;
+  list();detail();
+}
+function list(){
+  const q=$('q').value.toLowerCase(),f=$('f').value,r=S.filter(p=>(!f||p.tt===f)&&(p.ten+p.cd).toLowerCase().includes(q));
+  $('it').innerHTML=r.length?r.map(p=>{const d=pod(p),h=hs(p);return`<button class="pt ${p.hd==='Nội khoa'?'noi':''} ${p.id===sel?'sel':''}" data-id="${p.id}"><b>${esc(p.ten)}</b><div class="d">${esc(p.cd)}</div><span class="tag ${p.hd==='Nội khoa'?'a':''}">${p.hd}</span>${d!==null&&d>=0&&p.tt!=='Đã ra viện'?`<span class="tag">Hậu phẫu ngày ${d}</span>`:''}${h?`<span class="tag r">${h==='late'?'Quá hẹn':'Sắp tái khám'}</span>`:''}</button>`}).join(''):`<div class="empty">${S.length?'Không có bệnh nhân phù hợp.':'Chưa có bệnh nhân. Bấm "Thêm bệnh nhân", hoặc <a href="#" id="seed">nạp 2 bệnh nhân mẫu để thử</a>.'}</div>`;
+  $('ls').classList.toggle('hm',mob);
+}
+async function detail(){
+  const el=$('dt'),p=S.find(x=>x.id===sel);el.classList.toggle('hm',!mob);
+  if(!p){el.innerHTML='<div class="panel empty">Chọn một bệnh nhân để xem chi tiết.</div>';return}
+  const d=pod(p),ph=p.ph||[];
+  el.innerHTML=`<button class="btn" id="back" style="margin-bottom:10px;${innerWidth>800?'display:none':''}">Quay lại danh sách</button><div class="panel"><h2>${esc(p.ten)}</h2><div class="sub">${p.tuoi||'?'} tuổi · ${p.gioi} · ASA ${esc(p.asa)}</div>
+  <div class="grid"><div><span>Chẩn đoán</span>${esc(p.cd)}</div><div><span>Hướng điều trị</span>${p.hd}${p.pp?': '+esc(p.pp):''}</div><div><span>Ngày mổ</span>${fmt(p.ngayMo)}${d!==null&&d>=0?` (ngày ${d})`:''}</div><div><span>Tình trạng</span>${p.tt}</div><div><span>Hẹn tái khám</span>${fmt(p.hen)}</div></div>
+  <h3>Ghi chú chung</h3><div>${esc(p.ghi)||'<span class="sub">Chưa có.</span>'}</div>
+  <h3>Ảnh vết mổ</h3><button class="btn" id="shot">Chụp ảnh</button><div class="ph">${ph.map(x=>`<button data-ph="${x.id}"><img alt="Ảnh vết mổ"><small>${fmt(x.ng)}${p.ngayMo?' · N'+diff(p.ngayMo,x.ng):''}</small></button>`).join('')}</div>
+  <h3>Nhật ký theo dõi</h3><div class="two" style="grid-template-columns:130px 1fr auto;align-items:end"><label>Ngày<input type="date" id="nd" value="${today()}"></label><label>Nội dung<input id="nt" placeholder="Sinh hiệu, đau, dẫn lưu, xét nghiệm"></label><button class="btn pri" id="addn">Lưu</button></div>
+  ${(p.nhat||[]).slice().sort((a,b)=>b.ng.localeCompare(a.ng)).map(n=>`<div class="note"><small>${fmt(n.ng)}${p.ngayMo&&diff(p.ngayMo,n.ng)>=0?' · hậu phẫu ngày '+diff(p.ngayMo,n.ng):''}</small><br>${esc(n.t)}</div>`).join('')||'<div class="sub">Chưa có ghi chú.</div>'}
+  <div class="row"><button class="btn" id="edit">Sửa thông tin</button><button class="btn del" id="del">Xóa bệnh nhân</button></div></div>`;
+  for(const x of ph){try{const r=await tx('readonly',s=>s.get(x.id));if(!r)continue;const u=URL.createObjectURL(new Blob([await open(r.d)],{type:'image/jpeg'})),i=el.querySelector(`[data-ph="${x.id}"] img`);if(i){i.src=u;i.dataset.u=u}}catch(e){}}
+}
+function form(p){
+  const v=p||{ten:'',tuoi:'',gioi:'Nam',cd:'',hd:'Phẫu thuật',pp:'',asa:'II',ngayMo:'',tt:'Đang điều trị',hen:'',ghi:''},o=(a,x)=>a.map(i=>`<option ${i===x?'selected':''}>${i}</option>`).join('');
+  $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">${p?'Sửa bệnh nhân':'Thêm bệnh nhân'}</h2>
+  <label>Tên viết tắt hoặc mã hồ sơ<input id="f_ten" value="${esc(v.ten)}"></label><div class="two"><label>Tuổi<input id="f_tuoi" type="number" value="${esc(v.tuoi)}"></label><label>Giới<select id="f_gioi">${o(['Nam','Nữ'],v.gioi)}</select></label></div>
+  <label>Chẩn đoán<input id="f_cd" value="${esc(v.cd)}"></label><div class="two"><label>Hướng điều trị<select id="f_hd">${o(['Phẫu thuật','Nội khoa'],v.hd)}</select></label><label>ASA<select id="f_asa">${o(['I','II','III','IV'],v.asa)}</select></label></div>
+  <label>Phương pháp mổ<input id="f_pp" value="${esc(v.pp)}"></label><div class="two"><label>Ngày mổ<input id="f_nm" type="date" value="${v.ngayMo}"></label><label>Hẹn tái khám<input id="f_hen" type="date" value="${v.hen}"></label></div>
+  <label>Tình trạng<select id="f_tt">${o(['Đang điều trị','Ngoại trú','Đã ra viện'],v.tt)}</select></label><label>Ghi chú chung<textarea id="f_ghi" rows="3">${esc(v.ghi)}</textarea></label>
+  <div class="row" style="justify-content:flex-end"><button class="btn" id="cx">Hủy</button><button class="btn pri" id="ok">Lưu</button></div>`;
+  $('dlg').showModal();$('cx').onclick=()=>$('dlg').close();
+  $('ok').onclick=async()=>{const n={ten:$('f_ten').value.trim(),tuoi:+$('f_tuoi').value||0,gioi:$('f_gioi').value,cd:$('f_cd').value.trim(),hd:$('f_hd').value,pp:$('f_pp').value.trim(),asa:$('f_asa').value,ngayMo:$('f_nm').value,hen:$('f_hen').value,tt:$('f_tt').value,ghi:$('f_ghi').value.trim()};
+    if(!n.ten||!n.cd)return alert('Cần nhập tên viết tắt (hoặc mã) và chẩn đoán.');
+    if(p)Object.assign(p,n);else{const x={id:Date.now(),nhat:[],ph:[],...n};S.unshift(x);sel=x.id}
+    await save();$('dlg').close();mob=true;render()};
+}
+async function addPhoto(file){
+  const p=S.find(x=>x.id===sel);if(!p||!file)return;
+  try{const bm=await createImageBitmap(file),k=Math.min(1,1280/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=bm.width*k;c.height=bm.height*k;c.getContext('2d').drawImage(bm,0,0,c.width,c.height);
+    const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.75)),id=crypto.randomUUID();
+    await tx('readwrite',s=>s.put({id,d:await seal(new Uint8Array(await blob.arrayBuffer()))}));
+    (p.ph=p.ph||[]).push({id,ng:today()});await save();render();
+  }catch(e){alert('Không lưu được ảnh: '+e.message)}
+}
+async function backup(){
+  const ph=await tx('readonly',s=>s.getAll()),o={v:1,meta:JSON.parse(LG('sobn_meta')),data:LG('sobn_data'),ph:(ph||[]).map(x=>({id:x.id,d:b64(x.d)}))};
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:'application/json'}));a.download='sao-luu-'+today()+'.sobn';a.click();
+}
+async function restore(file){
+  try{const o=JSON.parse(await file.text());if(!o.meta||!o.data)throw 0;
+    if(!confirm('Nhập sao lưu sẽ THAY THẾ toàn bộ dữ liệu hiện có trên máy này. Tiếp tục?'))return;
+    await tx('readwrite',s=>s.clear());for(const x of o.ph)await tx('readwrite',s=>s.put({id:x.id,d:unb(x.d)}));
+    LS('sobn_meta',JSON.stringify(o.meta));LS('sobn_data',o.data);lockScreen('Đã nhập xong. Mở khóa bằng mật khẩu của bản sao lưu.');
+  }catch(e){alert('File sao lưu không hợp lệ.')}
+}
+const seedData=()=>[{id:1,ten:'BN-001 (mẫu)',tuoi:58,gioi:'Nam',cd:'Viêm ruột thừa cấp',hd:'Phẫu thuật',pp:'Cắt ruột thừa nội soi',asa:'II',ngayMo:day(-2),tt:'Đang điều trị',hen:day(7),ghi:'Tăng huyết áp. Không dị ứng thuốc.',nhat:[{ng:day(-1),t:'Tỉnh, đau VAS 3, đã trung tiện.'}],ph:[]},{id:2,ten:'BN-002 (mẫu)',tuoi:67,gioi:'Nam',cd:'Viêm tụy cấp nhẹ do sỏi',hd:'Nội khoa',pp:'',asa:'III',ngayMo:'',tt:'Đang điều trị',hen:day(-1),ghi:'Nhịn ăn, truyền dịch, giảm đau.',nhat:[],ph:[]}];
+
+document.addEventListener('click',async e=>{
+  if(e.target.id==='seed'){e.preventDefault();S=seedData();await save();return render()}
+  const b=e.target.closest('button');if(!b)return;const id=b.id;
+  if(b.classList.contains('pt')){sel=+b.dataset.id;mob=true;render()}
+  else if(b.dataset.ph){const i=b.querySelector('img');$('dlg').innerHTML=`<img class="big" src="${i.src}" alt="Ảnh vết mổ"><div class="row" style="justify-content:space-between"><button class="btn del" id="dph" data-id="${b.dataset.ph}">Xóa ảnh</button><button class="btn" id="cx">Đóng</button></div>`;$('dlg').showModal();$('cx').onclick=()=>$('dlg').close()}
+  else if(id==='dph'){if(!confirm('Xóa ảnh này?'))return;const p=S.find(x=>x.id===sel);p.ph=p.ph.filter(x=>x.id!==b.dataset.id);await tx('readwrite',s=>s.delete(b.dataset.id));await save();$('dlg').close();render()}
+  else if(id==='back'){mob=false;render()}
+  else if(id==='add')form();
+  else if(id==='edit')form(S.find(x=>x.id===sel));
+  else if(id==='del'){if(confirm('Xóa bệnh nhân này và toàn bộ ảnh?')){const p=S.find(x=>x.id===sel);for(const x of p.ph||[])await tx('readwrite',s=>s.delete(x.id));S=S.filter(x=>x!==p);sel=null;mob=false;await save();render()}}
+  else if(id==='addn'){const t=$('nt').value.trim();if(!t)return;S.find(x=>x.id===sel).nhat.push({ng:$('nd').value||today(),t});await save();render()}
+  else if(id==='shot'){busy=true;$('cam').click();setTimeout(()=>busy=false,6e4)}
+  else if(id==='bk')backup();
+  else if(id==='imp1'){busy=true;$('imp').click()}
+  else if(id==='lk')lockScreen();
+});
+$('cam').onchange=async e=>{busy=false;await addPhoto(e.target.files[0]);e.target.value=''};
+$('imp').onchange=async e=>{busy=false;if(e.target.files[0])await restore(e.target.files[0]);e.target.value=''};
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+lockScreen();
+</script>
+</body>
+</html>
