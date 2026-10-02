@@ -10,58 +10,64 @@
 <meta name="theme-color" content="#0e6b6e">
 <title>Sổ bệnh nhân</title>
 <style>
-:root{--bg:#f2f6f6;--card:#fff;--ink:#12262c;--mute:#5b7078;--line:#d7e2e4;--teal:#0e6b6e;--ts:#dcefef;--red:#c2402c;--rs:#f9e3de;--amb:#9a6700;--as:#fbf0d2;--on:#fff}
-@media(prefers-color-scheme:dark){:root{--bg:#0e1b1f;--card:#16272c;--ink:#e6f0f1;--mute:#93aab0;--line:#264047;--teal:#4fc1c4;--ts:#18393c;--red:#ff8f7b;--rs:#3d201b;--amb:#f0c25a;--as:#392d10;--on:#06201f}}
+:root{--bg:#eef4f4;--card:#fff;--ink:#12262c;--mute:#5b7078;--line:#dbe6e8;--teal:#0e6b6e;--ts:#dcefef;--red:#c2402c;--rs:#f9e3de;--amb:#9a6700;--as:#fbf0d2;--on:#fff;--sh:0 1px 2px rgba(10,40,45,.06),0 8px 24px rgba(10,40,45,.07)}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1b1f;--card:#16272c;--ink:#e6f0f1;--mute:#93aab0;--line:#264047;--teal:#4fc1c4;--ts:#18393c;--red:#ff8f7b;--rs:#3d201b;--amb:#f0c25a;--as:#392d10;--on:#06201f;--sh:0 1px 2px rgba(0,0,0,.4)}}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,"Segoe UI",Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--teal);outline-offset:2px}
-.wrap{max-width:1100px;margin:0 auto;padding:16px 16px 40px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-h1{font-size:20px;margin:0}
-.sub{color:var(--mute);font-size:13px}
-.btn{border:1px solid var(--line);background:var(--card);padding:9px 14px;border-radius:8px;cursor:pointer;font-weight:500}
-.btn.pri{background:var(--teal);border-color:var(--teal);color:var(--on)}
-.btn.del{color:var(--red)}
-.stats{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px}
-.stat b{font-size:19px;margin-right:6px}.stat.al b{color:var(--red)}
-.cols{display:grid;grid-template-columns:330px 1fr;gap:16px}
+.wrap{max-width:1100px;margin:0 auto;padding:14px 14px 40px}
+.hero{background:linear-gradient(135deg,#0b5558,#17939a);color:#fff;border-radius:16px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:var(--sh)}
+.hero h1{font-size:22px;margin:0}.hs{font-size:13px;opacity:.9}
+.hb{display:flex;gap:8px}.hbtn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:14px 0}
+.stat{background:var(--card);border-radius:14px;padding:12px 14px;box-shadow:var(--sh);border-top:4px solid var(--teal)}
+.stat b{display:block;font-size:26px;line-height:1.1}.stat span{font-size:12px;color:var(--mute)}
+.s2{border-top-color:#2f8f5b}.s3{border-top-color:var(--amb)}.s3.al{border-top-color:var(--red)}.s3.al b{color:var(--red)}.s4{border-top-color:#6b8088}
+.cols{display:grid;grid-template-columns:340px 1fr;gap:16px}
 @media(max-width:800px){.cols{grid-template-columns:1fr}.hm{display:none}}
 .bar{display:flex;gap:8px;margin-bottom:10px}
-.bar input,.bar select,label input,label select,label textarea{padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);width:100%}
+.bar input,.bar select,label input,label select,label textarea,.sel{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);width:100%}
 .bar input{flex:1}.bar select{width:auto}
-.pt{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
-.pt.noi{border-left-color:var(--amb)}.pt.sel{outline:2px solid var(--teal)}
-.d{font-size:13px;color:var(--mute)}
-.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px;background:var(--ts);color:var(--teal);margin:4px 4px 0 0}
+.btn{border:1px solid var(--line);background:var(--card);padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
+.btn.pri{background:linear-gradient(135deg,#0e6b6e,#14898c);border-color:transparent;color:#fff}
+.btn.del{color:var(--red)}
+.pt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:var(--card);border:1px solid transparent;border-radius:14px;padding:12px;margin-bottom:10px;cursor:pointer;box-shadow:var(--sh)}
+.pt.sel{border-color:var(--teal)}
+.av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#17939a,#0b5558);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+.av.big{width:58px;height:58px;font-size:20px}.noi .av{background:linear-gradient(135deg,#d9a21f,#9a6700)}
+.pm{min-width:0;flex:1}.d{font-size:13px;color:var(--mute)}
+.tag{display:inline-block;font-size:12px;padding:1px 9px;border-radius:99px;background:var(--ts);color:var(--teal);margin:5px 4px 0 0;font-weight:500}
 .tag.r{background:var(--rs);color:var(--red)}.tag.a{background:var(--as);color:var(--amb)}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
-.panel h2{margin:0;font-size:19px}h3{font-size:15px;margin:18px 0 6px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
-.grid span{display:block;font-size:12px;color:var(--mute)}
+.panel{background:var(--card);border-radius:16px;padding:18px;box-shadow:var(--sh)}
+.ph0{display:flex;gap:14px;align-items:center}.panel h2{margin:0;font-size:21px}.sub{color:var(--mute);font-size:13px}
+.chip{display:inline-block;background:var(--ts);color:var(--teal);padding:3px 11px;border-radius:99px;font-size:13px;text-decoration:none;margin:6px 6px 0 0;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.grid>div{background:var(--bg);border-radius:10px;padding:8px 12px}.grid span{display:block;font-size:12px;color:var(--mute)}
+h3{font-size:15px;margin:22px 0 8px;display:flex;align-items:center;gap:8px}h3:before{content:"";width:4px;height:16px;border-radius:2px;background:var(--teal)}
 .note{border-top:1px solid var(--line);padding:8px 0}.note small{color:var(--mute)}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.ph{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:8px}
-.ph button{padding:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg);cursor:pointer;text-align:left}
-.ph img{width:100%;height:96px;object-fit:cover;display:block}
-.ph small{display:block;padding:2px 6px;color:var(--mute);font-size:11px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.ph{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:10px}
+.ph button{padding:0;border:0;border-radius:12px;overflow:hidden;background:var(--bg);cursor:pointer;text-align:left;box-shadow:var(--sh)}
+.ph img{width:100%;height:120px;object-fit:cover;display:block}
+.ph small{display:block;padding:4px 8px;color:var(--mute);font-size:11px;line-height:1.3}.ph small b{color:var(--ink)}
 .empty{color:var(--mute);padding:24px;text-align:center}
-.lock{max-width:380px;margin:12vh auto 0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px}
+.lock{max-width:380px;margin:12vh auto 0;background:var(--card);border-radius:16px;padding:24px;box-shadow:var(--sh)}
 label{display:block;font-size:13px;color:var(--mute);margin-top:10px}label input,label select,label textarea{margin-top:3px;background:var(--bg)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .err{color:var(--red);min-height:22px;margin-top:8px;font-size:14px}
-.warn{background:var(--as);color:var(--amb);padding:8px 12px;border-radius:8px;font-size:13px;margin-top:10px}
-dialog{border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);width:min(520px,94vw);padding:16px}
+.warn{background:var(--as);color:var(--amb);padding:8px 12px;border-radius:10px;font-size:13px;margin-top:10px}
+dialog{border:0;border-radius:16px;background:var(--card);color:var(--ink);width:min(520px,94vw);padding:18px;max-height:92vh;box-shadow:var(--sh)}
 dialog::backdrop{background:rgba(0,0,0,.5)}
-dialog img.big{width:100%;border-radius:8px}
+dialog img.big{width:100%;border-radius:10px}
 </style>
 </head>
 <body>
 <div class="wrap" id="app"></div>
 <dialog id="dlg"></dialog>
 <input type="file" id="cam" accept="image/*" capture="environment" hidden>
+<input type="file" id="pick" accept="image/*" hidden>
 <input type="file" id="imp" accept=".sobn,application/json" hidden>
 <script>
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -72,7 +78,7 @@ const LG=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const LS=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){alert('Không lưu được dữ liệu. Hãy kiểm tra dung lượng máy.')}};
 const day=n=>{const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)},today=()=>day(0);
 const diff=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5),fmt=d=>d?d.split('-').reverse().join('/'):'—';
-let K=null,S=[],sel=null,mob=false,busy=false,idle;
+let K=null,S=[],sel=null,mob=false,busy=false,idle,pend={};
 
 /* ---- mã hóa ---- */
 async function derive(pw,salt){const m=await crypto.subtle.importKey('raw',E.encode(pw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:250000,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
@@ -120,55 +126,61 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&K&&!busy)l
 const pod=p=>p.ngayMo?diff(p.ngayMo,today()):null;
 const hs=p=>{if(!p.hen||p.tt==='Đã ra viện')return'';const d=diff(today(),p.hen);return d<0?'late':d<=1?'soon':''};
 function start(){
-  $('app').innerHTML=`<div class="top"><div><h1>Sổ bệnh nhân</h1><div class="sub">Dữ liệu được mã hóa, chỉ nằm trong máy này</div></div><div class="row" style="margin:0"><button class="btn" id="bk">Sao lưu</button><button class="btn" id="imp1">Nhập</button><button class="btn" id="lk">Khóa</button></div></div>
+  $('app').innerHTML=`<div class="hero"><div><h1>Sổ bệnh nhân</h1><div class="hs">Ngoại khoa · dữ liệu mã hóa, chỉ nằm trong máy này</div></div><div class="hb"><button class="hbtn" id="bk">Sao lưu</button><button class="hbtn" id="imp1">Nhập</button><button class="hbtn" id="lk">Khóa</button></div></div>
   <div class="stats" id="st"></div>
-  <div class="cols"><section id="ls"><div class="bar"><input id="q" placeholder="Tìm tên, chẩn đoán"><select id="f"><option value="">Tất cả</option><option>Đang điều trị</option><option>Ngoại trú</option><option>Đã ra viện</option></select></div><button class="btn pri" id="add" style="width:100%;margin-bottom:10px">Thêm bệnh nhân</button><div id="it"></div></section><section id="dt" class="hm"></section></div>`;
+  <div class="cols"><section id="ls"><div class="bar"><input id="q" placeholder="Tìm tên, chẩn đoán, mã y tế, SĐT"><select id="f"><option value="">Tất cả</option><option>Đang điều trị</option><option>Ngoại trú</option><option>Đã ra viện</option></select></div><button class="btn pri" id="add" style="width:100%;margin-bottom:12px">+ Thêm bệnh nhân</button><div id="it"></div></section><section id="dt" class="hm"></section></div>`;
   $('q').oninput=list;$('f').onchange=list;bump();render();
 }
 function render(){
   const a=S.filter(p=>p.tt==='Đang điều trị').length,h=S.filter(p=>hs(p)).length,hp=S.filter(p=>{const d=pod(p);return d!==null&&d>=0&&d<=3&&p.tt!=='Đã ra viện'}).length;
-  $('st').innerHTML=`<div class="stat"><b>${a}</b>đang điều trị</div><div class="stat"><b>${hp}</b>hậu phẫu ≤ 3 ngày</div><div class="stat ${h?'al':''}"><b>${h}</b>cần tái khám</div><div class="stat"><b>${S.length}</b>tổng số</div>`;
+  $('st').innerHTML=`<div class="stat"><b>${a}</b><span>Đang điều trị</span></div><div class="stat s2"><b>${hp}</b><span>Hậu phẫu ≤ 3 ngày</span></div><div class="stat s3 ${h?'al':''}"><b>${h}</b><span>Cần tái khám</span></div><div class="stat s4"><b>${S.length}</b><span>Tổng số</span></div>`;
   list();detail();
 }
+const ini=s=>(String(s).trim().split(/\s+/).slice(-2).map(w=>w[0]).join('')||'?').toUpperCase();
 function list(){
-  const q=$('q').value.toLowerCase(),f=$('f').value,r=S.filter(p=>(!f||p.tt===f)&&(p.ten+p.cd).toLowerCase().includes(q));
-  $('it').innerHTML=r.length?r.map(p=>{const d=pod(p),h=hs(p);return`<button class="pt ${p.hd==='Nội khoa'?'noi':''} ${p.id===sel?'sel':''}" data-id="${p.id}"><b>${esc(p.ten)}</b><div class="d">${esc(p.cd)}</div><span class="tag ${p.hd==='Nội khoa'?'a':''}">${p.hd}</span>${d!==null&&d>=0&&p.tt!=='Đã ra viện'?`<span class="tag">Hậu phẫu ngày ${d}</span>`:''}${h?`<span class="tag r">${h==='late'?'Quá hẹn':'Sắp tái khám'}</span>`:''}</button>`}).join(''):`<div class="empty">${S.length?'Không có bệnh nhân phù hợp.':'Chưa có bệnh nhân. Bấm "Thêm bệnh nhân", hoặc <a href="#" id="seed">nạp 2 bệnh nhân mẫu để thử</a>.'}</div>`;
+  const q=$('q').value.toLowerCase(),f=$('f').value,r=S.filter(p=>(!f||p.tt===f)&&(p.ten+' '+p.cd+' '+(p.mayte||'')+' '+(p.sdt||'')).toLowerCase().includes(q));
+  $('it').innerHTML=r.length?r.map(p=>{const d=pod(p),h=hs(p);return`<button class="pt ${p.hd==='Nội khoa'?'noi':''} ${p.id===sel?'sel':''}" data-id="${p.id}"><div class="av">${esc(ini(p.ten))}</div><div class="pm"><b>${esc(p.ten)}</b><div class="d">${esc(p.cd)}</div>${p.mayte?`<div class="d">Mã YT: ${esc(p.mayte)}</div>`:''}<span class="tag ${p.hd==='Nội khoa'?'a':''}">${p.hd}</span>${d!==null&&d>=0&&p.tt!=='Đã ra viện'?`<span class="tag">Hậu phẫu ngày ${d}</span>`:''}${h?`<span class="tag r">${h==='late'?'Quá hẹn':'Sắp tái khám'}</span>`:''}</div></button>`}).join(''):`<div class="empty">${S.length?'Không có bệnh nhân phù hợp.':'Chưa có bệnh nhân. Bấm "Thêm bệnh nhân", hoặc <a href="#" id="seed">nạp 2 bệnh nhân mẫu để thử</a>.'}</div>`;
   $('ls').classList.toggle('hm',mob);
 }
 async function detail(){
   const el=$('dt'),p=S.find(x=>x.id===sel);el.classList.toggle('hm',!mob);
   if(!p){el.innerHTML='<div class="panel empty">Chọn một bệnh nhân để xem chi tiết.</div>';return}
-  const d=pod(p),ph=p.ph||[];
-  el.innerHTML=`<button class="btn" id="back" style="margin-bottom:10px;${innerWidth>800?'display:none':''}">Quay lại danh sách</button><div class="panel"><h2>${esc(p.ten)}</h2><div class="sub">${p.tuoi||'?'} tuổi · ${p.gioi} · ASA ${esc(p.asa)}</div>
+  const d=pod(p),ph=p.ph||[],vm=ph.filter(x=>x.loai!=='cls'),cl=ph.filter(x=>x.loai==='cls');
+  const th=x=>`<button data-ph="${x.id}"><img alt="Ảnh"><small><b>${esc(x.nhan||'Vết mổ')}</b><br>${fmt(x.ng)}${p.ngayMo&&x.loai!=='cls'?' · N'+diff(p.ngayMo,x.ng):''}</small></button>`;
+  el.innerHTML=`<button class="btn" id="back" style="margin-bottom:10px;${innerWidth>800?'display:none':''}">← Danh sách</button><div class="panel">
+  <div class="ph0"><div class="av big ${p.hd==='Nội khoa'?'noi':''}">${esc(ini(p.ten))}</div><div><h2>${esc(p.ten)}</h2><div class="sub">${p.tuoi||'?'} tuổi · ${p.gioi} · ASA ${esc(p.asa)}</div><div>${p.mayte?`<span class="chip">Mã YT: ${esc(p.mayte)}</span>`:''}${p.sdt?`<a class="chip" href="tel:${esc(p.sdt)}">☎ ${esc(p.sdt)}</a>`:''}</div></div></div>
   <div class="grid"><div><span>Chẩn đoán</span>${esc(p.cd)}</div><div><span>Hướng điều trị</span>${p.hd}${p.pp?': '+esc(p.pp):''}</div><div><span>Ngày mổ</span>${fmt(p.ngayMo)}${d!==null&&d>=0?` (ngày ${d})`:''}</div><div><span>Tình trạng</span>${p.tt}</div><div><span>Hẹn tái khám</span>${fmt(p.hen)}</div></div>
   <h3>Ghi chú chung</h3><div>${esc(p.ghi)||'<span class="sub">Chưa có.</span>'}</div>
-  <h3>Ảnh vết mổ</h3><button class="btn" id="shot">Chụp ảnh</button><div class="ph">${ph.map(x=>`<button data-ph="${x.id}"><img alt="Ảnh vết mổ"><small>${fmt(x.ng)}${p.ngayMo?' · N'+diff(p.ngayMo,x.ng):''}</small></button>`).join('')}</div>
+  <h3>Ảnh vết mổ</h3><button class="btn" data-shot="vetmo" data-src="cam">Chụp vết mổ</button><div class="ph">${vm.map(th).join('')}</div>
+  <h3>Ảnh cận lâm sàng</h3><div class="row" style="margin-top:0"><select class="sel" id="clsType" style="width:auto"><option>X-quang</option><option>CT</option><option>MRI</option><option>Siêu âm</option><option>Xét nghiệm</option><option>Nội soi</option><option>Khác</option></select><button class="btn" data-shot="cls" data-src="cam">Chụp</button><button class="btn" data-shot="cls" data-src="pick">Chọn ảnh</button></div><div class="sub" style="margin-top:4px">"Chọn ảnh" lấy từ thư viện máy, nên xóa bản gốc trong thư viện sau khi lưu.</div><div class="ph">${cl.map(th).join('')}</div>
   <h3>Nhật ký theo dõi</h3><div class="two" style="grid-template-columns:130px 1fr auto;align-items:end"><label>Ngày<input type="date" id="nd" value="${today()}"></label><label>Nội dung<input id="nt" placeholder="Sinh hiệu, đau, dẫn lưu, xét nghiệm"></label><button class="btn pri" id="addn">Lưu</button></div>
   ${(p.nhat||[]).slice().sort((a,b)=>b.ng.localeCompare(a.ng)).map(n=>`<div class="note"><small>${fmt(n.ng)}${p.ngayMo&&diff(p.ngayMo,n.ng)>=0?' · hậu phẫu ngày '+diff(p.ngayMo,n.ng):''}</small><br>${esc(n.t)}</div>`).join('')||'<div class="sub">Chưa có ghi chú.</div>'}
   <div class="row"><button class="btn" id="edit">Sửa thông tin</button><button class="btn del" id="del">Xóa bệnh nhân</button></div></div>`;
   for(const x of ph){try{const r=await tx('readonly',s=>s.get(x.id));if(!r)continue;const u=URL.createObjectURL(new Blob([await open(r.d)],{type:'image/jpeg'})),i=el.querySelector(`[data-ph="${x.id}"] img`);if(i){i.src=u;i.dataset.u=u}}catch(e){}}
 }
 function form(p){
-  const v=p||{ten:'',tuoi:'',gioi:'Nam',cd:'',hd:'Phẫu thuật',pp:'',asa:'II',ngayMo:'',tt:'Đang điều trị',hen:'',ghi:''},o=(a,x)=>a.map(i=>`<option ${i===x?'selected':''}>${i}</option>`).join('');
+  const v=p||{ten:'',mayte:'',sdt:'',tuoi:'',gioi:'Nam',cd:'',hd:'Phẫu thuật',pp:'',asa:'II',ngayMo:'',tt:'Đang điều trị',hen:'',ghi:''},o=(a,x)=>a.map(i=>`<option ${i===x?'selected':''}>${i}</option>`).join('');
   $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">${p?'Sửa bệnh nhân':'Thêm bệnh nhân'}</h2>
-  <label>Tên viết tắt hoặc mã hồ sơ<input id="f_ten" value="${esc(v.ten)}"></label><div class="two"><label>Tuổi<input id="f_tuoi" type="number" value="${esc(v.tuoi)}"></label><label>Giới<select id="f_gioi">${o(['Nam','Nữ'],v.gioi)}</select></label></div>
+  <label>Họ tên (hoặc tên viết tắt)<input id="f_ten" value="${esc(v.ten)}"></label>
+  <div class="two"><label>Mã y tế (mã hồ sơ, bệnh án)<input id="f_myt" value="${esc(v.mayte||'')}"></label><label>Số điện thoại<input id="f_sdt" type="tel" inputmode="tel" value="${esc(v.sdt||'')}"></label></div>
+  <div class="two"><label>Tuổi<input id="f_tuoi" type="number" value="${esc(v.tuoi)}"></label><label>Giới<select id="f_gioi">${o(['Nam','Nữ'],v.gioi)}</select></label></div>
   <label>Chẩn đoán<input id="f_cd" value="${esc(v.cd)}"></label><div class="two"><label>Hướng điều trị<select id="f_hd">${o(['Phẫu thuật','Nội khoa'],v.hd)}</select></label><label>ASA<select id="f_asa">${o(['I','II','III','IV'],v.asa)}</select></label></div>
   <label>Phương pháp mổ<input id="f_pp" value="${esc(v.pp)}"></label><div class="two"><label>Ngày mổ<input id="f_nm" type="date" value="${v.ngayMo}"></label><label>Hẹn tái khám<input id="f_hen" type="date" value="${v.hen}"></label></div>
-  <label>Tình trạng<select id="f_tt">${o(['Đang điều trị','Ngoại trú','Đã ra viện'],v.tt)}</select></label><label>Ghi chú chung<textarea id="f_ghi" rows="3">${esc(v.ghi)}</textarea></label>
+  <label>Tình trạng<select id="f_tt">${o(['Đang điều trị','Ngoại trú','Đã ra viện'],v.tt)}</select></label><label>Ghi chú chung (tiền sử, dị ứng, kế hoạch)<textarea id="f_ghi" rows="3">${esc(v.ghi)}</textarea></label>
   <div class="row" style="justify-content:flex-end"><button class="btn" id="cx">Hủy</button><button class="btn pri" id="ok">Lưu</button></div>`;
   $('dlg').showModal();$('cx').onclick=()=>$('dlg').close();
-  $('ok').onclick=async()=>{const n={ten:$('f_ten').value.trim(),tuoi:+$('f_tuoi').value||0,gioi:$('f_gioi').value,cd:$('f_cd').value.trim(),hd:$('f_hd').value,pp:$('f_pp').value.trim(),asa:$('f_asa').value,ngayMo:$('f_nm').value,hen:$('f_hen').value,tt:$('f_tt').value,ghi:$('f_ghi').value.trim()};
-    if(!n.ten||!n.cd)return alert('Cần nhập tên viết tắt (hoặc mã) và chẩn đoán.');
+  $('ok').onclick=async()=>{const n={ten:$('f_ten').value.trim(),mayte:$('f_myt').value.trim(),sdt:$('f_sdt').value.trim(),tuoi:+$('f_tuoi').value||0,gioi:$('f_gioi').value,cd:$('f_cd').value.trim(),hd:$('f_hd').value,pp:$('f_pp').value.trim(),asa:$('f_asa').value,ngayMo:$('f_nm').value,hen:$('f_hen').value,tt:$('f_tt').value,ghi:$('f_ghi').value.trim()};
+    if(!n.ten||!n.cd)return alert('Cần nhập họ tên (hoặc tên viết tắt) và chẩn đoán.');
     if(p)Object.assign(p,n);else{const x={id:Date.now(),nhat:[],ph:[],...n};S.unshift(x);sel=x.id}
     await save();$('dlg').close();mob=true;render()};
 }
 async function addPhoto(file){
   const p=S.find(x=>x.id===sel);if(!p||!file)return;
-  try{const bm=await createImageBitmap(file),k=Math.min(1,1280/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=bm.width*k;c.height=bm.height*k;c.getContext('2d').drawImage(bm,0,0,c.width,c.height);
-    const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.75)),id=crypto.randomUUID();
+  try{const cls=pend.loai==='cls',M=cls?1800:1280,bm=await createImageBitmap(file),k=Math.min(1,M/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=bm.width*k;c.height=bm.height*k;c.getContext('2d').drawImage(bm,0,0,c.width,c.height);
+    const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',cls?.82:.75)),id=crypto.randomUUID();
     const sealed=await seal(new Uint8Array(await blob.arrayBuffer()));
     await tx('readwrite',s=>s.put({id,d:sealed}));
-    (p.ph=p.ph||[]).push({id,ng:today()});await save();render();
+    (p.ph=p.ph||[]).push({id,ng:today(),loai:pend.loai||'vetmo',nhan:pend.nhan||'Vết mổ'});await save();render();
   }catch(e){alert('Không lưu được ảnh: '+e.message)}
 }
 async function backup(){
@@ -182,7 +194,7 @@ async function restore(file){
     LS('sobn_meta',JSON.stringify(o.meta));LS('sobn_data',o.data);lockScreen('Đã nhập xong. Mở khóa bằng mật khẩu của bản sao lưu.');
   }catch(e){alert('File sao lưu không hợp lệ.')}
 }
-const seedData=()=>[{id:1,ten:'BN-001 (mẫu)',tuoi:58,gioi:'Nam',cd:'Viêm ruột thừa cấp',hd:'Phẫu thuật',pp:'Cắt ruột thừa nội soi',asa:'II',ngayMo:day(-2),tt:'Đang điều trị',hen:day(7),ghi:'Tăng huyết áp. Không dị ứng thuốc.',nhat:[{ng:day(-1),t:'Tỉnh, đau VAS 3, đã trung tiện.'}],ph:[]},{id:2,ten:'BN-002 (mẫu)',tuoi:67,gioi:'Nam',cd:'Viêm tụy cấp nhẹ do sỏi',hd:'Nội khoa',pp:'',asa:'III',ngayMo:'',tt:'Đang điều trị',hen:day(-1),ghi:'Nhịn ăn, truyền dịch, giảm đau.',nhat:[],ph:[]}];
+const seedData=()=>[{id:1,ten:'Nguyễn Văn A (mẫu)',mayte:'MYT-0001',sdt:'0900000001',tuoi:58,gioi:'Nam',cd:'Viêm ruột thừa cấp',hd:'Phẫu thuật',pp:'Cắt ruột thừa nội soi',asa:'II',ngayMo:day(-2),tt:'Đang điều trị',hen:day(7),ghi:'Tăng huyết áp. Không dị ứng thuốc.',nhat:[{ng:day(-1),t:'Tỉnh, đau VAS 3, đã trung tiện.'}],ph:[]},{id:2,ten:'Lê Văn C (mẫu)',mayte:'MYT-0002',sdt:'0900000002',tuoi:67,gioi:'Nam',cd:'Viêm tụy cấp nhẹ do sỏi',hd:'Nội khoa',pp:'',asa:'III',ngayMo:'',tt:'Đang điều trị',hen:day(-1),ghi:'Nhịn ăn, truyền dịch, giảm đau.',nhat:[],ph:[]}];
 
 document.addEventListener('click',async e=>{
   if(e.target.id==='seed'){e.preventDefault();S=seedData();await save();return render()}
@@ -195,12 +207,12 @@ document.addEventListener('click',async e=>{
   else if(id==='edit')form(S.find(x=>x.id===sel));
   else if(id==='del'){if(confirm('Xóa bệnh nhân này và toàn bộ ảnh?')){const p=S.find(x=>x.id===sel);for(const x of p.ph||[])await tx('readwrite',s=>s.delete(x.id));S=S.filter(x=>x!==p);sel=null;mob=false;await save();render()}}
   else if(id==='addn'){const t=$('nt').value.trim();if(!t)return;S.find(x=>x.id===sel).nhat.push({ng:$('nd').value||today(),t});await save();render()}
-  else if(id==='shot'){busy=true;$('cam').click();setTimeout(()=>busy=false,6e4)}
+  else if(b.dataset.shot){pend={loai:b.dataset.shot,nhan:b.dataset.shot==='cls'?$('clsType').value:'Vết mổ'};busy=true;$(b.dataset.src==='pick'?'pick':'cam').click();setTimeout(()=>busy=false,6e4)}
   else if(id==='bk')backup();
   else if(id==='imp1'){busy=true;$('imp').click()}
   else if(id==='lk')lockScreen();
 });
-$('cam').onchange=async e=>{busy=false;await addPhoto(e.target.files[0]);e.target.value=''};
+$('cam').onchange=$('pick').onchange=async e=>{busy=false;await addPhoto(e.target.files[0]);e.target.value=''};
 $('imp').onchange=async e=>{busy=false;if(e.target.files[0])await restore(e.target.files[0]);e.target.value=''};
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 lockScreen();
