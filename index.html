@@ -166,7 +166,8 @@ async function addPhoto(file){
   const p=S.find(x=>x.id===sel);if(!p||!file)return;
   try{const bm=await createImageBitmap(file),k=Math.min(1,1280/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=bm.width*k;c.height=bm.height*k;c.getContext('2d').drawImage(bm,0,0,c.width,c.height);
     const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.75)),id=crypto.randomUUID();
-    await tx('readwrite',s=>s.put({id,d:await seal(new Uint8Array(await blob.arrayBuffer()))}));
+    const sealed=await seal(new Uint8Array(await blob.arrayBuffer()));
+    await tx('readwrite',s=>s.put({id,d:sealed}));
     (p.ph=p.ph||[]).push({id,ng:today()});await save();render();
   }catch(e){alert('Không lưu được ảnh: '+e.message)}
 }
