@@ -9,43 +9,52 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#0e6b6e">
 <title>Sổ bệnh nhân</title>
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <style>
-:root{--bg:#eef4f4;--card:#fff;--ink:#12262c;--mute:#5b7078;--line:#dbe6e8;--teal:#0e6b6e;--ts:#dcefef;--red:#c2402c;--rs:#f9e3de;--amb:#9a6700;--as:#fbf0d2;--on:#fff;--sh:0 1px 2px rgba(10,40,45,.06),0 8px 24px rgba(10,40,45,.07)}
-@media(prefers-color-scheme:dark){:root{--bg:#0e1b1f;--card:#16272c;--ink:#e6f0f1;--mute:#93aab0;--line:#264047;--teal:#4fc1c4;--ts:#18393c;--red:#ff8f7b;--rs:#3d201b;--amb:#f0c25a;--as:#392d10;--on:#06201f;--sh:0 1px 2px rgba(0,0,0,.4)}}
+:root{--bg:#eef3f6;--card:#fff;--ink:#102a33;--mute:#5d737c;--line:#dce6ea;--teal:#0e6b6e;--ts:#dcefef;--red:#c2402c;--rs:#fbe4de;--amb:#9a6700;--as:#fbf0d2;--on:#fff;--dt:#1d6fd1;--dts:#e2eefc;--ng:#c27c0e;--ngs:#fdf0d5;--rv:#2c8f5a;--rvs:#e0f3e8;--sh:0 1px 2px rgba(10,40,55,.06),0 8px 24px rgba(10,40,55,.08)}
+@media(prefers-color-scheme:dark){:root{--bg:#0c181c;--card:#15262b;--ink:#e6f0f1;--mute:#93aab0;--line:#264047;--teal:#4fc1c4;--ts:#18393c;--red:#ff8f7b;--rs:#3d201b;--amb:#f0c25a;--as:#392d10;--on:#06201f;--dt:#6aa8f5;--dts:#16283d;--ng:#f0b64a;--ngs:#392d10;--rv:#5cc890;--rvs:#14352a;--sh:0 1px 2px rgba(0,0,0,.45)}}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,"Segoe UI",Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.dt{--c:var(--dt);--cs:var(--dts)}.ng{--c:var(--ng);--cs:var(--ngs)}.rv{--c:var(--rv);--cs:var(--rvs)}.al{--c:var(--red);--cs:var(--rs)}
 .wrap{max-width:1100px;margin:0 auto;padding:14px 14px 40px}
-.hero{background:linear-gradient(135deg,#0b5558,#17939a);color:#fff;border-radius:16px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:var(--sh)}
-.hero h1{font-size:22px;margin:0}.hs{font-size:13px;opacity:.9}
-.hb{display:flex;gap:8px}.hbtn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:600}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:14px 0}
-.stat{background:var(--card);border-radius:14px;padding:12px 14px;box-shadow:var(--sh);border-top:4px solid var(--teal)}
-.stat b{display:block;font-size:26px;line-height:1.1}.stat span{font-size:12px;color:var(--mute)}
-.s2{border-top-color:#2f8f5b}.s3{border-top-color:var(--amb)}.s3.al{border-top-color:var(--red)}.s3.al b{color:var(--red)}.s4{border-top-color:#6b8088}
-.cols{display:grid;grid-template-columns:340px 1fr;gap:16px}
+.hero{background:linear-gradient(120deg,#0a4f55,#17939a);color:#fff;border-radius:18px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:var(--sh)}
+.hl{display:flex;gap:12px;align-items:center}.hero h1{font-size:21px;margin:0;line-height:1.2}.hs{font-size:12.5px;opacity:.9}
+.hb{display:flex;gap:8px}.hbtn,.btn,.chip{display:inline-flex;align-items:center;gap:6px}
+.hbtn{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:10px;padding:8px 12px;cursor:pointer;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.stat{display:flex;gap:10px;align-items:center;background:var(--card);border-radius:14px;padding:10px 12px;box-shadow:var(--sh);border-left:5px solid var(--c,var(--teal))}
+.si{width:38px;height:38px;border-radius:11px;background:var(--cs);color:var(--c);display:flex;align-items:center;justify-content:center}
+.stat b{display:block;font-size:24px;line-height:1.1;color:var(--c)}.stat span{font-size:12px;color:var(--mute)}
+.cols{display:grid;grid-template-columns:350px 1fr;gap:16px}
 @media(max-width:800px){.cols{grid-template-columns:1fr}.hm{display:none}}
-.bar{display:flex;gap:8px;margin-bottom:10px}
-.bar input,.bar select,label input,label select,label textarea,.sel{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);width:100%}
-.bar input{flex:1}.bar select{width:auto}
-.btn{border:1px solid var(--line);background:var(--card);padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
-.btn.pri{background:linear-gradient(135deg,#0e6b6e,#14898c);border-color:transparent;color:#fff}
-.btn.del{color:var(--red)}
-.pt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:var(--card);border:1px solid transparent;border-radius:14px;padding:12px;margin-bottom:10px;cursor:pointer;box-shadow:var(--sh)}
-.pt.sel{border-color:var(--teal)}
-.av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#17939a,#0b5558);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
-.av.big{width:58px;height:58px;font-size:20px}.noi .av{background:linear-gradient(135deg,#d9a21f,#9a6700)}
-.pm{min-width:0;flex:1}.d{font-size:13px;color:var(--mute)}
-.tag{display:inline-block;font-size:12px;padding:1px 9px;border-radius:99px;background:var(--ts);color:var(--teal);margin:5px 4px 0 0;font-weight:500}
-.tag.r{background:var(--rs);color:var(--red)}.tag.a{background:var(--as);color:var(--amb)}
-.panel{background:var(--card);border-radius:16px;padding:18px;box-shadow:var(--sh)}
-.ph0{display:flex;gap:14px;align-items:center}.panel h2{margin:0;font-size:21px}.sub{color:var(--mute);font-size:13px}
-.chip{display:inline-block;background:var(--ts);color:var(--teal);padding:3px 11px;border-radius:99px;font-size:13px;text-decoration:none;margin:6px 6px 0 0;font-weight:600}
+.sw{position:relative;margin-bottom:10px}.sw .i{position:absolute;left:12px;top:12px;color:var(--mute)}.sw input{padding-left:38px}
+input,select,textarea{border:1px solid var(--line);border-radius:10px;background:var(--card);padding:10px 12px;width:100%}
+.fcs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.fc{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:5px 12px;font-size:13px;cursor:pointer;font-weight:600;color:var(--c,var(--ink))}
+.fc.on{background:var(--c,var(--teal));color:#fff;border-color:transparent}
+.btn{border:1px solid var(--line);background:var(--card);padding:9px 14px;border-radius:10px;cursor:pointer;font-weight:600}
+.btn.pri{background:linear-gradient(135deg,#0e6b6e,#17939a);border-color:transparent;color:#fff}
+.btn.del{color:var(--red)}.btn.ok{color:var(--rv)}
+.pt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:var(--card);border:2px solid transparent;border-left:6px solid var(--c);border-radius:14px;padding:12px;margin-bottom:10px;cursor:pointer;box-shadow:var(--sh)}
+.pt.sel{border-color:var(--c);border-left-width:6px}
+.av{width:44px;height:44px;border-radius:50%;background:var(--c,var(--teal));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+.av.big{width:60px;height:60px;font-size:21px}
+.pm{min-width:0;flex:1}.d{font-size:13px;color:var(--mute)}.tg{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:5px;background:var(--cs);color:var(--c);border-radius:99px;padding:2px 10px;font-size:12px;font-weight:700}
+.pill:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c)}
+.tag{font-size:12px;padding:2px 9px;border-radius:99px;background:var(--bg);color:var(--mute);font-weight:500}.tag.r{background:var(--rs);color:var(--red);font-weight:700}
+.panel{background:var(--card);border-radius:18px;padding:18px;box-shadow:var(--sh);overflow:hidden}
+.pb{height:7px;background:var(--c);margin:-18px -18px 16px}
+.ph0{display:flex;gap:14px;align-items:center}.panel h2{margin:0 0 2px;font-size:21px}.sub{color:var(--mute);font-size:13px}
+.chip{background:var(--ts);color:var(--teal);padding:4px 11px;border-radius:99px;font-size:13px;text-decoration:none;margin:6px 6px 0 0;font-weight:600}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
-.grid>div{background:var(--bg);border-radius:10px;padding:8px 12px}.grid span{display:block;font-size:12px;color:var(--mute)}
-h3{font-size:15px;margin:22px 0 8px;display:flex;align-items:center;gap:8px}h3:before{content:"";width:4px;height:16px;border-radius:2px;background:var(--teal)}
+.grid>div{background:var(--bg);border-radius:12px;padding:9px 12px}.grid span{display:flex;gap:5px;align-items:center;font-size:12px;color:var(--mute)}.grid span .i{width:14px;height:14px}
+h3{font-size:15px;margin:22px 0 8px;display:flex;align-items:center;gap:8px;color:var(--teal)}
 .note{border-top:1px solid var(--line);padding:8px 0}.note small{color:var(--mute)}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
 .ph{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:10px}
@@ -53,14 +62,25 @@ h3{font-size:15px;margin:22px 0 8px;display:flex;align-items:center;gap:8px}h3:b
 .ph img{width:100%;height:120px;object-fit:cover;display:block}
 .ph small{display:block;padding:4px 8px;color:var(--mute);font-size:11px;line-height:1.3}.ph small b{color:var(--ink)}
 .empty{color:var(--mute);padding:24px;text-align:center}
-.lock{max-width:380px;margin:12vh auto 0;background:var(--card);border-radius:16px;padding:24px;box-shadow:var(--sh)}
+.lock{max-width:380px;margin:12vh auto 0;background:var(--card);border-radius:18px;padding:24px;box-shadow:var(--sh)}
+.lock h1{font-size:22px;margin:0}.lg{margin-bottom:8px}
 label{display:block;font-size:13px;color:var(--mute);margin-top:10px}label input,label select,label textarea{margin-top:3px;background:var(--bg)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .err{color:var(--red);min-height:22px;margin-top:8px;font-size:14px}
 .warn{background:var(--as);color:var(--amb);padding:8px 12px;border-radius:10px;font-size:13px;margin-top:10px}
-dialog{border:0;border-radius:16px;background:var(--card);color:var(--ink);width:min(520px,94vw);padding:18px;max-height:92vh;box-shadow:var(--sh)}
+dialog{border:0;border-radius:18px;background:var(--card);color:var(--ink);width:min(560px,94vw);padding:18px;max-height:92vh;box-shadow:var(--sh)}
 dialog::backdrop{background:rgba(0,0,0,.5)}
 dialog img.big{width:100%;border-radius:10px}
+.seg{display:flex;background:var(--bg);border-radius:10px;padding:3px;margin:12px 0}.seg button{flex:1;border:0;background:none;padding:7px;border-radius:8px;font-weight:600;cursor:pointer}.seg button.on{background:var(--card);box-shadow:var(--sh);color:var(--teal)}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.kp{display:grid;grid-template-columns:1fr 1fr;gap:8px}.k{background:var(--bg);border-radius:12px;padding:10px 12px}.k b{display:block;font-size:24px;line-height:1.1}.k span{font-size:12px;color:var(--mute)}
+.cur{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.cur>div{background:var(--dts);color:var(--dt);border-radius:12px;padding:10px 12px}.cur b{display:block;font-size:26px;line-height:1.1}.cur span{font-size:12px}
+.chart{display:flex;gap:2px;height:130px;margin-top:6px}.bc{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;height:100%}.bb{height:calc(100% - 14px);width:100%;display:flex;gap:1px;align-items:flex-end}.bb i{flex:1;border-radius:3px 3px 0 0}.bc small{font-size:9px;color:var(--mute);margin-top:2px}
+.lg2{display:flex;gap:12px;font-size:12px;color:var(--mute);margin:6px 0}.lg2 i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px}
+.gr{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:5px 0;font-size:14px}
+.cdn{display:flex;align-items:center;gap:12px;background:var(--cs);color:var(--c);border-radius:14px;padding:10px 14px;margin-top:14px}.cdn b{font-size:32px;line-height:1}.cdn span{font-size:12px}
+.tag.cd{background:var(--dts);color:var(--dt);font-weight:700}
+
 </style>
 </head>
 <body>
@@ -76,7 +96,8 @@ const b64=u=>{u=new Uint8Array(u);let s='';for(let i=0;i<u.length;i+=8192)s+=Str
 const unb=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 const LG=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const LS=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){alert('Không lưu được dữ liệu. Hãy kiểm tra dung lượng máy.')}};
-const day=n=>{const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)},today=()=>day(0);
+const ld=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const day=n=>{const d=new Date();d.setDate(d.getDate()+n);return ld(d)},today=()=>day(0);
 const diff=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5),fmt=d=>d?d.split('-').reverse().join('/'):'—';
 let K=null,S=[],sel=null,mob=false,busy=false,idle,pend={};
 
@@ -93,7 +114,7 @@ const tx=async(m,f)=>{const d=await idb();return new Promise((ok,no)=>{const t=d
 function lockScreen(note){
   K=null;S=[];sel=null;mob=false;clearTimeout(idle);$('dlg').open&&$('dlg').close();
   const first=!LG('sobn_meta');
-  $('app').innerHTML=`<form class="lock" id="lf"><h1>Sổ bệnh nhân</h1><p class="sub">${first?'Tạo mật khẩu để bảo vệ dữ liệu':'Nhập mật khẩu để mở'}</p>
+  $('app').innerHTML=`<form class="lock" id="lf"><div class="lg">${LOGO}</div><h1>Sổ bệnh nhân</h1><p class="sub">${first?'Tạo mật khẩu để bảo vệ dữ liệu':'Nhập mật khẩu để mở'}</p>
   <label>Mật khẩu<input id="pw" type="password" autocomplete="${first?'new-password':'current-password'}"></label>
   ${first?'<label>Nhập lại mật khẩu<input id="pw2" type="password" autocomplete="new-password"></label><div class="warn">Mật khẩu này dùng để mã hóa dữ liệu. Nếu quên, không ai khôi phục được, kể cả người làm app. Hãy ghi lại ở nơi an toàn.</div>':''}
   <div class="err" id="msg">${note||''}</div><button class="btn pri" style="width:100%">${first?'Tạo và mở':'Mở khóa'}</button>
@@ -125,55 +146,120 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&K&&!busy)l
 /* ---- giao diện chính ---- */
 const pod=p=>p.ngayMo?diff(p.ngayMo,today()):null;
 const hs=p=>{if(!p.hen||p.tt==='Đã ra viện')return'';const d=diff(today(),p.hen);return d<0?'late':d<=1?'soon':''};
+const IC={
+phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+cam:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+img:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',
+doc:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/>',
+activity:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+clip:'<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',
+lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+down:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+up:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>',
+search:'<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/>',
+cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+back:'<path d="M15 18l-6-6 6-6"/>',
+edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+trash:'<path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',
+home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
+check:'<path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4L12 14l-3-3"/>'};
+IC.chart='<path d="M18 20V10M12 20V4M6 20v-6"/>';
+const ic=n=>`<svg class="i" viewBox="0 0 24 24">${IC[n]}</svg>`;
+const LOGO=`<svg viewBox="0 0 64 64" width="46" height="46"><defs><linearGradient id="lgG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2bb3b8"/><stop offset="1" stop-color="#0a4a50"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#lgG)"/><path d="M27 14h10v12h12v10H37v12H27V36H15V26h12z" fill="#fff"/><path d="M15 55c10-5 24-5 34 0" stroke="#9fe9e0" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray=".1 7"/></svg>`;
+const SC={'Đang điều trị':'dt','Ngoại trú':'ng','Đã ra viện':'rv'},sc=p=>SC[p.tt]||'dt';
+let flt='';
+function chips(){$('chips').innerHTML=[['','Tất cả','']].concat(Object.keys(SC).map(k=>[k,k,SC[k]])).map(([v,t,c])=>`<button class="fc ${c} ${flt===v?'on':''}" data-f="${v}">${t}</button>`).join('')}
 function start(){
-  $('app').innerHTML=`<div class="hero"><div><h1>Sổ bệnh nhân</h1><div class="hs">Ngoại khoa · dữ liệu mã hóa, chỉ nằm trong máy này</div></div><div class="hb"><button class="hbtn" id="bk">Sao lưu</button><button class="hbtn" id="imp1">Nhập</button><button class="hbtn" id="lk">Khóa</button></div></div>
+  flt='';
+  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">Ngoại khoa · dữ liệu mã hóa trong máy</div></div></div><div class="hb"><button class="hbtn" id="stbtn">${ic('chart')}Thống kê</button><button class="hbtn" id="bk">${ic('down')}Sao lưu</button><button class="hbtn" id="imp1">${ic('up')}Nhập</button><button class="hbtn" id="lk">${ic('lock')}Khóa</button></div></div>
   <div class="stats" id="st"></div>
-  <div class="cols"><section id="ls"><div class="bar"><input id="q" placeholder="Tìm tên, chẩn đoán, mã y tế, SĐT"><select id="f"><option value="">Tất cả</option><option>Đang điều trị</option><option>Ngoại trú</option><option>Đã ra viện</option></select></div><button class="btn pri" id="add" style="width:100%;margin-bottom:12px">+ Thêm bệnh nhân</button><div id="it"></div></section><section id="dt" class="hm"></section></div>`;
-  $('q').oninput=list;$('f').onchange=list;bump();render();
+  <div class="cols"><section id="ls"><div class="sw">${ic('search')}<input id="q" placeholder="Tìm tên, chẩn đoán, mã y tế, SĐT"></div><div class="fcs" id="chips"></div><button class="btn pri" id="add" style="width:100%;margin-bottom:12px;justify-content:center">${ic('plus')}Thêm bệnh nhân</button><div id="it"></div></section><section id="dt" class="hm"></section></div>`;
+  $('q').oninput=list;chips();bump();render();
 }
 function render(){
-  const a=S.filter(p=>p.tt==='Đang điều trị').length,h=S.filter(p=>hs(p)).length,hp=S.filter(p=>{const d=pod(p);return d!==null&&d>=0&&d<=3&&p.tt!=='Đã ra viện'}).length;
-  $('st').innerHTML=`<div class="stat"><b>${a}</b><span>Đang điều trị</span></div><div class="stat s2"><b>${hp}</b><span>Hậu phẫu ≤ 3 ngày</span></div><div class="stat s3 ${h?'al':''}"><b>${h}</b><span>Cần tái khám</span></div><div class="stat s4"><b>${S.length}</b><span>Tổng số</span></div>`;
+  const n=t=>S.filter(p=>p.tt===t).length,h=S.filter(p=>hs(p)).length,c=(cl,i,num,lab)=>`<div class="stat ${cl}"><div class="si">${ic(i)}</div><div><b>${num}</b><span>${lab}</span></div></div>`;
+  $('st').innerHTML=c('dt','activity',n('Đang điều trị'),'Đang điều trị')+c('ng','home',n('Ngoại trú'),'Ngoại trú')+c('rv','check',n('Đã ra viện'),'Đã ra viện')+c('al','cal',h,'Cần tái khám');
   list();detail();
 }
 const ini=s=>(String(s).trim().split(/\s+/).slice(-2).map(w=>w[0]).join('')||'?').toUpperCase();
 function list(){
-  const q=$('q').value.toLowerCase(),f=$('f').value,r=S.filter(p=>(!f||p.tt===f)&&(p.ten+' '+p.cd+' '+(p.mayte||'')+' '+(p.sdt||'')).toLowerCase().includes(q));
-  $('it').innerHTML=r.length?r.map(p=>{const d=pod(p),h=hs(p);return`<button class="pt ${p.hd==='Nội khoa'?'noi':''} ${p.id===sel?'sel':''}" data-id="${p.id}"><div class="av">${esc(ini(p.ten))}</div><div class="pm"><b>${esc(p.ten)}</b><div class="d">${esc(p.cd)}</div>${p.mayte?`<div class="d">Mã YT: ${esc(p.mayte)}</div>`:''}<span class="tag ${p.hd==='Nội khoa'?'a':''}">${p.hd}</span>${d!==null&&d>=0&&p.tt!=='Đã ra viện'?`<span class="tag">Hậu phẫu ngày ${d}</span>`:''}${h?`<span class="tag r">${h==='late'?'Quá hẹn':'Sắp tái khám'}</span>`:''}</div></button>`}).join(''):`<div class="empty">${S.length?'Không có bệnh nhân phù hợp.':'Chưa có bệnh nhân. Bấm "Thêm bệnh nhân", hoặc <a href="#" id="seed">nạp 2 bệnh nhân mẫu để thử</a>.'}</div>`;
+  const q=$('q').value.toLowerCase(),r=S.filter(p=>(!flt||p.tt===flt)&&(p.ten+' '+p.cd+' '+(p.mayte||'')+' '+(p.sdt||'')).toLowerCase().includes(q));
+  $('it').innerHTML=r.length?r.map(p=>{const d=pod(p),h=hs(p),cd=curDays(p);return`<button class="pt ${sc(p)} ${p.id===sel?'sel':''}" data-id="${p.id}"><div class="av">${esc(ini(p.ten))}</div><div class="pm"><b>${esc(p.ten)}</b><div class="d">${esc(p.cd)}</div>${p.mayte?`<div class="d">Mã YT: ${esc(p.mayte)}</div>`:''}<div class="tg"><span class="pill">${p.tt}</span><span class="tag">${p.hd}</span>${cd!==null?`<span class="tag cd">Ngày điều trị thứ ${cd}</span>`:''}${d!==null&&d>=0&&p.tt!=='Đã ra viện'&&isPT(p)?`<span class="tag">Hậu phẫu ngày ${d}</span>`:''}${h?`<span class="tag r">${h==='late'?'Quá hẹn':'Sắp tái khám'}</span>`:''}</div></div></button>`}).join(''):`<div class="empty">${S.length?'Không có bệnh nhân phù hợp.':'Chưa có bệnh nhân. Bấm "Thêm bệnh nhân", hoặc <a href="#" id="seed">nạp bệnh nhân mẫu để thử</a>.'}</div>`;
   $('ls').classList.toggle('hm',mob);
 }
+const isPT=p=>p.hd!=='Nội khoa',vao=p=>p.ngayVao||p.ngayMo||'';
+const curDays=p=>p.tt==='Đang điều trị'&&vao(p)?diff(vao(p),today())+1:null;
+let lastD=today();setInterval(()=>{if(K&&today()!==lastD){lastD=today();render()}},6e4);
 async function detail(){
   const el=$('dt'),p=S.find(x=>x.id===sel);el.classList.toggle('hm',!mob);
   if(!p){el.innerHTML='<div class="panel empty">Chọn một bệnh nhân để xem chi tiết.</div>';return}
-  const d=pod(p),ph=p.ph||[],vm=ph.filter(x=>x.loai!=='cls'&&x.loai!=='tt'),cl=ph.filter(x=>x.loai==='cls'),tr=ph.filter(x=>x.loai==='tt');
+  const pt=isPT(p),d=pod(p),cd=curDays(p),ph=p.ph||[],vm=ph.filter(x=>x.loai!=='cls'&&x.loai!=='tt'),cl=ph.filter(x=>x.loai==='cls'),tr=ph.filter(x=>x.loai==='tt');
   const th=x=>`<button data-ph="${x.id}"><img alt="Ảnh"><small><b>${esc(x.nhan||'Vết mổ')}</b><br>${fmt(x.ng)}${p.ngayMo&&x.loai!=='cls'?' · N'+diff(p.ngayMo,x.ng):''}</small></button>`;
-  el.innerHTML=`<button class="btn" id="back" style="margin-bottom:10px;${innerWidth>800?'display:none':''}">← Danh sách</button><div class="panel">
-  <div class="ph0"><div class="av big ${p.hd==='Nội khoa'?'noi':''}">${esc(ini(p.ten))}</div><div><h2>${esc(p.ten)}</h2><div class="sub">${p.tuoi||'?'} tuổi · ${p.gioi} · ASA ${esc(p.asa)}</div><div>${p.mayte?`<span class="chip">Mã YT: ${esc(p.mayte)}</span>`:''}${p.sdt?`<button class="chip" data-tel="${esc(p.sdt)}" style="border:0;cursor:pointer">☎ ${esc(p.sdt)}</button>`:''}</div></div></div>
-  <div class="grid"><div><span>Chẩn đoán</span>${esc(p.cd)}</div><div><span>Hướng điều trị</span>${p.hd}${p.pp?': '+esc(p.pp):''}</div><div><span>Ngày mổ</span>${fmt(p.ngayMo)}${d!==null&&d>=0?` (ngày ${d})`:''}</div><div><span>Tình trạng</span>${p.tt}</div><div><span>Hẹn tái khám</span>${fmt(p.hen)}</div></div>
-  <h3>Ghi chú chung</h3><div>${esc(p.ghi)||'<span class="sub">Chưa có.</span>'}</div>
-  <h3>Ảnh vết mổ</h3><div class="row" style="margin-top:0"><button class="btn" data-shot="vetmo" data-src="cam">Chụp vết mổ</button><button class="btn" data-shot="vetmo" data-src="pick">Chọn ảnh</button></div><div class="sub" style="margin-top:4px">"Chọn ảnh" lấy từ thư viện máy, nên xóa bản gốc trong thư viện sau khi lưu.</div><div class="ph">${vm.map(th).join('')}</div>
-  <h3>Tường trình phẫu thuật</h3><div class="row" style="margin-top:0"><button class="btn" data-shot="tt" data-src="cam">Chụp tường trình</button><button class="btn" data-shot="tt" data-src="pick">Chọn ảnh</button></div><div class="sub" style="margin-top:4px">"Chọn ảnh" lấy từ thư viện máy, nên xóa bản gốc trong thư viện sau khi lưu.</div><div class="ph">${tr.map(th).join('')}</div>
-  <h3>Ảnh cận lâm sàng</h3><div class="row" style="margin-top:0"><select class="sel" id="clsType" style="width:auto"><option>X-quang</option><option>CT</option><option>MRI</option><option>Siêu âm</option><option>Xét nghiệm</option><option>Nội soi</option><option>Khác</option></select><button class="btn" data-shot="cls" data-src="cam">Chụp</button><button class="btn" data-shot="cls" data-src="pick">Chọn ảnh</button></div><div class="sub" style="margin-top:4px">"Chọn ảnh" lấy từ thư viện máy, nên xóa bản gốc trong thư viện sau khi lưu.</div><div class="ph">${cl.map(th).join('')}</div>
-  <h3>Nhật ký theo dõi</h3><div class="two" style="grid-template-columns:130px 1fr auto;align-items:end"><label>Ngày<input type="date" id="nd" value="${today()}"></label><label>Nội dung<input id="nt" placeholder="Sinh hiệu, đau, dẫn lưu, xét nghiệm"></label><button class="btn pri" id="addn">Lưu</button></div>
+  const lib='<div class="sub" style="margin-top:4px">"Chọn ảnh" lấy từ thư viện máy, nên xóa bản gốc trong thư viện sau khi lưu.</div>';
+  const pair=k=>`<button class="btn" data-shot="${k}" data-src="cam">${ic('cam')}Chụp</button><button class="btn" data-shot="${k}" data-src="pick">${ic('img')}Chọn ảnh</button>`;
+  const T=(i,l,v)=>`<div><span>${ic(i)}${l}</span>${v}</div>`;
+  const tiles=T('activity','Chẩn đoán',esc(p.cd))+T('clip','Hướng điều trị',p.hd)+T('clip',pt?'Phương pháp phẫu thuật':'Phương pháp điều trị',esc(p.pp)||'—')+T('cal','Ngày vào viện',fmt(p.ngayVao))+(pt?T('cal','Ngày mổ',fmt(p.ngayMo)+(d!==null&&d>=0?` (hậu phẫu ngày ${d})`:'')):'')+(p.ngayRa?T('cal','Ngày ra viện',fmt(p.ngayRa)):'')+T('cal','Hẹn tái khám',fmt(p.hen));
+  const cdn=p.tt!=='Đang điều trị'?'':cd!==null?`<div class="cdn"><b>${cd}</b><span>ngày điều trị<br>tự cập nhật mỗi ngày</span></div>`:'<div class="warn">Chưa có ngày vào viện. Bấm "Sửa thông tin" để nhập, app sẽ tự đếm số ngày điều trị.</div>';
+  el.innerHTML=`<button class="btn" id="back" style="margin-bottom:10px;${innerWidth>800?'display:none':''}">${ic('back')}Danh sách</button><div class="panel ${sc(p)}"><div class="pb"></div>
+  <div class="ph0"><div class="av big">${esc(ini(p.ten))}</div><div><h2>${esc(p.ten)}</h2><div class="sub">${p.tuoi||'?'} tuổi · ${p.gioi}${pt&&p.asa?' · ASA '+esc(p.asa):''}</div><div><span class="pill" style="margin:6px 6px 0 0">${p.tt}</span>${p.mayte?`<span class="chip">${ic('clip')}Mã YT: ${esc(p.mayte)}</span>`:''}${p.sdt?`<button class="chip" data-tel="${esc(p.sdt)}" style="border:0;cursor:pointer">${ic('phone')}${esc(p.sdt)}</button>`:''}</div></div></div>
+  ${cdn}<div class="grid">${tiles}</div>
+  <h3>${ic('clip')}Ghi chú chung</h3><div>${esc(p.ghi)||'<span class="sub">Chưa có.</span>'}</div>
+  ${pt?`<h3>${ic('cam')}Ảnh vết mổ</h3><div class="row" style="margin-top:0">${pair('vetmo')}</div>${lib}<div class="ph">${vm.map(th).join('')}</div>
+  <h3>${ic('doc')}Tường trình phẫu thuật</h3><div class="row" style="margin-top:0">${pair('tt')}</div>${lib}<div class="ph">${tr.map(th).join('')}</div>`:''}
+  <h3>${ic('activity')}Ảnh cận lâm sàng</h3><div class="row" style="margin-top:0"><select id="clsType" style="width:auto"><option>X-quang</option><option>CT</option><option>MRI</option><option>Siêu âm</option><option>Xét nghiệm</option><option>Nội soi</option><option>Khác</option></select>${pair('cls')}</div>${lib}<div class="ph">${cl.map(th).join('')}</div>
+  <h3>${ic('edit')}Nhật ký theo dõi</h3><div class="two" style="grid-template-columns:130px 1fr auto;align-items:end"><label>Ngày<input type="date" id="nd" value="${today()}"></label><label>Nội dung<input id="nt" placeholder="Sinh hiệu, đau, dẫn lưu, xét nghiệm"></label><button class="btn pri" id="addn">Lưu</button></div>
   ${(p.nhat||[]).slice().sort((a,b)=>b.ng.localeCompare(a.ng)).map(n=>`<div class="note"><small>${fmt(n.ng)}${p.ngayMo&&diff(p.ngayMo,n.ng)>=0?' · hậu phẫu ngày '+diff(p.ngayMo,n.ng):''}</small><br>${esc(n.t)}</div>`).join('')||'<div class="sub">Chưa có ghi chú.</div>'}
-  <div class="row"><button class="btn" id="edit">Sửa thông tin</button><button class="btn del" id="del">Xóa bệnh nhân</button></div></div>`;
+  <div class="row"><button class="btn" id="edit">${ic('edit')}Sửa thông tin</button>${p.tt==='Đang điều trị'?`<button class="btn ok" id="dis">${ic('check')}Cho ra viện</button>`:''}<button class="btn del" id="del">${ic('trash')}Xóa</button></div></div>`;
   for(const x of ph){try{const r=await tx('readonly',s=>s.get(x.id));if(!r)continue;const u=URL.createObjectURL(new Blob([await open(r.d)],{type:'image/jpeg'})),i=el.querySelector(`[data-ph="${x.id}"] img`);if(i){i.src=u;i.dataset.u=u}}catch(e){}}
 }
 function form(p){
-  const v=p||{ten:'',mayte:'',sdt:'',tuoi:'',gioi:'Nam',cd:'',hd:'Phẫu thuật',pp:'',asa:'II',ngayMo:'',tt:'Đang điều trị',hen:'',ghi:''},o=(a,x)=>a.map(i=>`<option ${i===x?'selected':''}>${i}</option>`).join('');
+  const v=p||{ten:'',mayte:'',sdt:'',tuoi:'',gioi:'Nam',cd:'',hd:'Phẫu thuật',pp:'',asa:'II',ngayVao:today(),ngayMo:'',tt:'Đang điều trị',hen:'',ngayRa:'',ghi:''},o=(a,x)=>a.map(i=>`<option ${i===x?'selected':''}>${i}</option>`).join('');
   $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">${p?'Sửa bệnh nhân':'Thêm bệnh nhân'}</h2>
   <label>Họ tên (hoặc tên viết tắt)<input id="f_ten" value="${esc(v.ten)}"></label>
   <div class="two"><label>Mã y tế (mã hồ sơ, bệnh án)<input id="f_myt" value="${esc(v.mayte||'')}"></label><label>Số điện thoại<input id="f_sdt" type="tel" inputmode="tel" value="${esc(v.sdt||'')}"></label></div>
   <div class="two"><label>Tuổi<input id="f_tuoi" type="number" value="${esc(v.tuoi)}"></label><label>Giới<select id="f_gioi">${o(['Nam','Nữ'],v.gioi)}</select></label></div>
-  <label>Chẩn đoán<input id="f_cd" value="${esc(v.cd)}"></label><div class="two"><label>Hướng điều trị<select id="f_hd">${o(['Phẫu thuật','Nội khoa'],v.hd)}</select></label><label>ASA<select id="f_asa">${o(['I','II','III','IV'],v.asa)}</select></label></div>
-  <label>Phương pháp mổ<input id="f_pp" value="${esc(v.pp)}"></label><div class="two"><label>Ngày mổ<input id="f_nm" type="date" value="${v.ngayMo}"></label><label>Hẹn tái khám<input id="f_hen" type="date" value="${v.hen}"></label></div>
-  <label>Tình trạng<select id="f_tt">${o(['Đang điều trị','Ngoại trú','Đã ra viện'],v.tt)}</select></label><label>Ghi chú chung (tiền sử, dị ứng, kế hoạch)<textarea id="f_ghi" rows="3">${esc(v.ghi)}</textarea></label>
+  <label>Chẩn đoán<input id="f_cd" value="${esc(v.cd)}"></label>
+  <div class="two"><label>Hướng điều trị<select id="f_hd">${o(['Phẫu thuật','Nội khoa'],v.hd)}</select></label><label>Ngày vào viện<input id="f_nv" type="date" value="${v.ngayVao||''}"></label></div>
+  <label><span id="f_ppl">Phương pháp phẫu thuật</span><input id="f_pp" value="${esc(v.pp)}"></label>
+  <div class="two sg"><label>Ngày mổ<input id="f_nm" type="date" value="${v.ngayMo||''}"></label><label>ASA<select id="f_asa">${o(['I','II','III','IV'],v.asa||'II')}</select></label></div>
+  <div class="two"><label>Tình trạng<select id="f_tt">${o(['Đang điều trị','Ngoại trú','Đã ra viện'],v.tt)}</select></label><label>Hẹn tái khám<input id="f_hen" type="date" value="${v.hen||''}"></label></div>
+  <label id="f_rl">Ngày ra viện<input id="f_nr" type="date" value="${v.ngayRa||''}"></label>
+  <label>Ghi chú chung (tiền sử, dị ứng, kế hoạch)<textarea id="f_ghi" rows="3">${esc(v.ghi)}</textarea></label>
   <div class="row" style="justify-content:flex-end"><button class="btn" id="cx">Hủy</button><button class="btn pri" id="ok">Lưu</button></div>`;
+  const sync=()=>{const pt=$('f_hd').value!=='Nội khoa',out=$('f_tt').value!=='Đang điều trị';document.querySelectorAll('#dlg .sg').forEach(e=>e.style.display=pt?'':'none');$('f_ppl').textContent=pt?'Phương pháp phẫu thuật':'Phương pháp điều trị';$('f_rl').style.display=out?'':'none';if(out&&!$('f_nr').value)$('f_nr').value=today()};
+  $('f_hd').onchange=$('f_tt').onchange=sync;sync();
   $('dlg').showModal();$('cx').onclick=()=>$('dlg').close();
-  $('ok').onclick=async()=>{const n={ten:$('f_ten').value.trim(),mayte:$('f_myt').value.trim(),sdt:$('f_sdt').value.trim(),tuoi:+$('f_tuoi').value||0,gioi:$('f_gioi').value,cd:$('f_cd').value.trim(),hd:$('f_hd').value,pp:$('f_pp').value.trim(),asa:$('f_asa').value,ngayMo:$('f_nm').value,hen:$('f_hen').value,tt:$('f_tt').value,ghi:$('f_ghi').value.trim()};
+  $('ok').onclick=async()=>{const pt=$('f_hd').value!=='Nội khoa',tt=$('f_tt').value,n={ten:$('f_ten').value.trim(),mayte:$('f_myt').value.trim(),sdt:$('f_sdt').value.trim(),tuoi:+$('f_tuoi').value||0,gioi:$('f_gioi').value,cd:$('f_cd').value.trim(),hd:$('f_hd').value,pp:$('f_pp').value.trim(),asa:pt?$('f_asa').value:'',ngayVao:$('f_nv').value,ngayMo:pt?$('f_nm').value:'',hen:$('f_hen').value,tt,ngayRa:tt!=='Đang điều trị'?($('f_nr').value||today()):'',ghi:$('f_ghi').value.trim()};
     if(!n.ten||!n.cd)return alert('Cần nhập họ tên (hoặc tên viết tắt) và chẩn đoán.');
     if(p)Object.assign(p,n);else{const x={id:Date.now(),nhat:[],ph:[],...n};S.unshift(x);sel=x.id}
     await save();$('dlg').close();mob=true;render()};
+}
+let sp={m:'week',o:0};
+function statsDlg(){
+  const {m,o}=sp,t=new Date();t.setHours(12,0,0,0);let a,b;
+  if(m==='week'){const w=(t.getDay()+6)%7;a=new Date(t);a.setDate(t.getDate()-w+7*o);b=new Date(a);b.setDate(a.getDate()+6)}
+  else if(m==='month'){a=new Date(t.getFullYear(),t.getMonth()+o,1,12);b=new Date(a.getFullYear(),a.getMonth()+1,0,12)}
+  else{a=new Date(t.getFullYear()+o,0,1,12);b=new Date(t.getFullYear()+o,11,31,12)}
+  const A=ld(a),B=ld(b),inr=d=>d&&d>=A&&d<=B,df=x=>String(x.getDate()).padStart(2,'0')+'/'+String(x.getMonth()+1).padStart(2,'0');
+  const lab=m==='week'?`${df(a)} – ${df(b)}/${b.getFullYear()}`:m==='month'?`Tháng ${a.getMonth()+1}/${a.getFullYear()}`:`Năm ${a.getFullYear()}`;
+  const sur=S.filter(p=>isPT(p)&&inr(p.ngayMo)),med=S.filter(p=>!isPT(p)&&inr(vao(p))),out=S.filter(p=>inr(p.ngayRa)),los=out.filter(p=>vao(p)).map(p=>Math.max(1,diff(vao(p),p.ngayRa))),cds=S.map(curDays).filter(x=>x!==null);
+  const avg=r=>r.length?(r.reduce((s,x)=>s+x,0)/r.length).toFixed(1):'—';
+  const bk=[];
+  if(m==='year')for(let i=0;i<12;i++)bk.push([a.getFullYear()+'-'+String(i+1).padStart(2,'0'),'T'+(i+1)]);
+  else for(let x=new Date(a);x<=b;x.setDate(x.getDate()+1))bk.push([ld(x),m==='week'?['CN','T2','T3','T4','T5','T6','T7'][x.getDay()]:String(x.getDate())]);
+  const key=d=>m==='year'?d.slice(0,7):d,cnt=(r,f)=>{const z={};r.forEach(p=>{const k=key(f(p));z[k]=(z[k]||0)+1});return z},cs=cnt(sur,p=>p.ngayMo),cm=cnt(med,vao),mx=Math.max(1,...bk.map(([k])=>Math.max(cs[k]||0,cm[k]||0)));
+  const bars=bk.map(([k,l])=>`<div class="bc"><div class="bb"><i style="height:${(cs[k]||0)/mx*100}%;background:var(--teal)"></i><i style="height:${(cm[k]||0)/mx*100}%;background:var(--ng)"></i></div><small>${l}</small></div>`).join('');
+  const gl=(r,c)=>{const z={};r.forEach(p=>{const k=(p.pp||'Chưa ghi phương pháp').trim();z[k]=(z[k]||0)+1});const e=Object.entries(z).sort((x,y)=>y[1]-x[1]);return e.length?e.map(([k,n])=>`<div class="gr"><span>${esc(k)}</span><b style="color:${c}">${n}</b></div>`).join(''):'<div class="sub">Chưa có.</div>'};
+  $('dlg').innerHTML=`<div class="row" style="justify-content:space-between;margin:0"><h2 style="margin:0;font-size:18px">Thống kê</h2><button class="btn" id="cx">Đóng</button></div>
+  <div class="seg">${[['week','Tuần'],['month','Tháng'],['year','Năm']].map(([k,x])=>`<button class="${m===k?'on':''}" data-sm="${k}">${x}</button>`).join('')}</div>
+  <div class="nav"><button class="btn" data-so="-1">${ic('back')}</button><b>${lab}</b><button class="btn" data-so="1" style="transform:scaleX(-1)">${ic('back')}</button></div>
+  <div class="kp"><div class="k"><b>${sur.length}</b><span>Bệnh nhân phẫu thuật</span></div><div class="k"><b>${med.length}</b><span>Điều trị nội khoa</span></div><div class="k"><b>${out.length}</b><span>Bệnh nhân ra viện</span></div><div class="k"><b>${avg(los)}</b><span>Ngày nằm viện TB (ra viện trong kỳ)</span></div></div>
+  <div class="cur"><div><b>${cds.length}</b><span>Đang điều trị hiện tại</span></div><div><b>${avg(cds)}</b><span>Ngày điều trị TB hiện tại</span></div></div>
+  <h3>${ic('chart')}Biểu đồ theo ${m==='year'?'tháng':'ngày'}</h3><div class="lg2"><span><i style="background:var(--teal)"></i>Phẫu thuật</span><span><i style="background:var(--ng)"></i>Nội khoa</span></div><div class="chart">${bars}</div>
+  <h3>${ic('clip')}Phương pháp phẫu thuật</h3>${gl(sur,'var(--teal)')}<h3>${ic('clip')}Phương pháp điều trị nội khoa</h3>${gl(med,'var(--ng)')}
+  <div class="sub" style="margin-top:12px">Phẫu thuật tính theo ngày mổ, nội khoa tính theo ngày vào viện. Ngày điều trị = ngày hiện tại trừ ngày vào viện, cộng 1.</div>`;
+  if(!$('dlg').open)$('dlg').showModal();$('cx').onclick=()=>$('dlg').close();
 }
 async function addPhoto(file){
   const p=S.find(x=>x.id===sel);if(!p||!file)return;
@@ -195,7 +281,12 @@ async function restore(file){
     LS('sobn_meta',JSON.stringify(o.meta));LS('sobn_data',o.data);lockScreen('Đã nhập xong. Mở khóa bằng mật khẩu của bản sao lưu.');
   }catch(e){alert('File sao lưu không hợp lệ.')}
 }
-const seedData=()=>[{id:1,ten:'Nguyễn Văn A (mẫu)',mayte:'MYT-0001',sdt:'0900000001',tuoi:58,gioi:'Nam',cd:'Viêm ruột thừa cấp',hd:'Phẫu thuật',pp:'Cắt ruột thừa nội soi',asa:'II',ngayMo:day(-2),tt:'Đang điều trị',hen:day(7),ghi:'Tăng huyết áp. Không dị ứng thuốc.',nhat:[{ng:day(-1),t:'Tỉnh, đau VAS 3, đã trung tiện.'}],ph:[]},{id:2,ten:'Lê Văn C (mẫu)',mayte:'MYT-0002',sdt:'0900000002',tuoi:67,gioi:'Nam',cd:'Viêm tụy cấp nhẹ do sỏi',hd:'Nội khoa',pp:'',asa:'III',ngayMo:'',tt:'Đang điều trị',hen:day(-1),ghi:'Nhịn ăn, truyền dịch, giảm đau.',nhat:[],ph:[]}];
+const seedData=()=>[
+{id:1,ten:'Nguyễn Văn A (mẫu)',mayte:'MYT-0001',sdt:'0900000001',tuoi:58,gioi:'Nam',cd:'Viêm ruột thừa cấp',hd:'Phẫu thuật',pp:'Cắt ruột thừa nội soi',asa:'II',ngayVao:day(-3),ngayMo:day(-2),tt:'Đang điều trị',hen:day(7),ngayRa:'',ghi:'Tăng huyết áp. Không dị ứng thuốc.',nhat:[{ng:day(-1),t:'Tỉnh, đau VAS 3, đã trung tiện.'}],ph:[]},
+{id:2,ten:'Lê Văn C (mẫu)',mayte:'MYT-0002',sdt:'0900000002',tuoi:67,gioi:'Nam',cd:'Viêm tụy cấp nhẹ do sỏi',hd:'Nội khoa',pp:'Nhịn ăn, truyền dịch, giảm đau',asa:'',ngayVao:day(-5),ngayMo:'',tt:'Đang điều trị',hen:day(-1),ngayRa:'',ghi:'',nhat:[],ph:[]},
+{id:3,ten:'Trần Thị B (mẫu)',mayte:'MYT-0003',sdt:'0900000003',tuoi:45,gioi:'Nữ',cd:'Sỏi túi mật',hd:'Phẫu thuật',pp:'Cắt túi mật nội soi',asa:'I',ngayVao:day(-16),ngayMo:day(-14),tt:'Ngoại trú',hen:day(1),ngayRa:day(-11),ghi:'',nhat:[],ph:[]},
+{id:4,ten:'Phạm Thị D (mẫu)',mayte:'MYT-0004',sdt:'0900000004',tuoi:34,gioi:'Nữ',cd:'Thoát vị bẹn phải',hd:'Phẫu thuật',pp:'Mổ mở đặt lưới',asa:'I',ngayVao:day(-41),ngayMo:day(-40),tt:'Đã ra viện',hen:'',ngayRa:day(-37),ghi:'',nhat:[],ph:[]},
+{id:5,ten:'Hoàng Văn E (mẫu)',mayte:'MYT-0005',sdt:'0900000005',tuoi:52,gioi:'Nam',cd:'Viêm dạ dày xuất huyết',hd:'Nội khoa',pp:'PPI truyền tĩnh mạch',asa:'',ngayVao:day(-9),ngayMo:'',tt:'Đã ra viện',hen:'',ngayRa:day(-4),ghi:'',nhat:[],ph:[]}];
 
 document.addEventListener('click',async e=>{
   if(e.target.id==='seed'){e.preventDefault();S=seedData();await save();return render()}
@@ -207,6 +298,11 @@ document.addEventListener('click',async e=>{
   else if(b.dataset.tel){const n=b.dataset.tel,dg=n.replace(/[^\d+]/g,''),z=dg.replace(/^\+/,''),st='display:block;text-align:center;text-decoration:none;color:inherit;margin-top:8px';
     $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">${esc(n)}</h2><div class="sub">Chọn cách liên hệ</div><a class="btn pri" style="${st};color:var(--on)" href="tel:${dg}">Gọi điện</a><a class="btn" style="${st}" href="https://zalo.me/${z}" target="_blank" rel="noopener">Nhắn Zalo</a><a class="btn" style="${st}" href="sms:${dg}">Nhắn SMS</a><button class="btn" id="cpy" data-n="${esc(n)}" style="width:100%;margin-top:8px">Sao chép số</button><button class="btn" id="cx" style="width:100%;margin-top:8px">Đóng</button>`;$('dlg').showModal();$('cx').onclick=()=>$('dlg').close()}
   else if(id==='cpy'){try{await navigator.clipboard.writeText(b.dataset.n);b.textContent='Đã sao chép'}catch(e){b.textContent='Không sao chép được'}}
+  else if(id==='stbtn'){sp={m:'week',o:0};statsDlg()}
+  else if(b.dataset.sm){sp={m:b.dataset.sm,o:0};statsDlg()}
+  else if(b.dataset.so){sp.o+=+b.dataset.so;statsDlg()}
+  else if(b.dataset.f!==undefined){flt=b.dataset.f;chips();list()}
+  else if(id==='dis'){const p=S.find(x=>x.id===sel);p.tt='Đã ra viện';p.ngayRa=today();await save();render()}
   else if(id==='add')form();
   else if(id==='edit')form(S.find(x=>x.id===sel));
   else if(id==='del'){if(confirm('Xóa bệnh nhân này và toàn bộ ảnh?')){const p=S.find(x=>x.id===sel);for(const x of p.ph||[])await tx('readwrite',s=>s.delete(x.id));S=S.filter(x=>x!==p);sel=null;mob=false;await save();render()}}
