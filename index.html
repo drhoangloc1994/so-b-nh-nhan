@@ -83,6 +83,10 @@ dialog img.big{width:100%;border-radius:10px}
 .rem{background:var(--card);border-radius:16px;padding:14px;box-shadow:var(--sh);margin-bottom:14px}
 .ri{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border-left:5px solid var(--c);background:var(--bg);border-radius:12px;padding:8px 12px;margin-top:8px}
 .ra{display:flex;gap:6px;flex-wrap:wrap}
+#f_ten{text-transform:uppercase}
+.acl{position:absolute;left:0;right:0;top:100%;z-index:5;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--sh);max-height:220px;overflow:auto;display:none}
+.acl button{display:block;width:100%;text-align:left;border:0;background:none;padding:10px 12px;cursor:pointer;color:var(--ink);font-size:14px}
+.acl button+button{border-top:1px solid var(--line)}
 
 
 </style>
@@ -180,7 +184,7 @@ let flt='';
 function chips(){$('chips').innerHTML=[['','Tất cả','']].concat(Object.keys(SC).map(k=>[k,k,SC[k]])).map(([v,t,c])=>`<button class="fc ${c} ${flt===v?'on':''}" data-f="${v}">${t}</button>`).join('')}
 function start(){
   flt='';
-  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">Ngoại khoa · dữ liệu mã hóa trong máy · v7</div></div></div><div class="hb"><button class="hbtn" id="stbtn">${ic('chart')}Thống kê</button><button class="hbtn" id="bk">${ic('down')}Sao lưu</button><button class="hbtn" id="imp1">${ic('up')}Nhập</button><button class="hbtn" id="lk">${ic('lock')}Khóa</button></div></div>
+  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">Ngoại khoa · dữ liệu mã hóa trong máy · v8</div></div></div><div class="hb"><button class="hbtn" id="stbtn">${ic('chart')}Thống kê</button><button class="hbtn" id="bk">${ic('down')}Sao lưu</button><button class="hbtn" id="imp1">${ic('up')}Nhập</button><button class="hbtn" id="lk">${ic('lock')}Khóa</button></div></div>
   <div class="stats" id="st"></div><div id="rem"></div>
   <div class="cols"><section id="ls"><div class="sw">${ic('search')}<input id="q" placeholder="Tìm tên, chẩn đoán, mã y tế, SĐT"></div><div class="fcs" id="chips"></div><button class="btn pri" id="add" style="width:100%;margin-bottom:12px;justify-content:center">${ic('plus')}Thêm bệnh nhân</button><div id="it"></div></section><section id="dt" class="hm"></section></div>`;
   $('q').oninput=list;chips();bump();render();if(remList().length)remDlg();
@@ -193,7 +197,7 @@ function render(){
 const ini=s=>(String(s).trim().split(/\s+/).slice(-2).map(w=>w[0]).join('')||'?').toUpperCase();
 function list(){
   const q=$('q').value.toLowerCase(),r=S.filter(p=>(!flt||p.tt===flt)&&(p.ten+' '+p.cd+' '+(p.mayte||'')+' '+(p.sdt||'')+' '+(p.dc||'')).toLowerCase().includes(q));
-  $('it').innerHTML=r.length?r.map(p=>{const d=pod(p),h=hs(p),cd=curDays(p);return`<button class="pt ${sc(p)} ${p.id===sel?'sel':''}" data-id="${p.id}"><div class="av">${esc(ini(p.ten))}</div><div class="pm"><b>${esc(p.ten)}</b><div class="d">${esc(p.cd)}</div>${p.mayte?`<div class="d">Mã YT: ${esc(p.mayte)}</div>`:''}<div class="tg"><span class="pill">${p.tt}</span><span class="tag">${p.hd}</span>${p.tt==='Đang điều trị'&&p.giuong?`<span class="tag cd">Giường ${esc(p.giuong)}</span>`:''}${cd!==null?`<span class="tag cd">Ngày điều trị thứ ${cd}</span>`:''}${d!==null&&d>=0&&p.tt!=='Đã ra viện'&&isPT(p)?`<span class="tag">Hậu phẫu ngày ${d}</span>`:''}${h?`<span class="tag r">${h==='late'?'Quá hẹn':'Sắp tái khám'}</span>`:''}</div></div></button>`}).join(''):`<div class="empty">${S.length?'Không có bệnh nhân phù hợp.':'Chưa có bệnh nhân. Bấm "Thêm bệnh nhân", hoặc <a href="#" id="seed">nạp bệnh nhân mẫu để thử</a>.'}</div>`;
+  $('it').innerHTML=r.length?r.map(p=>{const d=pod(p),h=hs(p),cd=curDays(p);return`<button class="pt ${sc(p)} ${p.id===sel?'sel':''}" data-id="${p.id}"><div class="av">${esc(ini(p.ten))}</div><div class="pm"><b>${esc((p.ten||'').toUpperCase())}</b><div class="d">${esc(p.cd)}</div>${p.mayte?`<div class="d">Mã YT: ${esc(p.mayte)}</div>`:''}<div class="tg"><span class="pill">${p.tt}</span><span class="tag">${p.hd}</span>${p.tt==='Đang điều trị'&&p.giuong?`<span class="tag cd">Giường ${esc(p.giuong)}</span>`:''}${cd!==null?`<span class="tag cd">Ngày điều trị thứ ${cd}</span>`:''}${d!==null&&d>=0&&p.tt!=='Đã ra viện'&&isPT(p)?`<span class="tag">Hậu phẫu ngày ${d}</span>`:''}${h?`<span class="tag r">${h==='late'?'Quá hẹn':'Sắp tái khám'}</span>`:''}</div></div></button>`}).join(''):`<div class="empty">${S.length?'Không có bệnh nhân phù hợp.':'Chưa có bệnh nhân. Bấm "Thêm bệnh nhân", hoặc <a href="#" id="seed">nạp bệnh nhân mẫu để thử</a>.'}</div>`;
   $('ls').classList.toggle('hm',mob);
 }
 const isPT=p=>p.hd!=='Nội khoa',vao=p=>p.ngayVao||p.ngayMo||'';
@@ -210,7 +214,7 @@ async function detail(){
   const tiles=T('activity','Chẩn đoán',esc(p.cd))+T('clip','Hướng điều trị',p.hd)+T('clip',pt?'Phương pháp phẫu thuật':'Phương pháp điều trị',esc(p.pp)||'—')+T('cal','Ngày vào viện',fmt(p.ngayVao))+(pt?T('cal','Ngày mổ',fmt(p.ngayMo)+(d!==null&&d>=0?` (hậu phẫu ngày ${d})`:'')):'')+(p.ngayRa?T('cal','Ngày ra viện',fmt(p.ngayRa)):'')+(p.bhyt?T('clip','Số thẻ BHYT',esc(p.bhyt)):'')+T('cal','Hẹn tái khám',fmt(p.hen))+(p.dc?`<div style="grid-column:1/-1"><span>${ic('home')}Địa chỉ</span>${esc(p.dc)}</div>`:'')+(p.tt==='Đang điều trị'?T('home','Số giường',esc(p.giuong)||'—'):'');
   const cdn=p.tt!=='Đang điều trị'?'':cd!==null?`<div class="cdn"><b>${cd}</b><span>ngày điều trị<br>tự cập nhật mỗi ngày</span></div>`:'<div class="warn">Chưa có ngày vào viện. Bấm "Sửa thông tin" để nhập, app sẽ tự đếm số ngày điều trị.</div>';
   el.innerHTML=`<button class="btn" id="back" style="margin-bottom:10px;${innerWidth>800?'display:none':''}">${ic('back')}Danh sách</button><div class="panel ${sc(p)}"><div class="pb"></div>
-  <div class="ph0"><div class="av big">${esc(ini(p.ten))}</div><div><h2>${esc(p.ten)}</h2><div class="sub">${age(p)||'?'} tuổi${p.namSinh?' (sinh '+p.namSinh+')':''} · ${p.gioi}${pt&&p.asa?' · ASA '+esc(p.asa):''}</div><div><span class="pill" style="margin:6px 6px 0 0">${p.tt}</span>${p.mayte?`<span class="chip">${ic('clip')}Mã YT: ${esc(p.mayte)}</span>`:''}${p.sdt?`<button class="chip" data-tel="${esc(p.sdt)}" style="border:0;cursor:pointer">${ic('phone')}${esc(p.sdt)}</button>`:''}</div></div></div>
+  <div class="ph0"><div class="av big">${esc(ini(p.ten))}</div><div><h2>${esc((p.ten||'').toUpperCase())}</h2><div class="sub">${age(p)||'?'} tuổi${p.namSinh?' (sinh '+p.namSinh+')':''} · ${p.gioi}${pt&&p.asa?' · ASA '+esc(p.asa):''}</div><div><span class="pill" style="margin:6px 6px 0 0">${p.tt}</span>${p.mayte?`<span class="chip">${ic('clip')}Mã YT: ${esc(p.mayte)}</span>`:''}${p.sdt?`<button class="chip" data-tel="${esc(p.sdt)}" style="border:0;cursor:pointer">${ic('phone')}${esc(p.sdt)}</button>`:''}</div></div></div>
   ${cdn}<div class="grid">${tiles}</div>
   <h3>${ic('clip')}Ghi chú chung</h3><div>${esc(p.ghi)||'<span class="sub">Chưa có.</span>'}</div>
   ${pt?`<h3>${ic('cam')}Ảnh vết mổ</h3><div class="row" style="margin-top:0">${pair('vetmo')}</div>${lib}<div class="ph">${vm.map(th).join('')}</div>
@@ -251,7 +255,7 @@ function parseInfo(raw){
   return r}
 function fillPaste(){
   const r=parseInfo($('f_paste').value),map={ten:'f_ten',mayte:'f_myt',sdt:'f_sdt',namSinh:'f_ns',gioi:'f_gioi',dc:'f_dc',cd:'f_cd'},nm={ten:'Họ tên',mayte:'Mã y tế',sdt:'SĐT',namSinh:'Năm sinh',gioi:'Giới',dc:'Địa chỉ',cd:'Chẩn đoán'},got=[],miss=[];
-  for(const k in map){if(r[k]){$(map[k]).value=r[k];got.push(nm[k])}else if(k!=='cd'&&k!=='gioi')miss.push(nm[k])}
+  for(const k in map){if(r[k]){$(map[k]).value=k==='ten'?r[k].toUpperCase():r[k];got.push(nm[k])}else if(k!=='cd'&&k!=='gioi')miss.push(nm[k])}
   $('pz_msg').textContent=got.length?`Đã điền: ${got.join(', ')}.`+(miss.length?` Chưa thấy: ${miss.join(', ')}.`:'')+' Hãy kiểm tra lại trước khi lưu.':'Không nhận ra thông tin nào. Chữ dán vào cần có nhãn như "Họ tên:", "Ngày sinh:", "Địa chỉ:".'}
 /* ---- quét chữ bằng camera (chạy trong máy, ảnh không được lưu) ---- */
 let tsP;
@@ -300,20 +304,47 @@ async function qrFromFile(file){
   return null}
 function qrDone(t){
   const r=parseQR(t),map={ten:'f_ten',namSinh:'f_ns',gioi:'f_gioi',dc:'f_dc',sdt:'f_sdt',bhyt:'f_bh'},nm={ten:'Họ tên',namSinh:'Năm sinh',gioi:'Giới',dc:'Địa chỉ',sdt:'SĐT',bhyt:'Số thẻ BHYT'},got=[];
-  for(const k in map)if(r[k]&&$(map[k])){$(map[k]).value=r[k];got.push(nm[k])}
+  for(const k in map)if(r[k]&&$(map[k])){$(map[k]).value=k==='ten'?r[k].toUpperCase():r[k];got.push(nm[k])}
   const m=$('pz_msg0');if(m)m.textContent=got.length?`Đã quét ${r.loai}: điền ${got.join(', ')}. Hãy kiểm tra lại trước khi lưu.`:'Quét được mã nhưng chưa nhận ra định dạng. Xem nội dung quét được bên dưới.';
   const d=$('qraw');if(d)d.textContent=t.replace(/\|/g,' | ');
 }
+/* ---- gợi ý xã, phường theo đơn vị hành chính sau sáp nhập 2025 ---- */
+let ADR=null,adrP=null,acPre='',acList=[];
+const adrShort=n=>n.replace(/^(Tỉnh|Thành phố)\s+/,'');
+const adrFromT=t=>({t,h:nd(t).toLowerCase(),c:nd(t.split(',')[0].replace(/^(Xã|Phường|Đặc khu|Thị trấn)\s+/i,'')).toLowerCase()});
+function loadAddr(){
+  if(ADR)return Promise.resolve(ADR);
+  if(adrP)return adrP;
+  const c=LG('sobn_addr');if(c){try{const a=JSON.parse(c).map(adrFromT);if(a.length>3000){ADR=a;return Promise.resolve(ADR)}}catch(e){}}
+  adrP=(async()=>{
+    for(const u of['diachi.json','https://provinces.open-api.vn/api/v2/?depth=2','https://provinces.open-api.vn/api/v2/p/?depth=2']){
+      try{const r=await fetch(u,{cache:'no-store'});if(!r.ok)continue;const j=await r.json(),t=[];
+        if(Array.isArray(j)&&typeof j[0]==='string')t.push(...j);else if(Array.isArray(j))j.forEach(p=>(p.wards||[]).forEach(w=>t.push(w.name+', '+adrShort(p.name||''))));
+        if(t.length>3000){ADR=t.map(adrFromT);try{localStorage.setItem('sobn_addr',JSON.stringify(t))}catch(e){}return ADR}}catch(e){}}
+    adrP=null;throw new Error('không tải được danh sách xã, phường')})();
+  return adrP}
+function adrSearch(q){
+  const s=nd(q).toLowerCase().trim();if(s.length<2||!ADR)return[];
+  const tk=s.split(/\s+/),r=[];
+  for(const x of ADR){let sc=-1;if(x.c.startsWith(s))sc=0;else if(x.c.includes(s))sc=1;else if(tk.every(k=>x.h.includes(k)))sc=2;if(sc>=0)r.push([sc,x])}
+  return r.sort((a,b)=>a[0]-b[0]||a[1].t.length-b[1].t.length).slice(0,8).map(a=>a[1].t)}
+async function acShow(){
+  const inp=$('f_dc'),box=$('acl');if(!inp||!box)return;
+  const v=inp.value,i=v.lastIndexOf(','),pre=i>=0?v.slice(0,i).trim():'',q=i>=0?v.slice(i+1):v;
+  try{await loadAddr()}catch(e){box.style.display='none';const m=$('acm');if(m)m.textContent='Chưa tải được danh sách xã, phường (cần mạng lần đầu). Bác sĩ vẫn nhập tay được.';return}
+  const m=$('acm');if(m)m.textContent='';
+  acPre=pre;acList=adrSearch(q);
+  box.innerHTML=acList.map((t,k)=>`<button type="button" data-ac="${k}">${esc(t)}</button>`).join('');box.style.display=acList.length?'block':'none'}
 /* ---- nhắc tái khám ---- */
 const remList=()=>S.filter(p=>p.hen&&diff(today(),p.hen)<=1).sort((a,b)=>a.hen.localeCompare(b.hen));
 const remWhen=p=>{const d=diff(today(),p.hen);return d<0?`Quá hẹn ${-d} ngày`:d===0?'Hôm nay':'Ngày mai'};
 function remHTML(){
   const r=remList();if(!r.length)return'';
-  return`<div class="rem"><h3 style="margin:0 0 4px">${ic('cal')}Nhắc tái khám (${r.length})</h3>${r.map(p=>`<div class="ri ${diff(today(),p.hen)<0?'al':'ng'}"><div><b>${esc(p.ten)}</b><div class="d">Hẹn ${fmt(p.hen)} · ${remWhen(p)}${p.mayte?' · Mã YT: '+esc(p.mayte):''}</div></div><div class="ra"><button class="btn ok" data-kham="${p.id}">${ic('check')}Đã khám</button>${p.sdt?`<button class="btn" data-tel="${esc(p.sdt)}">${ic('phone')}Liên hệ</button>`:''}</div></div>`).join('')}</div>`}
+  return`<div class="rem"><h3 style="margin:0 0 4px">${ic('cal')}Nhắc tái khám (${r.length})</h3>${r.map(p=>`<div class="ri ${diff(today(),p.hen)<0?'al':'ng'}"><div><b>${esc((p.ten||'').toUpperCase())}</b><div class="d">Hẹn ${fmt(p.hen)} · ${remWhen(p)}${p.mayte?' · Mã YT: '+esc(p.mayte):''}</div></div><div class="ra"><button class="btn ok" data-kham="${p.id}">${ic('check')}Đã khám</button>${p.sdt?`<button class="btn" data-tel="${esc(p.sdt)}">${ic('phone')}Liên hệ</button>`:''}</div></div>`).join('')}</div>`}
 function remDlg(){$('dlg').innerHTML=remHTML()+'<div class="row" style="justify-content:flex-end"><button class="btn" id="cx">Đóng</button></div>';sd();$('cx').onclick=()=>$('dlg').close()}
 function khamDlg(id){
   const p=S.find(x=>x.id===id);if(!p)return;
-  $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">Đã tái khám: ${esc(p.ten)}</h2><div class="sub">Ghi nhận đã khám hôm nay. Nếu có hẹn lần sau, chọn ngày:</div><label>Ngày hẹn tiếp theo (không bắt buộc)<input type="date" id="kn"></label><div class="row" style="justify-content:flex-end"><button class="btn" id="cx">Hủy</button><button class="btn pri" data-kok="${id}">Lưu</button></div>`;
+  $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">Đã tái khám: ${esc((p.ten||'').toUpperCase())}</h2><div class="sub">Ghi nhận đã khám hôm nay. Nếu có hẹn lần sau, chọn ngày:</div><label>Ngày hẹn tiếp theo (không bắt buộc)<input type="date" id="kn"></label><div class="row" style="justify-content:flex-end"><button class="btn" id="cx">Hủy</button><button class="btn pri" data-kok="${id}">Lưu</button></div>`;
   sd();$('cx').onclick=()=>$('dlg').close()}
 function bedDlg(){
   const p=S.find(x=>x.id===sel);if(!p)return;
@@ -329,7 +360,7 @@ function form(p){
   <label>Họ tên (hoặc tên viết tắt)<input id="f_ten" value="${esc(v.ten)}"></label>
   <div class="two"><label>Mã y tế (mã hồ sơ, bệnh án)<input id="f_myt" value="${esc(v.mayte||'')}"></label><label>Số điện thoại<input id="f_sdt" type="tel" inputmode="tel" value="${esc(v.sdt||'')}"></label></div>
   <div class="two"><label>Năm sinh (tuổi tự tính)<input id="f_ns" type="number" inputmode="numeric" placeholder="VD: 1965" value="${esc(ns)}"></label><label>Giới<select id="f_gioi">${o(['Nam','Nữ'],v.gioi)}</select></label></div>
-  <label>Địa chỉ<input id="f_dc" value="${esc(v.dc||'')}"></label>
+  <label style="position:relative">Địa chỉ (gõ vài chữ của xã, phường để chọn)<input id="f_dc" autocomplete="off" value="${esc(v.dc||'')}"><div class="acl" id="acl"></div></label><div class="sub" id="acm"></div>
   <label>Số thẻ BHYT<input id="f_bh" value="${esc(v.bhyt||'')}"></label>
   <label>Chẩn đoán<input id="f_cd" value="${esc(v.cd)}"></label>
   <div class="two"><label>Hướng điều trị<select id="f_hd">${o(['Phẫu thuật','Nội khoa'],v.hd)}</select></label><label>Ngày vào viện<input id="f_nv" type="date" value="${v.ngayVao||''}"></label></div>
@@ -342,10 +373,11 @@ function form(p){
   <div class="row" style="justify-content:flex-end"><button class="btn" id="cx">Hủy</button><button class="btn pri" id="ok">Lưu</button></div>`;
   const sync=()=>{const pt=$('f_hd').value!=='Nội khoa',out=$('f_tt').value!=='Đang điều trị';document.querySelectorAll('#dlg .sg').forEach(e=>e.style.display=pt?'':'none');$('f_ppl').textContent=pt?'Phương pháp phẫu thuật':'Phương pháp điều trị';$('f_rl').style.display=out?'':'none';$('f_bl').style.display=out?'none':'';if(out&&!$('f_nr').value)$('f_nr').value=today()};
   $('f_hd').onchange=$('f_tt').onchange=sync;sync();
+  $('f_dc').oninput=acShow;$('f_ten').onblur=()=>{$('f_ten').value=$('f_ten').value.toUpperCase()};loadAddr().catch(()=>{});
   sd();$('cx').onclick=()=>$('dlg').close();
   $('ok').onclick=async()=>{const pt=$('f_hd').value!=='Nội khoa',tt=$('f_tt').value,nsv=+$('f_ns').value||0;
     if(nsv&&(nsv<1900||nsv>yr))return alert('Năm sinh không hợp lệ.');
-    const n={ten:$('f_ten').value.trim(),mayte:$('f_myt').value.trim(),sdt:$('f_sdt').value.trim(),namSinh:nsv,dc:$('f_dc').value.trim(),bhyt:$('f_bh').value.trim(),gioi:$('f_gioi').value,cd:$('f_cd').value.trim(),hd:$('f_hd').value,pp:$('f_pp').value.trim(),asa:pt?$('f_asa').value:'',ngayVao:$('f_nv').value,ngayMo:pt?$('f_nm').value:'',hen:$('f_hen').value,tt,giuong:tt==='Đang điều trị'?$('f_gi').value.trim():'',ngayRa:tt!=='Đang điều trị'?($('f_nr').value||today()):'',ghi:$('f_ghi').value.trim()};
+    const n={ten:$('f_ten').value.trim().toUpperCase(),mayte:$('f_myt').value.trim(),sdt:$('f_sdt').value.trim(),namSinh:nsv,dc:$('f_dc').value.trim(),bhyt:$('f_bh').value.trim(),gioi:$('f_gioi').value,cd:$('f_cd').value.trim(),hd:$('f_hd').value,pp:$('f_pp').value.trim(),asa:pt?$('f_asa').value:'',ngayVao:$('f_nv').value,ngayMo:pt?$('f_nm').value:'',hen:$('f_hen').value,tt,giuong:tt==='Đang điều trị'?$('f_gi').value.trim():'',ngayRa:tt!=='Đang điều trị'?($('f_nr').value||today()):'',ghi:$('f_ghi').value.trim()};
     if(!n.ten||!n.cd)return alert('Cần nhập họ tên (hoặc tên viết tắt) và chẩn đoán.');
     if(p)Object.assign(p,n);else{const x={id:Date.now(),nhat:[],ph:[],gl:[],...n};S.unshift(x);sel=x.id}
     await save();$('dlg').close();mob=true;render()};
@@ -405,6 +437,7 @@ const seedData=()=>[
 
 document.addEventListener('click',async e=>{
   if(e.target.id==='seed'){e.preventDefault();S=seedData();await save();return render()}
+  if(!e.target.closest('#acl')&&e.target.id!=='f_dc'){const a=$('acl');if(a)a.style.display='none'}
   const b=e.target.closest('button');if(!b)return;const id=b.id;
   if(b.classList.contains('pt')){sel=+b.dataset.id;mob=true;render()}
   else if(b.dataset.ph){const i=b.querySelector('img');$('dlg').innerHTML=`<img class="big" src="${i.src}" alt="Ảnh vết mổ"><div class="row" style="justify-content:space-between"><button class="btn del" id="dph" data-id="${b.dataset.ph}">Xóa ảnh</button><button class="btn" id="cx">Đóng</button></div>`;sd();$('cx').onclick=()=>$('dlg').close()}
@@ -415,6 +448,7 @@ document.addEventListener('click',async e=>{
   else if(id==='cpy'){try{await navigator.clipboard.writeText(b.dataset.n);b.textContent='Đã sao chép'}catch(e){b.textContent='Không sao chép được'}}
   else if(id==='ocr1'){busy=true;$('ocr').click();setTimeout(()=>busy=false,6e4)}
   else if(id==='ocr2'){busy=true;$('ocrp').click();setTimeout(()=>busy=false,6e4)}
+  else if(b.dataset.ac!==undefined){$('f_dc').value=(acPre?acPre+', ':'')+acList[+b.dataset.ac];$('acl').style.display='none'}
   else if(id==='qr1')qrScan();
   else if(id==='qph')$('qrf').click();
   else if(id==='pz')fillPaste();
