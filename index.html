@@ -180,7 +180,7 @@ let flt='';
 function chips(){$('chips').innerHTML=[['','Tất cả','']].concat(Object.keys(SC).map(k=>[k,k,SC[k]])).map(([v,t,c])=>`<button class="fc ${c} ${flt===v?'on':''}" data-f="${v}">${t}</button>`).join('')}
 function start(){
   flt='';
-  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">Ngoại khoa · dữ liệu mã hóa trong máy · v6</div></div></div><div class="hb"><button class="hbtn" id="stbtn">${ic('chart')}Thống kê</button><button class="hbtn" id="bk">${ic('down')}Sao lưu</button><button class="hbtn" id="imp1">${ic('up')}Nhập</button><button class="hbtn" id="lk">${ic('lock')}Khóa</button></div></div>
+  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">Ngoại khoa · dữ liệu mã hóa trong máy · v7</div></div></div><div class="hb"><button class="hbtn" id="stbtn">${ic('chart')}Thống kê</button><button class="hbtn" id="bk">${ic('down')}Sao lưu</button><button class="hbtn" id="imp1">${ic('up')}Nhập</button><button class="hbtn" id="lk">${ic('lock')}Khóa</button></div></div>
   <div class="stats" id="st"></div><div id="rem"></div>
   <div class="cols"><section id="ls"><div class="sw">${ic('search')}<input id="q" placeholder="Tìm tên, chẩn đoán, mã y tế, SĐT"></div><div class="fcs" id="chips"></div><button class="btn pri" id="add" style="width:100%;margin-bottom:12px;justify-content:center">${ic('plus')}Thêm bệnh nhân</button><div id="it"></div></section><section id="dt" class="hm"></section></div>`;
   $('q').oninput=list;chips();bump();render();if(remList().length)remDlg();
@@ -255,7 +255,7 @@ function fillPaste(){
   $('pz_msg').textContent=got.length?`Đã điền: ${got.join(', ')}.`+(miss.length?` Chưa thấy: ${miss.join(', ')}.`:'')+' Hãy kiểm tra lại trước khi lưu.':'Không nhận ra thông tin nào. Chữ dán vào cần có nhãn như "Họ tên:", "Ngày sinh:", "Địa chỉ:".'}
 /* ---- quét chữ bằng camera (chạy trong máy, ảnh không được lưu) ---- */
 let tsP;
-const loadTess=()=>tsP||(tsP=new Promise((ok,no)=>{if(window.Tesseract)return ok();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';s.onload=ok;s.onerror=()=>{tsP=null;no(new Error('không tải được bộ nhận dạng chữ, hãy kiểm tra mạng'))};document.head.appendChild(s)}));
+const loadTess=()=>tsP||(tsP=window.Tesseract?Promise.resolve():loadJS(['https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js','https://unpkg.com/tesseract.js@5.1.1/dist/tesseract.min.js'],'Tesseract').catch(e=>{tsP=null;throw e}));
 async function runOcr(file){
   const msg=t=>{const e=$('pz_msg');if(e)e.textContent=t};
   try{msg('Đang tải bộ nhận dạng chữ (lần đầu hơi lâu)...');await loadTess();
@@ -281,14 +281,15 @@ function parseQR(raw){
     else if(!r.dc&&(bad.test(n)||x.includes(','))&&x.length>12)r.dc=x});
   r.loai=r.bhyt?'thẻ BHYT':'mã QR';return r}
 let qrP,qrStream=null,qrRun=false;
-const loadQR=()=>qrP||(qrP=new Promise((ok,no)=>{if(window.jsQR)return ok();const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js';s.onload=ok;s.onerror=()=>{qrP=null;no(new Error('không tải được bộ đọc mã QR, hãy kiểm tra mạng'))};document.head.appendChild(s)}));
+const loadJS=(urls,name)=>new Promise((ok,no)=>{let i=0;const nx=()=>{if(i>=urls.length)return no(new Error('không tải được từ '+urls.length+' nguồn'));const s=document.createElement('script');s.src=urls[i++];s.onload=()=>window[name]?ok():(s.remove(),nx());s.onerror=()=>{s.remove();nx()};document.head.appendChild(s)};nx()});
+const loadQR=()=>qrP||(qrP=window.jsQR?Promise.resolve():loadJS(['jsQR.js','https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js','https://unpkg.com/jsqr@1.4.0/dist/jsQR.js','https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js'],'jsQR').catch(e=>{qrP=null;throw e}));
 const qrText=r=>{if(r.binaryData){const t=new TextDecoder('utf-8').decode(new Uint8Array(r.binaryData));if(!t.includes('\uFFFD'))return t}return r.data};
 function qrStop(){qrRun=false;busy=false;if(qrStream){qrStream.getTracks().forEach(t=>t.stop());qrStream=null}}
 async function qrScan(){
   const dq=$('dq');busy=true;
   dq.innerHTML=`<h2 style="margin:0;font-size:18px">Quét mã QR</h2><div class="sub" id="qm">Đưa mã QR trên căn cước hoặc thẻ BHYT vào khung hình, giữ yên và đủ sáng.</div><video id="qv" playsinline muted style="width:100%;border-radius:12px;margin-top:8px;background:#000;max-height:50vh"></video><div class="row"><button class="btn" id="qx">Đóng</button><button class="btn" id="qph">${ic('cam')}Chụp ảnh mã QR</button></div>`;
   dq.showModal();$('qx').onclick=()=>{qrStop();dq.close()};dq.onclose=qrStop;
-  try{await loadQR();qrStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280}}});
+  try{try{await loadQR()}catch(e){const m=$('qm');if(m)m.textContent='Không tải được bộ đọc mã QR. Kiểm tra mạng (thử Wi-Fi khác hoặc 4G, tắt VPN hoặc trình chặn quảng cáo), rồi bấm Đóng và quét lại.';return}qrStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280}}});
     const v=$('qv');v.srcObject=qrStream;await v.play();qrRun=true;const c=document.createElement('canvas'),x=c.getContext('2d',{willReadFrequently:true});
     const tick=()=>{if(!qrRun)return;if(v.videoWidth){c.width=v.videoWidth;c.height=v.videoHeight;x.drawImage(v,0,0);const r=jsQR(x.getImageData(0,0,c.width,c.height).data,c.width,c.height,{inversionAttempts:'dontInvert'});if(r&&r.data){const t=qrText(r);qrStop();dq.close();qrDone(t);return}}setTimeout(tick,150)};tick();
   }catch(e){const m=$('qm');if(m)m.textContent='Không mở được camera ('+e.message+'). Bấm "Chụp ảnh mã QR" để dùng camera của máy.'}
