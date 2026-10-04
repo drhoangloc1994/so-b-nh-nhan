@@ -92,6 +92,8 @@ dialog img.big{width:100%;border-radius:10px}
 <dialog id="dlg"></dialog>
 <input type="file" id="cam" accept="image/*" capture="environment" hidden>
 <input type="file" id="pick" accept="image/*" hidden>
+<input type="file" id="ocr" accept="image/*" capture="environment" hidden>
+<input type="file" id="ocrp" accept="image/*" hidden>
 <input type="file" id="imp" accept=".sobn,application/json" hidden>
 <script>
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -176,7 +178,7 @@ let flt='';
 function chips(){$('chips').innerHTML=[['','Tất cả','']].concat(Object.keys(SC).map(k=>[k,k,SC[k]])).map(([v,t,c])=>`<button class="fc ${c} ${flt===v?'on':''}" data-f="${v}">${t}</button>`).join('')}
 function start(){
   flt='';
-  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">Ngoại khoa · dữ liệu mã hóa trong máy · v4</div></div></div><div class="hb"><button class="hbtn" id="stbtn">${ic('chart')}Thống kê</button><button class="hbtn" id="bk">${ic('down')}Sao lưu</button><button class="hbtn" id="imp1">${ic('up')}Nhập</button><button class="hbtn" id="lk">${ic('lock')}Khóa</button></div></div>
+  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">Ngoại khoa · dữ liệu mã hóa trong máy · v5</div></div></div><div class="hb"><button class="hbtn" id="stbtn">${ic('chart')}Thống kê</button><button class="hbtn" id="bk">${ic('down')}Sao lưu</button><button class="hbtn" id="imp1">${ic('up')}Nhập</button><button class="hbtn" id="lk">${ic('lock')}Khóa</button></div></div>
   <div class="stats" id="st"></div><div id="rem"></div>
   <div class="cols"><section id="ls"><div class="sw">${ic('search')}<input id="q" placeholder="Tìm tên, chẩn đoán, mã y tế, SĐT"></div><div class="fcs" id="chips"></div><button class="btn pri" id="add" style="width:100%;margin-bottom:12px;justify-content:center">${ic('plus')}Thêm bệnh nhân</button><div id="it"></div></section><section id="dt" class="hm"></section></div>`;
   $('q').oninput=list;chips();bump();render();if(remList().length)remDlg();
@@ -249,6 +251,17 @@ function fillPaste(){
   const r=parseInfo($('f_paste').value),map={ten:'f_ten',mayte:'f_myt',sdt:'f_sdt',namSinh:'f_ns',gioi:'f_gioi',dc:'f_dc',cd:'f_cd'},nm={ten:'Họ tên',mayte:'Mã y tế',sdt:'SĐT',namSinh:'Năm sinh',gioi:'Giới',dc:'Địa chỉ',cd:'Chẩn đoán'},got=[],miss=[];
   for(const k in map){if(r[k]){$(map[k]).value=r[k];got.push(nm[k])}else if(k!=='cd'&&k!=='gioi')miss.push(nm[k])}
   $('pz_msg').textContent=got.length?`Đã điền: ${got.join(', ')}.`+(miss.length?` Chưa thấy: ${miss.join(', ')}.`:'')+' Hãy kiểm tra lại trước khi lưu.':'Không nhận ra thông tin nào. Chữ dán vào cần có nhãn như "Họ tên:", "Ngày sinh:", "Địa chỉ:".'}
+/* ---- quét chữ bằng camera (chạy trong máy, ảnh không được lưu) ---- */
+let tsP;
+const loadTess=()=>tsP||(tsP=new Promise((ok,no)=>{if(window.Tesseract)return ok();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';s.onload=ok;s.onerror=()=>{tsP=null;no(new Error('không tải được bộ nhận dạng chữ, hãy kiểm tra mạng'))};document.head.appendChild(s)}));
+async function runOcr(file){
+  const msg=t=>{const e=$('pz_msg');if(e)e.textContent=t};
+  try{msg('Đang tải bộ nhận dạng chữ (lần đầu hơi lâu)...');await loadTess();
+    const bm=await createImageBitmap(file),k=Math.min(1,2200/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=bm.width*k;c.height=bm.height*k;c.getContext('2d').drawImage(bm,0,0,c.width,c.height);
+    const r=await Tesseract.recognize(c,'vie',{logger:m=>{if(m.status==='recognizing text')msg('Đang đọc chữ: '+Math.round(m.progress*100)+'%')}});
+    const ta=$('f_paste');ta.value=(ta.value?ta.value+'\n':'')+r.data.text;fillPaste();
+  }catch(e){msg('Quét không được: '+e.message)}
+}
 /* ---- nhắc tái khám ---- */
 const remList=()=>S.filter(p=>p.hen&&diff(today(),p.hen)<=1).sort((a,b)=>a.hen.localeCompare(b.hen));
 const remWhen=p=>{const d=diff(today(),p.hen);return d<0?`Quá hẹn ${-d} ngày`:d===0?'Hôm nay':'Ngày mai'};
@@ -269,7 +282,7 @@ function form(p){
   const yr=new Date().getFullYear(),v=p||{ten:'',mayte:'',sdt:'',namSinh:'',dc:'',gioi:'Nam',cd:'',hd:'Phẫu thuật',pp:'',asa:'II',ngayVao:today(),ngayMo:'',tt:'Đang điều trị',giuong:'',hen:'',ngayRa:'',ghi:''},ns=v.namSinh||(v.tuoi?yr-v.tuoi:''),o=(a,x)=>a.map(i=>`<option ${i===x?'selected':''}>${i}</option>`).join('');
   $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">${p?'Sửa bệnh nhân':'Thêm bệnh nhân'}</h2>
   <label>Dán nhanh thông tin (quét camera hoặc chép từ phần mềm)<textarea id="f_paste" rows="3" placeholder="Họ tên: ...&#10;Ngày sinh: ...&#10;Địa chỉ: ...&#10;Điện thoại: ...&#10;Mã y tế: ..."></textarea></label>
-  <div class="row" style="margin-top:6px"><button class="btn" id="pz">Tách thông tin</button><span class="sub" id="pz_msg">Trên iPhone: bấm giữ trong ô trên, chọn Quét văn bản rồi hướng camera vào màn hình.</span></div>
+  <div class="row" style="margin-top:6px"><button class="btn pri" id="ocr1">${ic('cam')}Quét bằng camera</button><button class="btn" id="ocr2">${ic('img')}Chọn ảnh</button><button class="btn" id="pz">Tách thông tin</button></div><div class="sub" id="pz_msg" style="margin-top:4px">Hướng camera vào phần thông tin trên màn hình. Lần đầu cần có mạng để tải bộ nhận dạng chữ.</div>
   <label>Họ tên (hoặc tên viết tắt)<input id="f_ten" value="${esc(v.ten)}"></label>
   <div class="two"><label>Mã y tế (mã hồ sơ, bệnh án)<input id="f_myt" value="${esc(v.mayte||'')}"></label><label>Số điện thoại<input id="f_sdt" type="tel" inputmode="tel" value="${esc(v.sdt||'')}"></label></div>
   <div class="two"><label>Năm sinh (tuổi tự tính)<input id="f_ns" type="number" inputmode="numeric" placeholder="VD: 1965" value="${esc(ns)}"></label><label>Giới<select id="f_gioi">${o(['Nam','Nữ'],v.gioi)}</select></label></div>
@@ -356,6 +369,8 @@ document.addEventListener('click',async e=>{
   else if(b.dataset.tel){const n=b.dataset.tel,dg=n.replace(/[^\d+]/g,''),z=dg.replace(/^\+/,''),st='display:block;text-align:center;text-decoration:none;color:inherit;margin-top:8px';
     $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">${esc(n)}</h2><div class="sub">Chọn cách liên hệ</div><a class="btn pri" style="${st};color:var(--on)" href="tel:${dg}">Gọi điện</a><a class="btn" style="${st}" href="https://zalo.me/${z}" target="_blank" rel="noopener">Nhắn Zalo</a><a class="btn" style="${st}" href="sms:${dg}">Nhắn SMS</a><button class="btn" id="cpy" data-n="${esc(n)}" style="width:100%;margin-top:8px">Sao chép số</button><button class="btn" id="cx" style="width:100%;margin-top:8px">Đóng</button>`;sd();$('cx').onclick=()=>$('dlg').close()}
   else if(id==='cpy'){try{await navigator.clipboard.writeText(b.dataset.n);b.textContent='Đã sao chép'}catch(e){b.textContent='Không sao chép được'}}
+  else if(id==='ocr1'){busy=true;$('ocr').click();setTimeout(()=>busy=false,6e4)}
+  else if(id==='ocr2'){busy=true;$('ocrp').click();setTimeout(()=>busy=false,6e4)}
   else if(id==='pz')fillPaste();
   else if(b.dataset.kham)khamDlg(+b.dataset.kham);
   else if(b.dataset.kok){const p=S.find(x=>x.id===+b.dataset.kok);(p.nhat=p.nhat||[]).push({ng:today(),t:'Đã tái khám (hẹn '+fmt(p.hen)+')'});p.hen=$('kn').value||'';await save();$('dlg').close();render()}
@@ -378,6 +393,7 @@ document.addEventListener('click',async e=>{
 });
 $('cam').onchange=$('pick').onchange=async e=>{busy=false;await addPhoto(e.target.files[0]);e.target.value=''};
 $('imp').onchange=async e=>{busy=false;if(e.target.files[0])await restore(e.target.files[0]);e.target.value=''};
+$('ocr').onchange=$('ocrp').onchange=async e=>{busy=false;const fl=e.target.files[0];e.target.value='';if(fl)await runOcr(fl)};
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 lockScreen();
 </script>
