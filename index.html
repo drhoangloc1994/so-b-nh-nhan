@@ -90,6 +90,8 @@ dialog img.big{width:100%;border-radius:10px}
 <body>
 <div class="wrap" id="app"></div>
 <dialog id="dlg"></dialog>
+<dialog id="dq"></dialog>
+<input type="file" id="qrf" accept="image/*" capture="environment" hidden>
 <input type="file" id="cam" accept="image/*" capture="environment" hidden>
 <input type="file" id="pick" accept="image/*" hidden>
 <input type="file" id="ocr" accept="image/*" capture="environment" hidden>
@@ -118,7 +120,7 @@ const tx=async(m,f)=>{const d=await idb();return new Promise((ok,no)=>{const t=d
 
 /* ---- màn hình khóa ---- */
 function lockScreen(note){
-  K=null;S=[];sel=null;mob=false;clearTimeout(idle);$('dlg').open&&$('dlg').close();
+  K=null;S=[];sel=null;mob=false;clearTimeout(idle);$('dlg').open&&$('dlg').close();if($('dq').open){qrStop();$('dq').close()}
   const first=!LG('sobn_meta');
   $('app').innerHTML=`<form class="lock" id="lf"><div class="lg">${LOGO}</div><h1>Sổ bệnh nhân</h1><p class="sub">${first?'Tạo mật khẩu để bảo vệ dữ liệu':'Nhập mật khẩu để mở'}</p>
   <label>Mật khẩu<input id="pw" type="password" autocomplete="${first?'new-password':'current-password'}"></label>
@@ -178,7 +180,7 @@ let flt='';
 function chips(){$('chips').innerHTML=[['','Tất cả','']].concat(Object.keys(SC).map(k=>[k,k,SC[k]])).map(([v,t,c])=>`<button class="fc ${c} ${flt===v?'on':''}" data-f="${v}">${t}</button>`).join('')}
 function start(){
   flt='';
-  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">Ngoại khoa · dữ liệu mã hóa trong máy · v5</div></div></div><div class="hb"><button class="hbtn" id="stbtn">${ic('chart')}Thống kê</button><button class="hbtn" id="bk">${ic('down')}Sao lưu</button><button class="hbtn" id="imp1">${ic('up')}Nhập</button><button class="hbtn" id="lk">${ic('lock')}Khóa</button></div></div>
+  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">Ngoại khoa · dữ liệu mã hóa trong máy · v6</div></div></div><div class="hb"><button class="hbtn" id="stbtn">${ic('chart')}Thống kê</button><button class="hbtn" id="bk">${ic('down')}Sao lưu</button><button class="hbtn" id="imp1">${ic('up')}Nhập</button><button class="hbtn" id="lk">${ic('lock')}Khóa</button></div></div>
   <div class="stats" id="st"></div><div id="rem"></div>
   <div class="cols"><section id="ls"><div class="sw">${ic('search')}<input id="q" placeholder="Tìm tên, chẩn đoán, mã y tế, SĐT"></div><div class="fcs" id="chips"></div><button class="btn pri" id="add" style="width:100%;margin-bottom:12px;justify-content:center">${ic('plus')}Thêm bệnh nhân</button><div id="it"></div></section><section id="dt" class="hm"></section></div>`;
   $('q').oninput=list;chips();bump();render();if(remList().length)remDlg();
@@ -205,7 +207,7 @@ async function detail(){
   const lib='<div class="sub" style="margin-top:4px">"Chọn ảnh" lấy từ thư viện máy, nên xóa bản gốc trong thư viện sau khi lưu.</div>';
   const pair=k=>`<button class="btn" data-shot="${k}" data-src="cam">${ic('cam')}Chụp</button><button class="btn" data-shot="${k}" data-src="pick">${ic('img')}Chọn ảnh</button>`;
   const T=(i,l,v)=>`<div><span>${ic(i)}${l}</span>${v}</div>`;
-  const tiles=T('activity','Chẩn đoán',esc(p.cd))+T('clip','Hướng điều trị',p.hd)+T('clip',pt?'Phương pháp phẫu thuật':'Phương pháp điều trị',esc(p.pp)||'—')+T('cal','Ngày vào viện',fmt(p.ngayVao))+(pt?T('cal','Ngày mổ',fmt(p.ngayMo)+(d!==null&&d>=0?` (hậu phẫu ngày ${d})`:'')):'')+(p.ngayRa?T('cal','Ngày ra viện',fmt(p.ngayRa)):'')+T('cal','Hẹn tái khám',fmt(p.hen))+(p.dc?`<div style="grid-column:1/-1"><span>${ic('home')}Địa chỉ</span>${esc(p.dc)}</div>`:'')+(p.tt==='Đang điều trị'?T('home','Số giường',esc(p.giuong)||'—'):'');
+  const tiles=T('activity','Chẩn đoán',esc(p.cd))+T('clip','Hướng điều trị',p.hd)+T('clip',pt?'Phương pháp phẫu thuật':'Phương pháp điều trị',esc(p.pp)||'—')+T('cal','Ngày vào viện',fmt(p.ngayVao))+(pt?T('cal','Ngày mổ',fmt(p.ngayMo)+(d!==null&&d>=0?` (hậu phẫu ngày ${d})`:'')):'')+(p.ngayRa?T('cal','Ngày ra viện',fmt(p.ngayRa)):'')+(p.bhyt?T('clip','Số thẻ BHYT',esc(p.bhyt)):'')+T('cal','Hẹn tái khám',fmt(p.hen))+(p.dc?`<div style="grid-column:1/-1"><span>${ic('home')}Địa chỉ</span>${esc(p.dc)}</div>`:'')+(p.tt==='Đang điều trị'?T('home','Số giường',esc(p.giuong)||'—'):'');
   const cdn=p.tt!=='Đang điều trị'?'':cd!==null?`<div class="cdn"><b>${cd}</b><span>ngày điều trị<br>tự cập nhật mỗi ngày</span></div>`:'<div class="warn">Chưa có ngày vào viện. Bấm "Sửa thông tin" để nhập, app sẽ tự đếm số ngày điều trị.</div>';
   el.innerHTML=`<button class="btn" id="back" style="margin-bottom:10px;${innerWidth>800?'display:none':''}">${ic('back')}Danh sách</button><div class="panel ${sc(p)}"><div class="pb"></div>
   <div class="ph0"><div class="av big">${esc(ini(p.ten))}</div><div><h2>${esc(p.ten)}</h2><div class="sub">${age(p)||'?'} tuổi${p.namSinh?' (sinh '+p.namSinh+')':''} · ${p.gioi}${pt&&p.asa?' · ASA '+esc(p.asa):''}</div><div><span class="pill" style="margin:6px 6px 0 0">${p.tt}</span>${p.mayte?`<span class="chip">${ic('clip')}Mã YT: ${esc(p.mayte)}</span>`:''}${p.sdt?`<button class="chip" data-tel="${esc(p.sdt)}" style="border:0;cursor:pointer">${ic('phone')}${esc(p.sdt)}</button>`:''}</div></div></div>
@@ -262,6 +264,45 @@ async function runOcr(file){
     const ta=$('f_paste');ta.value=(ta.value?ta.value+'\n':'')+r.data.text;fillPaste();
   }catch(e){msg('Quét không được: '+e.message)}
 }
+/* ---- quét mã QR căn cước, thẻ BHYT ---- */
+const tc=s=>s&&s===s.toUpperCase()?s.toLowerCase().replace(/(^|\s)\S/g,c=>c.toUpperCase()):s;
+const dmY=x=>{const i=x.match(/^(\d{4})-\d{2}-\d{2}$/);if(i)return+i[1];const m=x.match(/^(\d{2})(\d{2})(\d{4})$/)||x.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/);return m?+m[3]:0};
+function parseQR(raw){
+  const s=raw.normalize('NFC').trim(),P=s.split('|').map(x=>x.trim()),r={};
+  if(P.length>=6&&/^\d{12}$/.test(P[0])){ // căn cước gắn chip: số CCCD|số CMND cũ|họ tên|ngày sinh|giới tính|địa chỉ|ngày cấp
+    r.ten=tc(P[2]);r.namSinh=dmY(P[3]);r.gioi=nd(P[4]).toLowerCase().startsWith('nu')?'Nữ':'Nam';r.dc=P[5];r.loai='căn cước';return r}
+  const bad=/\b(phuong|xa|quan|huyen|tinh|thanh pho|tp|thi tran|thon|to|duong|so|khu|ap|ban)\b/;
+  s.split(/[|;\n\t]+/).map(x=>x.trim()).filter(Boolean).forEach(x=>{const n=nd(x).toLowerCase();
+    if(!r.bhyt&&/^[A-Za-z]{2}\d{13}$/.test(x))r.bhyt=x.toUpperCase();
+    else if(!r.sdt&&/^0\d{9,10}$/.test(x))r.sdt=x;
+    else if(!r.namSinh&&dmY(x))r.namSinh=dmY(x);
+    else if(!r.gioi&&/^(nam|nu)$/.test(n))r.gioi=n==='nu'?'Nữ':'Nam';
+    else if(!r.ten&&/^[^\d,]{4,40}$/.test(x)&&x.split(/\s+/).length>=2&&!bad.test(n))r.ten=tc(x);
+    else if(!r.dc&&(bad.test(n)||x.includes(','))&&x.length>12)r.dc=x});
+  r.loai=r.bhyt?'thẻ BHYT':'mã QR';return r}
+let qrP,qrStream=null,qrRun=false;
+const loadQR=()=>qrP||(qrP=new Promise((ok,no)=>{if(window.jsQR)return ok();const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js';s.onload=ok;s.onerror=()=>{qrP=null;no(new Error('không tải được bộ đọc mã QR, hãy kiểm tra mạng'))};document.head.appendChild(s)}));
+const qrText=r=>{if(r.binaryData){const t=new TextDecoder('utf-8').decode(new Uint8Array(r.binaryData));if(!t.includes('\uFFFD'))return t}return r.data};
+function qrStop(){qrRun=false;busy=false;if(qrStream){qrStream.getTracks().forEach(t=>t.stop());qrStream=null}}
+async function qrScan(){
+  const dq=$('dq');busy=true;
+  dq.innerHTML=`<h2 style="margin:0;font-size:18px">Quét mã QR</h2><div class="sub" id="qm">Đưa mã QR trên căn cước hoặc thẻ BHYT vào khung hình, giữ yên và đủ sáng.</div><video id="qv" playsinline muted style="width:100%;border-radius:12px;margin-top:8px;background:#000;max-height:50vh"></video><div class="row"><button class="btn" id="qx">Đóng</button><button class="btn" id="qph">${ic('cam')}Chụp ảnh mã QR</button></div>`;
+  dq.showModal();$('qx').onclick=()=>{qrStop();dq.close()};dq.onclose=qrStop;
+  try{await loadQR();qrStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280}}});
+    const v=$('qv');v.srcObject=qrStream;await v.play();qrRun=true;const c=document.createElement('canvas'),x=c.getContext('2d',{willReadFrequently:true});
+    const tick=()=>{if(!qrRun)return;if(v.videoWidth){c.width=v.videoWidth;c.height=v.videoHeight;x.drawImage(v,0,0);const r=jsQR(x.getImageData(0,0,c.width,c.height).data,c.width,c.height,{inversionAttempts:'dontInvert'});if(r&&r.data){const t=qrText(r);qrStop();dq.close();qrDone(t);return}}setTimeout(tick,150)};tick();
+  }catch(e){const m=$('qm');if(m)m.textContent='Không mở được camera ('+e.message+'). Bấm "Chụp ảnh mã QR" để dùng camera của máy.'}
+}
+async function qrFromFile(file){
+  await loadQR();const bm=await createImageBitmap(file);
+  for(const M of[1600,2400,1000]){const k=Math.min(1,M/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);const x=c.getContext('2d');x.drawImage(bm,0,0,c.width,c.height);const r=jsQR(x.getImageData(0,0,c.width,c.height).data,c.width,c.height,{inversionAttempts:'attemptBoth'});if(r)return qrText(r)}
+  return null}
+function qrDone(t){
+  const r=parseQR(t),map={ten:'f_ten',namSinh:'f_ns',gioi:'f_gioi',dc:'f_dc',sdt:'f_sdt',bhyt:'f_bh'},nm={ten:'Họ tên',namSinh:'Năm sinh',gioi:'Giới',dc:'Địa chỉ',sdt:'SĐT',bhyt:'Số thẻ BHYT'},got=[];
+  for(const k in map)if(r[k]&&$(map[k])){$(map[k]).value=r[k];got.push(nm[k])}
+  const m=$('pz_msg0');if(m)m.textContent=got.length?`Đã quét ${r.loai}: điền ${got.join(', ')}. Hãy kiểm tra lại trước khi lưu.`:'Quét được mã nhưng chưa nhận ra định dạng. Xem nội dung quét được bên dưới.';
+  const d=$('qraw');if(d)d.textContent=t.replace(/\|/g,' | ');
+}
 /* ---- nhắc tái khám ---- */
 const remList=()=>S.filter(p=>p.hen&&diff(today(),p.hen)<=1).sort((a,b)=>a.hen.localeCompare(b.hen));
 const remWhen=p=>{const d=diff(today(),p.hen);return d<0?`Quá hẹn ${-d} ngày`:d===0?'Hôm nay':'Ngày mai'};
@@ -281,12 +322,14 @@ function bedDlg(){
 function form(p){
   const yr=new Date().getFullYear(),v=p||{ten:'',mayte:'',sdt:'',namSinh:'',dc:'',gioi:'Nam',cd:'',hd:'Phẫu thuật',pp:'',asa:'II',ngayVao:today(),ngayMo:'',tt:'Đang điều trị',giuong:'',hen:'',ngayRa:'',ghi:''},ns=v.namSinh||(v.tuoi?yr-v.tuoi:''),o=(a,x)=>a.map(i=>`<option ${i===x?'selected':''}>${i}</option>`).join('');
   $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">${p?'Sửa bệnh nhân':'Thêm bệnh nhân'}</h2>
-  <label>Dán nhanh thông tin (quét camera hoặc chép từ phần mềm)<textarea id="f_paste" rows="3" placeholder="Họ tên: ...&#10;Ngày sinh: ...&#10;Địa chỉ: ...&#10;Điện thoại: ...&#10;Mã y tế: ..."></textarea></label>
-  <div class="row" style="margin-top:6px"><button class="btn pri" id="ocr1">${ic('cam')}Quét bằng camera</button><button class="btn" id="ocr2">${ic('img')}Chọn ảnh</button><button class="btn" id="pz">Tách thông tin</button></div><div class="sub" id="pz_msg" style="margin-top:4px">Hướng camera vào phần thông tin trên màn hình. Lần đầu cần có mạng để tải bộ nhận dạng chữ.</div>
+  <div class="row" style="margin-top:12px"><button class="btn pri" id="qr1" style="width:100%;justify-content:center">${ic('cam')}Quét QR căn cước / thẻ BHYT</button></div><div class="sub" id="pz_msg0" style="margin-top:4px"></div><details style="margin-top:6px"><summary class="sub">Xem nội dung quét được</summary><pre id="qraw" style="white-space:pre-wrap;font-size:12px;margin:4px 0"></pre></details>
+  <details style="margin-top:8px"><summary class="sub">Hoặc dán chữ, quét chữ bằng camera</summary><label>Dán nhanh thông tin (quét camera hoặc chép từ phần mềm)<textarea id="f_paste" rows="3" placeholder="Họ tên: ...&#10;Ngày sinh: ...&#10;Địa chỉ: ...&#10;Điện thoại: ...&#10;Mã y tế: ..."></textarea></label>
+  <div class="row" style="margin-top:6px"><button class="btn pri" id="ocr1">${ic('cam')}Quét bằng camera</button><button class="btn" id="ocr2">${ic('img')}Chọn ảnh</button><button class="btn" id="pz">Tách thông tin</button></div><div class="sub" id="pz_msg" style="margin-top:4px">Hướng camera vào phần thông tin trên màn hình. Lần đầu cần có mạng để tải bộ nhận dạng chữ.</div></details>
   <label>Họ tên (hoặc tên viết tắt)<input id="f_ten" value="${esc(v.ten)}"></label>
   <div class="two"><label>Mã y tế (mã hồ sơ, bệnh án)<input id="f_myt" value="${esc(v.mayte||'')}"></label><label>Số điện thoại<input id="f_sdt" type="tel" inputmode="tel" value="${esc(v.sdt||'')}"></label></div>
   <div class="two"><label>Năm sinh (tuổi tự tính)<input id="f_ns" type="number" inputmode="numeric" placeholder="VD: 1965" value="${esc(ns)}"></label><label>Giới<select id="f_gioi">${o(['Nam','Nữ'],v.gioi)}</select></label></div>
   <label>Địa chỉ<input id="f_dc" value="${esc(v.dc||'')}"></label>
+  <label>Số thẻ BHYT<input id="f_bh" value="${esc(v.bhyt||'')}"></label>
   <label>Chẩn đoán<input id="f_cd" value="${esc(v.cd)}"></label>
   <div class="two"><label>Hướng điều trị<select id="f_hd">${o(['Phẫu thuật','Nội khoa'],v.hd)}</select></label><label>Ngày vào viện<input id="f_nv" type="date" value="${v.ngayVao||''}"></label></div>
   <label><span id="f_ppl">Phương pháp phẫu thuật</span><input id="f_pp" value="${esc(v.pp)}"></label>
@@ -301,7 +344,7 @@ function form(p){
   sd();$('cx').onclick=()=>$('dlg').close();
   $('ok').onclick=async()=>{const pt=$('f_hd').value!=='Nội khoa',tt=$('f_tt').value,nsv=+$('f_ns').value||0;
     if(nsv&&(nsv<1900||nsv>yr))return alert('Năm sinh không hợp lệ.');
-    const n={ten:$('f_ten').value.trim(),mayte:$('f_myt').value.trim(),sdt:$('f_sdt').value.trim(),namSinh:nsv,dc:$('f_dc').value.trim(),gioi:$('f_gioi').value,cd:$('f_cd').value.trim(),hd:$('f_hd').value,pp:$('f_pp').value.trim(),asa:pt?$('f_asa').value:'',ngayVao:$('f_nv').value,ngayMo:pt?$('f_nm').value:'',hen:$('f_hen').value,tt,giuong:tt==='Đang điều trị'?$('f_gi').value.trim():'',ngayRa:tt!=='Đang điều trị'?($('f_nr').value||today()):'',ghi:$('f_ghi').value.trim()};
+    const n={ten:$('f_ten').value.trim(),mayte:$('f_myt').value.trim(),sdt:$('f_sdt').value.trim(),namSinh:nsv,dc:$('f_dc').value.trim(),bhyt:$('f_bh').value.trim(),gioi:$('f_gioi').value,cd:$('f_cd').value.trim(),hd:$('f_hd').value,pp:$('f_pp').value.trim(),asa:pt?$('f_asa').value:'',ngayVao:$('f_nv').value,ngayMo:pt?$('f_nm').value:'',hen:$('f_hen').value,tt,giuong:tt==='Đang điều trị'?$('f_gi').value.trim():'',ngayRa:tt!=='Đang điều trị'?($('f_nr').value||today()):'',ghi:$('f_ghi').value.trim()};
     if(!n.ten||!n.cd)return alert('Cần nhập họ tên (hoặc tên viết tắt) và chẩn đoán.');
     if(p)Object.assign(p,n);else{const x={id:Date.now(),nhat:[],ph:[],gl:[],...n};S.unshift(x);sel=x.id}
     await save();$('dlg').close();mob=true;render()};
@@ -371,6 +414,8 @@ document.addEventListener('click',async e=>{
   else if(id==='cpy'){try{await navigator.clipboard.writeText(b.dataset.n);b.textContent='Đã sao chép'}catch(e){b.textContent='Không sao chép được'}}
   else if(id==='ocr1'){busy=true;$('ocr').click();setTimeout(()=>busy=false,6e4)}
   else if(id==='ocr2'){busy=true;$('ocrp').click();setTimeout(()=>busy=false,6e4)}
+  else if(id==='qr1')qrScan();
+  else if(id==='qph')$('qrf').click();
   else if(id==='pz')fillPaste();
   else if(b.dataset.kham)khamDlg(+b.dataset.kham);
   else if(b.dataset.kok){const p=S.find(x=>x.id===+b.dataset.kok);(p.nhat=p.nhat||[]).push({ng:today(),t:'Đã tái khám (hẹn '+fmt(p.hen)+')'});p.hen=$('kn').value||'';await save();$('dlg').close();render()}
@@ -394,6 +439,7 @@ document.addEventListener('click',async e=>{
 $('cam').onchange=$('pick').onchange=async e=>{busy=false;await addPhoto(e.target.files[0]);e.target.value=''};
 $('imp').onchange=async e=>{busy=false;if(e.target.files[0])await restore(e.target.files[0]);e.target.value=''};
 $('ocr').onchange=$('ocrp').onchange=async e=>{busy=false;const fl=e.target.files[0];e.target.value='';if(fl)await runOcr(fl)};
+$('qrf').onchange=async e=>{const fl=e.target.files[0];e.target.value='';if(!fl)return;const m=$('qm');if(m)m.textContent='Đang đọc mã...';try{const t=await qrFromFile(fl);if(t){qrStop();$('dq').close();qrDone(t)}else if(m)m.textContent='Không đọc được mã QR trong ảnh. Hãy chụp gần hơn, đủ sáng, mã nằm trọn trong ảnh.'}catch(err){if(m)m.textContent='Lỗi: '+err.message}};
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 lockScreen();
 </script>
