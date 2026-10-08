@@ -204,7 +204,7 @@ let K=null,S=[],sel=null,mob=false,busy=false,idle,pend={};
 async function derive(pw,salt){const m=await crypto.subtle.importKey('raw',E.encode(pw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:250000,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
 async function seal(b,kk){const iv=crypto.getRandomValues(new Uint8Array(12)),c=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},kk||K,b)),o=new Uint8Array(12+c.length);o.set(iv);o.set(c,12);return o}
 async function open(b){b=new Uint8Array(b);return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:b.slice(0,12)},K,b.slice(12)))}
-const save=async()=>LS('sobn_data',b64(await seal(E.encode(JSON.stringify(S)))));
+const save=async()=>{sigCheck();LS('sobn_data',b64(await seal(E.encode(JSON.stringify(S)))));schedSync()};
 /* ---- kho ảnh (IndexedDB) ---- */
 const idb=()=>new Promise((ok,no)=>{const r=indexedDB.open('sobn',1);r.onupgradeneeded=()=>r.result.createObjectStore('ph',{keyPath:'id'});r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
 const tx=async(m,f)=>{const d=await idb();return new Promise((ok,no)=>{const t=d.transaction('ph',m),r=f(t.objectStore('ph'));t.oncomplete=()=>ok(r&&r.result);t.onerror=()=>no(t.error)})};
@@ -235,7 +235,7 @@ async function go(){
       try{await open(unb(meta.chk))}catch(e){K=null;return say('Sai mật khẩu.')}
       const d=LG('sobn_data');S=d?JSON.parse(D.decode(await open(unb(d)))):[];
     }
-    start();await restoreUI().catch(()=>{});
+    sigInit();start();await restoreUI().catch(()=>{});syncNow(true);
   }catch(e){K=null;say('Có lỗi: '+e.message)}
 }
 const CFG=(()=>{try{return Object.assign({hide:180,idle:300},JSON.parse(localStorage.getItem('sobn_cfg')||'{}'))}catch(e){return{hide:180,idle:300}}})();
@@ -282,7 +282,7 @@ let flt='';
 function chips(){$('chips').innerHTML=[['','Tất cả','']].concat(Object.keys(SC).map(k=>[k,k,SC[k]])).map(([v,t,c])=>`<button class="fc ${c} ${flt===v&&!(v===''&&F.hen==='can')?'on':''}" data-f="${v}">${t}</button>`).join('')+`<button class="fc al ${F.hen==='can'?'on':''}" data-fhen="1">Cần tái khám</button>`}
 function start(){
   flt='Đang điều trị';F=F0();
-  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">${greet()} · v18</div></div></div><div class="hb"><button class="hbtn" id="toolb">${ic('tool')}<span>Tiện ích</span></button><button class="hbtn" id="setb">${ic('gear')}<span>Cài đặt</span></button><button class="hbtn" id="stbtn">${ic('chart')}<span>Thống kê</span></button><button class="hbtn" id="bk">${ic('down')}<span>Sao lưu</span></button><button class="hbtn" id="imp1">${ic('up')}<span>Nhập</span></button><button class="hbtn" id="lk">${ic('lock')}<span>Khóa</span></button></div></div>
+  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">${greet()} · v19</div></div></div><div class="hb"><button class="hbtn" id="toolb">${ic('tool')}<span>Tiện ích</span></button><button class="hbtn" id="setb">${ic('gear')}<span>Cài đặt</span></button><button class="hbtn" id="stbtn">${ic('chart')}<span>Thống kê</span></button><button class="hbtn" id="bk">${ic('down')}<span>Sao lưu</span></button><button class="hbtn" id="imp1">${ic('up')}<span>Nhập</span></button><button class="hbtn" id="lk">${ic('lock')}<span>Khóa</span></button></div></div>
   <div class="stats" id="st"></div><div id="rem"></div>
   <div class="cols"><section id="ls"><div class="bar2"><div class="sw">${ic('search')}<input id="q" placeholder="Tìm tên, chẩn đoán, mã y tế, SĐT"></div><button class="btn" id="fbtn">${ic('filter')}Bộ lọc<span id="fbd" class="bd" style="display:none"></span></button></div><div class="fcs" id="chips"></div><div class="rs" id="rs"></div><button class="btn pri" id="add" style="width:100%;margin-bottom:12px;justify-content:center">${ic('plus')}Thêm bệnh nhân</button><div id="it"></div></section><section id="dt" class="hm"></section></div>
   <nav class="bn"><button class="on" data-nav="list">${ic('home')}Bệnh nhân</button><button data-nav="tool">${ic('tool')}Tiện ích</button><button class="plus" data-nav="add" aria-label="Thêm bệnh nhân">${ic('plus')}</button><button data-nav="stats">${ic('chart')}Thống kê</button><button data-nav="lock">${ic('lock')}Khóa</button></nav>`;
@@ -603,6 +603,7 @@ function setDlg(){
   <label>Khi chuyển sang cửa sổ hoặc app khác, tự khóa sau${mk('cfh',[[0,'Ngay lập tức'],[60,'1 phút'],[180,'3 phút'],[300,'5 phút'],[600,'10 phút']],CFG.hide)}</label>
   <label>Khi không thao tác, tự khóa sau${mk('cfi',[[300,'5 phút'],[600,'10 phút'],[900,'15 phút'],[1800,'30 phút']],CFG.idle)}</label>
   <div class="sub" style="margin-top:8px">Thời gian càng dài càng tiện nhưng càng kém an toàn khi để máy ở nơi đông người. Nút Khóa luôn khóa ngay.</div>
+  <div class="row" style="margin-top:14px"><button class="btn" id="syb">${ic('cloud')}Đồng bộ Supabase${SB?' (đang bật)':''}</button></div>
   <div class="row" style="justify-content:flex-end"><button class="btn pri" id="cfok">Xong</button></div>`;
   sd();$('cfh').onchange=$('cfi').onchange=()=>{CFG.hide=+$('cfh').value;CFG.idle=+$('cfi').value;try{localStorage.setItem('sobn_cfg',JSON.stringify(CFG))}catch(e){}bump();toast('Đã lưu cài đặt')}}
 /* ---- tiện ích: mức lọc cầu thận, tra liều thuốc ---- */
@@ -699,6 +700,101 @@ function algDlg(id){
   const p=S.find(x=>x.id===id);if(!p)return;
   $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">Tiền sử dị ứng thuốc</h2><div class="sub">${esc((p.ten||'').toUpperCase())}</div><label>Thuốc và phản ứng đã gặp<textarea id="ad" rows="3" placeholder="Ví dụ: Penicillin (nổi mẩn, khó thở), Ceftriaxon (sốc phản vệ)">${esc(p.dung||'')}</textarea></label><div class="row" style="justify-content:space-between"><div>${p.dung?`<button class="btn del" data-algdel="${id}">${ic('trash')}Xóa</button>`:''}</div><div class="row" style="margin:0"><button class="btn" id="cx">Hủy</button><button class="btn pri" data-algsave="${id}">Lưu</button></div></div>`;
   sd();$('cx').onclick=()=>$('dlg').close()}
+/* ---- đồng bộ Supabase, mã hóa đầu cuối ---- */
+IC.cloud='<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>';
+const sjson=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||'null')||d}catch(e){return d}};
+const SY0=()=>({srv:'1970-01-01T00:00:00Z',init:false,dirty:[],tomb:[],phs:[],last:0,err:''});
+let SB=sjson('sobn_sb',null),SY=Object.assign(SY0(),sjson('sobn_sy',{})),SIG={},syBusy=false,syAgain=false,syT;
+const sbSave=()=>{try{SB?localStorage.setItem('sobn_sb',JSON.stringify(SB)):localStorage.removeItem('sobn_sb')}catch(e){}};
+const syState=()=>{try{localStorage.setItem('sobn_sy',JSON.stringify(SY))}catch(e){}};
+const sig=p=>{const{u,...r}=p;return JSON.stringify(r)};
+function sigInit(){SIG={};S.forEach(p=>SIG[p.id]=sig(p))}
+function sigCheck(){if(!SB)return;let c=false;for(const p of S){const s=sig(p);if(SIG[p.id]!==s){SIG[p.id]=s;p.u=Date.now();if(!SY.dirty.includes(p.id))SY.dirty.push(p.id);c=true}}if(c)syState()}
+function addTomb(id){if(!SB)return;SY.tomb=SY.tomb.filter(t=>t.id!==id);SY.tomb.push({id,u:Date.now()});SY.dirty=SY.dirty.filter(x=>x!==id);delete SIG[id];syState()}
+function schedSync(){if(!SB)return;clearTimeout(syT);syT=setTimeout(()=>syncNow(true),3000)}
+async function sbAuth(body,grant){
+  const r=await fetch(SB.url+'/auth/v1/token?grant_type='+grant,{method:'POST',headers:{apikey:SB.key,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(j.error_description||j.msg||j.message||('Lỗi đăng nhập '+r.status));
+  SB.at=j.access_token;SB.rt=j.refresh_token;SB.exp=Date.now()+(j.expires_in||3600)*1000;sbSave()}
+async function sbTok(){if(!SB.at||Date.now()>SB.exp-60000){if(!SB.rt)throw new Error('Cần đăng nhập lại');await sbAuth({refresh_token:SB.rt},'refresh_token')}return SB.at}
+async function sbq(path,o={}){
+  const t=await sbTok(),r=await fetch(SB.url+'/rest/v1/'+path,{method:o.m||'GET',headers:{apikey:SB.key,Authorization:'Bearer '+t,'Content-Type':'application/json',...(o.h||{})},body:o.b?JSON.stringify(o.b):undefined});
+  if(!r.ok){let m='';try{m=(await r.json()).message||''}catch(e){}throw new Error('Máy chủ trả lỗi '+r.status+(m?': '+m:''))}
+  return o.nores?null:r.json()}
+const sbUp=b=>sbq('sobn_records?on_conflict=user_id,id',{m:'POST',h:{Prefer:'resolution=merge-duplicates,return=minimal'},b,nores:true});
+const phIds=()=>{const a=new Set();for(const p of S){(p.ph||[]).forEach(x=>a.add(x.id));(p.ds||[]).forEach(e=>(e.ph||[]).forEach(x=>a.add(x.id)))}return[...a]};
+async function syncNow(quiet){
+  if(!SB||!K)return;if(syBusy){syAgain=true;return}
+  syBusy=true;SY.err='';let ch=0;
+  try{
+    const m=JSON.parse(LG('sobn_meta')),c=await sbq('sobn_records?select=data&id=eq.meta');
+    if(!c.length)await sbUp([{id:'meta',kind:'meta',data:JSON.stringify(m),updated_at:0,deleted:false}]);
+    else if(JSON.parse(c[0].data).salt!==m.salt)throw new Error('Khóa mã hóa của máy này khác bản trên Supabase. Hãy tắt đồng bộ rồi nối lại đúng sổ.');
+    for(;;){
+      const rows=await sbq(`sobn_records?select=id,kind,data,updated_at,deleted,srv&kind=neq.photo&kind=neq.meta&srv=gt.${encodeURIComponent(SY.srv)}&order=srv.asc&limit=200`);
+      for(const r of rows){
+        const id=r.id.slice(2),loc=S.find(x=>String(x.id)===id);
+        if(r.deleted){if(loc&&(loc.u||0)<=r.updated_at){S=S.filter(x=>x!==loc);delete SIG[loc.id];SY.dirty=SY.dirty.filter(x=>x!==loc.id);ch++}}
+        else{let o;try{o=JSON.parse(D.decode(await open(unb(r.data))))}catch(e){throw new Error('Không giải mã được dữ liệu từ Supabase, khóa mã hóa không khớp')}
+          if(!loc){S.unshift(o);SIG[o.id]=sig(o);ch++}
+          else if((o.u||0)>(loc.u||0)){Object.keys(loc).forEach(k=>delete loc[k]);Object.assign(loc,o);SIG[loc.id]=sig(loc);SY.dirty=SY.dirty.filter(x=>x!==loc.id);ch++}}
+        SY.srv=r.srv}
+      if(rows.length<200)break}
+    const have=new Set(await tx('readonly',s=>s.getAllKeys()));
+    for(const id of phIds()){if(have.has(id))continue;const r=await sbq(`sobn_records?select=data&id=eq.${encodeURIComponent('f:'+id)}`);if(r[0]&&r[0].data){await tx('readwrite',s=>s.put({id,d:unb(r[0].data)}));if(!SY.phs.includes(id))SY.phs.push(id);ch++}}
+    const ids=SY.init?SY.dirty.filter(x=>S.some(p=>p.id===x)):S.map(p=>p.id),rows=[];
+    for(const id of ids){const p=S.find(x=>x.id===id);if(!p)continue;if(!p.u)p.u=Date.now();rows.push({id:'p:'+id,kind:'patient',data:b64(await seal(E.encode(JSON.stringify(p)))),updated_at:p.u,deleted:false})}
+    for(const t of SY.tomb)rows.push({id:'p:'+t.id,kind:'patient',data:'',updated_at:t.u,deleted:true});
+    for(let i=0;i<rows.length;i+=20)await sbUp(rows.slice(i,i+20));
+    for(const id of phIds()){if(SY.phs.includes(id))continue;const r=await tx('readonly',s=>s.get(id));if(!r)continue;await sbUp([{id:'f:'+id,kind:'photo',data:b64(r.d),updated_at:Date.now(),deleted:false}]);SY.phs.push(id)}
+    SY.dirty=[];SY.tomb=[];SY.init=true;SY.last=Date.now();syState();
+    await save();
+    if(ch){if(!$('dlg').open)render();toast('Đã cập nhật '+ch+' mục từ máy khác')}
+    else if(!quiet)toast('Đã đồng bộ')
+  }catch(e){SY.err=e.message||String(e);syState();if(!quiet)toast('Đồng bộ lỗi: '+SY.err)}
+  syBusy=false;if(syAgain){syAgain=false;setTimeout(()=>syncNow(true),500)}
+  if($('sy_st'))syStatus()}
+function syStatus(){const e=$('sy_st');if(!e)return;e.innerHTML=SY.err?`<span style="color:var(--red)">Lỗi lần gần nhất: ${esc(SY.err)}</span>`:SY.last?`Đồng bộ lần cuối: ${new Date(SY.last).toLocaleString('vi-VN')}`:'Chưa đồng bộ lần nào'}
+async function syncConnect(){
+  const g=id=>($(id).value||'').trim(),msg=t=>{$('sy_msg').textContent=t};
+  const url=g('sy_url').replace(/\/+$/,''),key=g('sy_key'),email=g('sy_em'),pw=$('sy_pw').value,vpw=$('sy_vp').value;
+  if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url))return msg('Địa chỉ dự án cần có dạng https://xxxx.supabase.co');
+  if(!key||!email||!pw)return msg('Cần nhập đủ khóa công khai, email và mật khẩu tài khoản Supabase.');
+  if(/service_role|sb_secret/.test(key))return msg('Đây là khóa bí mật. Chỉ dùng khóa công khai (anon hoặc publishable).');
+  if(key.split('.').length===3){try{if(JSON.parse(atob(key.split('.')[1])).role==='service_role')return msg('Đây là khóa service_role (bí mật). Chỉ dùng khóa anon.')}catch(e){}}
+  msg('Đang kết nối...');const old=SB,oldK=K;SB={url,key,email};
+  try{
+    await sbAuth({email,password:pw},'password');
+    const m=JSON.parse(LG('sobn_meta')),c=await sbq('sobn_records?select=data&id=eq.meta');
+    if(c.length){const cm=JSON.parse(c[0].data);
+      if(cm.salt!==m.salt){
+        if(S.length)throw new Error('Máy này đã có dữ liệu mã hóa bằng khóa khác với sổ trên Supabase. Hãy xóa dữ liệu máy này (nút bên dưới) rồi nối lại, hoặc dùng nút Nhập với file sao lưu của máy đầu tiên.');
+        if(!vpw)throw new Error('Dự án đã có sổ từ máy khác. Nhập Mật khẩu của sổ (mật khẩu đã đặt ở máy đầu tiên) rồi bấm lại.');
+        K=await derive(vpw,unb(cm.salt));
+        try{await open(unb(cm.chk))}catch(e){K=oldK;throw new Error('Sai mật khẩu của sổ.')}
+        LS('sobn_meta',JSON.stringify(cm));sigInit()}}
+    SY=SY0();sbSave();syState();sigInit();
+    await syncNow(true);syncDlg();toast(SY.err?'Đã nối nhưng chưa đồng bộ được':'Đã bật đồng bộ')
+  }catch(e){SB=old;sbSave();K=oldK;msg(e.message)}}
+function syncDlg(){
+  const v=(a,d)=>esc((SB&&SB[a])||d||'');
+  $('dlg').innerHTML=SB?`<h2 style="margin:0;font-size:18px">Đồng bộ Supabase</h2><div class="sub">Đang bật cho ${esc(SB.email)}</div><div class="dpv" id="sy_st"></div><div class="sub" style="margin-top:8px">Việc chờ gửi lên: ${SY.dirty.length+SY.tomb.length} hồ sơ. Dữ liệu và ảnh được mã hóa trên máy trước khi gửi.</div><div class="row"><button class="btn pri" id="syn">${ic('cloud')}Đồng bộ ngay</button><button class="btn" id="syo">Tắt đồng bộ</button></div><div class="row" style="justify-content:flex-end"><button class="btn" id="cx">Đóng</button></div>`
+  :`<h2 style="margin:0;font-size:18px">Đồng bộ Supabase</h2><div class="sub">Dữ liệu được mã hóa bằng mật khẩu của sổ rồi mới gửi lên, Supabase chỉ lưu dữ liệu đã mã hóa.</div>
+  <label>Địa chỉ dự án (Project URL)<input id="sy_url" placeholder="https://xxxx.supabase.co" autocomplete="off"></label>
+  <label>Khóa công khai (anon hoặc publishable key)<input id="sy_key" autocomplete="off"></label>
+  <label>Email tài khoản Supabase của bác sĩ (tạo trong Authentication)<input id="sy_em" type="email" autocomplete="off"></label>
+  <label>Mật khẩu tài khoản đó<input id="sy_pw" type="password" autocomplete="off"></label>
+  <label>Mật khẩu của sổ (chỉ cần khi nối máy thứ hai trở đi)<input id="sy_vp" type="password" autocomplete="off"></label>
+  <div class="err" id="sy_msg"></div>
+  <div class="row"><button class="btn pri" id="syc">${ic('cloud')}Đăng nhập và bật đồng bộ</button><button class="btn del" id="syr">Xóa dữ liệu máy này</button></div>
+  <div class="row" style="justify-content:flex-end"><button class="btn" id="cx">Đóng</button></div>`;
+  sd();$('cx').onclick=()=>$('dlg').close();if(SB)syStatus()}
+async function syncReset(){
+  if(!confirm('XÓA toàn bộ hồ sơ và ảnh trên máy này? Chỉ làm khi dữ liệu đã có trên Supabase hoặc đã sao lưu.'))return;
+  try{['sobn_data','sobn_meta','sobn_sy','sobn_ui'].forEach(k=>localStorage.removeItem(k));sessionStorage.removeItem('sobn_ui')}catch(e){}
+  await tx('readwrite',s=>s.clear());SY=SY0();skipSnap=true;lockScreen('Đã xóa dữ liệu trên máy này. Tạo mật khẩu mới rồi nối lại Supabase.')}
+window.addEventListener('online',()=>syncNow(true));
 /* ---- nhắc tái khám ---- */
 const remList=()=>S.filter(p=>p.hen&&diff(today(),p.hen)<=1).sort((a,b)=>a.hen.localeCompare(b.hen));
 const remWhen=p=>{const d=diff(today(),p.hen);return d<0?`Quá hẹn ${-d} ngày`:d===0?'Hôm nay':'Ngày mai'};
@@ -791,7 +887,7 @@ async function restore(file){
   try{const o=JSON.parse(await file.text());if(!o.meta||!o.data)throw 0;
     if(!confirm('Nhập sao lưu sẽ THAY THẾ toàn bộ dữ liệu hiện có trên máy này. Tiếp tục?'))return;
     await tx('readwrite',s=>s.clear());for(const x of o.ph)await tx('readwrite',s=>s.put({id:x.id,d:unb(x.d)}));
-    LS('sobn_meta',JSON.stringify(o.meta));LS('sobn_data',o.data);skipSnap=true;lockScreen('Đã nhập xong. Mở khóa bằng mật khẩu của bản sao lưu.');
+    LS('sobn_meta',JSON.stringify(o.meta));LS('sobn_data',o.data);SY=SY0();syState();skipSnap=true;lockScreen('Đã nhập xong. Mở khóa bằng mật khẩu của bản sao lưu.');
   }catch(e){alert('File sao lưu không hợp lệ.')}
 }
 const seedData=()=>[
@@ -817,6 +913,11 @@ document.addEventListener('click',async e=>{
     if(v&&d<v)return alert('Ngày ra viện không được trước ngày vào viện ('+fmt(v)+').');
     const den=raSel==='Ra viện'?'':($('rt').value||'').trim();p.tt='Đã ra viện';p.ngayRa=d;p.ra={loai:raSel,den};
     (p.nhat=p.nhat||[]).push({ng:d,t:raSel+(den?' → '+den:'')+' ngày '+fmt(d)});await save();$('dlg').close();render();toast('Đã ghi nhận: '+raSel)}
+  else if(id==='syb')syncDlg();
+  else if(id==='syc')syncConnect();
+  else if(id==='syn'){syncNow(false).then(syncDlg)}
+  else if(id==='syo'){if(confirm('Tắt đồng bộ trên máy này? Dữ liệu trên máy và trên Supabase vẫn được giữ.')){SB=null;sbSave();SY=SY0();syState();syncDlg()}}
+  else if(id==='syr')syncReset();
   else if(b.dataset.alg)algDlg(+b.dataset.alg);
   else if(b.dataset.algsave){const p=S.find(x=>x.id===+b.dataset.algsave),v=($('ad').value||'').trim();if(v!==(p.dung||''))p.dungAck=false;p.dung=v;await save();$('dlg').close();render();toast(v?'Đã lưu tiền sử dị ứng thuốc':'Đã xóa tiền sử dị ứng thuốc')}
   else if(b.dataset.algdel){if(!confirm('Xóa tiền sử dị ứng thuốc của bệnh nhân này?'))return;const p=S.find(x=>x.id===+b.dataset.algdel);p.dung='';p.dungAck=false;await save();$('dlg').close();render();toast('Đã xóa tiền sử dị ứng thuốc')}
@@ -866,7 +967,7 @@ document.addEventListener('click',async e=>{
   else if(id==='dis')disDlg();
   else if(id==='add')form();
   else if(id==='edit')form(S.find(x=>x.id===sel));
-  else if(id==='del'){if(confirm('Xóa bệnh nhân này và toàn bộ ảnh?')){const p=S.find(x=>x.id===sel);for(const x of [...(p.ph||[]),...(p.ds||[]).flatMap(e=>e.ph||[])])await tx('readwrite',s=>s.delete(x.id));S=S.filter(x=>x!==p);sel=null;mob=false;await save();render()}}
+  else if(id==='del'){if(confirm('Xóa bệnh nhân này và toàn bộ ảnh?')){const p=S.find(x=>x.id===sel);for(const x of [...(p.ph||[]),...(p.ds||[]).flatMap(e=>e.ph||[])])await tx('readwrite',s=>s.delete(x.id));S=S.filter(x=>x!==p);addTomb(p.id);sel=null;mob=false;await save();render()}}
   else if(id==='addn'){const t=$('nt').value.trim();if(!t)return;S.find(x=>x.id===sel).nhat.push({ng:$('nd').value||today(),t});await save();render();toast('Đã lưu nhật ký')}
   else if(b.dataset.shot&&b.dataset.src==='paste')pasteImg(b.dataset.shot);
   else if(b.dataset.pt){const k=b.dataset.pt;pend=mkPend(k);$('dlg').close();const pf=pendFile;pendFile=null;await addPhoto(pf)}
