@@ -300,6 +300,8 @@ dialog[open]{animation:dlgIn .32s cubic-bezier(.2,.8,.2,1)}dialog[open]::backdro
 dialog[open]{animation:sheetIn .38s cubic-bezier(.2,.8,.2,1)}}
 .cols>section{min-width:0}
 @media(max-width:800px){button.stat{width:auto}.hero{padding:12px 14px}.hb{width:100%;justify-content:flex-start}}
+.yck .d{fill:none}.cols.home .bar2{flex:1 1 300px}
+@media(max-width:800px){.hvr .stats,.hvr .fcs,.hvr .rs,.hvr #add{display:none}#rem{gap:8px}details.rem{margin-bottom:8px}.hvr .hero{padding:8px 12px}}
 @keyframes heroMove{to{background-position:100% 0}}@keyframes fi{from{opacity:0}}
 @keyframes tabIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes pulseDot{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--c) 55%,transparent)}100%{box-shadow:0 0 0 7px transparent}}
@@ -329,6 +331,31 @@ a.zl{display:inline-flex;align-items:center;gap:4px;color:#0068ff;font-weight:70
 .cols.home #it{display:none}.cols.home #ls{overflow:visible}
 .cols.home .lsh{position:static;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding-bottom:10px}
 .cols.home .bar2{order:1;flex:1 1 380px;margin:0}.cols.home .fcs{order:2;flex:0 1 auto;margin:0;overflow:visible}.cols.home .rs{order:3;margin:0}.cols.home #add{order:4;width:auto!important;margin:0!important;padding:0 18px;height:44px}}
+/* ===== y lệnh, đi buồng ===== */
+#rem{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}#rem:empty{display:none}
+details.rem{flex:1 1 320px;min-width:0}
+details.rem.yl>summary{color:#e11d48}details.rem.yl .rb{background:#ffe4ea;color:#e11d48}
+.bd2{display:inline-flex;align-items:center;justify-content:center;min-width:42px;height:30px;padding:0 8px;border-radius:10px;background:var(--dts);color:var(--dt);font-weight:800;font-size:13px;flex:none}
+.yg{padding:8px 0;border-bottom:1px solid var(--line)}.yg:last-child{border:0}.yh{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.yi{display:flex;gap:10px;align-items:flex-start;margin:6px 0}
+.yck{flex:none;width:28px;height:28px;border-radius:9px;border:1.5px solid var(--line);background:var(--card);color:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.yck .i{width:18px;height:18px}.yck:hover{border-color:var(--rv)}.yi.ok .yck{background:var(--rv);border-color:var(--rv);color:#fff}
+.yedit{flex:1;min-width:0;text-align:left;font:inherit;color:inherit;background:none;border:0;padding:2px 4px;border-radius:8px;cursor:pointer;line-height:1.4}.yedit:hover{background:var(--bg)}
+.yi.ok .yedit{opacity:.5;text-decoration:line-through}.yedit b{font-weight:800}.cy{color:var(--red)}.cy b{color:var(--red)}
+.ywh{display:inline-block;font-size:11px;font-weight:800;padding:1px 8px;border-radius:99px;background:var(--bg);color:var(--mute);margin-bottom:2px}.ywh.now{background:#ffe4ea;color:#e11d48}
+.ylc{margin:6px 0}.ro .ylc{pointer-events:none}
+.hv{display:flex;background:var(--bg);border-radius:12px;padding:3px;gap:2px}.hv button{display:flex;align-items:center;gap:6px;border:0;background:none;font:inherit;font-size:13px;font-weight:700;color:var(--mute);padding:7px 12px;border-radius:10px;cursor:pointer}.hv button .i{width:18px;height:18px}.hv button.on{background:var(--card);color:var(--teal);box-shadow:var(--sh)}
+.chipb{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--card);color:var(--mute);font:inherit;font-size:12px;font-weight:700;padding:5px 11px;border-radius:99px;cursor:pointer}.chipb .i{width:16px;height:16px}.chipb.on{background:var(--dt);border-color:var(--dt);color:#fff}
+.wth .cnt.ok{background:var(--rvs);color:var(--rv)}
+.wtb td.gb2{text-align:center;padding-left:14px}.wtb td.ylx{min-width:280px}
+.rc{background:var(--card);border-radius:18px;box-shadow:var(--sh);padding:12px 12px 10px;margin-bottom:10px;border-left:6px solid var(--c);cursor:pointer}
+.rch{display:flex;gap:10px;align-items:center}.rch .bd2{min-width:48px;height:40px;font-size:17px}
+.rc .al{display:inline-flex;vertical-align:middle;margin-left:6px;color:var(--red)}.rc .al .i{width:16px;height:16px}
+@media(min-width:801px){
+#rem{position:relative;z-index:15}details.rem{position:relative;overflow:visible}
+details.rem>.rbody{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:25;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 50px -18px rgba(15,34,48,.45);max-height:56vh;overflow:auto;padding:8px 14px 12px}
+.cols:not(.home) .hv{display:none}.cols.home .hv{order:2}}
+@media(max-width:800px){.hv{margin:0 0 10px}.hv button{flex:1;justify-content:center}}
 </style>
 </head>
 <body>
@@ -397,7 +424,7 @@ async function go0(){
       try{await open(unb(meta.chk))}catch(e){K=null;return say('Sai mật khẩu.')}
       const d=LG('sobn_data');S=d?JSON.parse(D.decode(await open(unb(d)))):[];
     }
-    sigInit();start();await restoreUI().catch(()=>{});syncNow(true);
+    sigInit();if(ylPurge())await save();start();await restoreUI().catch(()=>{});syncNow(true);
   }catch(e){K=null;say('Có lỗi: '+e.message)}
 }
 const CFG=(()=>{try{return Object.assign({hide:180,idle:300},JSON.parse(localStorage.getItem('sobn_cfg')||'{}'))}catch(e){return{hide:180,idle:300}}})();
@@ -444,27 +471,27 @@ let flt='';
 function chips(){stagOn=true;$('chips').innerHTML=[['','Tất cả','']].concat(Object.keys(SC).map(k=>[k,k,SC[k]])).map(([v,t,c])=>`<button class="fc ${c} ${flt===v&&!(v===''&&F.hen==='can')?'on':''}" data-f="${v}">${t}</button>`).join('')+`<button class="fc al ${F.hen==='can'?'on':''}" data-fhen="1">Cần tái khám</button>`}
 function start(){
   flt='Đang điều trị';F=F0();
-  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">${greet()} · v25</div></div></div><div class="hb"><button class="hbtn" id="homeb" title="Bảng bệnh nhân">${ic('bed')}<span>Bảng</span></button><button class="hbtn" id="toolb" title="Tiện ích">${ic('tool')}<span>Tiện ích</span></button><button class="hbtn" id="setb" title="Cài đặt">${ic('gear')}<span>Cài đặt</span></button><button class="hbtn" id="stbtn" title="Thống kê">${ic('chart')}<span>Thống kê</span></button><button class="hbtn" id="bk" title="Sao lưu dữ liệu">${ic('down')}<span>Sao lưu</span></button><button class="hbtn" id="imp1" title="Nhập file sao lưu">${ic('up')}<span>Nhập</span></button><button class="hbtn" id="lk" title="Khóa ngay">${ic('lock')}<span>Khóa</span></button></div></div>
+  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">${greet()} · v26</div></div></div><div class="hb"><button class="hbtn" id="homeb" title="Bảng bệnh nhân">${ic('bed')}<span>Bảng</span></button><button class="hbtn" id="toolb" title="Tiện ích">${ic('tool')}<span>Tiện ích</span></button><button class="hbtn" id="setb" title="Cài đặt">${ic('gear')}<span>Cài đặt</span></button><button class="hbtn" id="stbtn" title="Thống kê">${ic('chart')}<span>Thống kê</span></button><button class="hbtn" id="bk" title="Sao lưu dữ liệu">${ic('down')}<span>Sao lưu</span></button><button class="hbtn" id="imp1" title="Nhập file sao lưu">${ic('up')}<span>Nhập</span></button><button class="hbtn" id="lk" title="Khóa ngay">${ic('lock')}<span>Khóa</span></button></div></div>
   <div class="stats" id="st"></div><div id="rem"></div>
-  <div class="cols"><section id="ls"><div class="lsh"><div class="bar2"><div class="sw">${ic('search')}<input id="q" placeholder="Tìm tên, chẩn đoán, mã y tế, SĐT"></div><button class="btn" id="fbtn">${ic('filter')}Bộ lọc<span id="fbd" class="bd" style="display:none"></span></button></div><div class="fcs" id="chips"></div><div class="rs" id="rs"></div><button class="btn pri" id="add" style="width:100%;margin-bottom:12px;justify-content:center">${ic('plus')}Thêm bệnh nhân</button></div><div id="it"></div></section><section id="dt" class="hm"></section></div>
+  <div class="cols"><section id="ls"><div class="lsh"><div class="bar2"><div class="sw">${ic('search')}<input id="q" placeholder="Tìm tên, chẩn đoán, mã y tế, SĐT"></div><button class="btn" id="fbtn">${ic('filter')}Bộ lọc<span id="fbd" class="bd" style="display:none"></span></button></div><div class="fcs" id="chips"></div><div class="rs" id="rs"></div><div class="hv" id="hv"></div><button class="btn pri" id="add" style="width:100%;margin-bottom:12px;justify-content:center">${ic('plus')}Thêm bệnh nhân</button></div><div id="it"></div></section><section id="dt" class="hm"></section></div>
   <nav class="bn"><button class="on" data-nav="list">${ic('home')}Bệnh nhân</button><button data-nav="tool">${ic('tool')}Tiện ích</button><button class="plus" data-nav="add" aria-label="Thêm bệnh nhân">${ic('plus')}</button><button data-nav="stats">${ic('chart')}Thống kê</button><button data-nav="lock">${ic('lock')}Khóa</button></nav>`;
-  $('q').oninput=list;chips();bump();render();if(remList().length&&!hasSnap())remDlg();
+  $('q').oninput=list;chips();bump();render();if((remList().length||ylToday().length)&&!hasSnap())remDlg();
 }
 function render(){
   const n=t=>S.filter(p=>p.tt===t).length,h=S.filter(p=>hs(p)).length,c=(cl,i,num,lab,k,on)=>`<button class="stat ${cl}${on?' on':''}" data-stat="${k}"><div class="si">${ic(i)}</div><div><b data-n="${num}">${num}</b><span>${lab}</span></div></button>`;
   $('st').innerHTML=c('dt','activity',n('Đang điều trị'),'Đang điều trị','Đang điều trị',flt==='Đang điều trị')+c('ng','home',n('Ngoại trú'),'Ngoại trú','Ngoại trú',flt==='Ngoại trú')+c('rv','check',n('Đã ra viện'),'Đã ra viện','Đã ra viện',flt==='Đã ra viện')+c('al','cal',h,'Cần tái khám','hen',F.hen==='can');countUps($('st'));
-  $('rem').innerHTML=remHTML();list();detail();
+  $('rem').innerHTML=remHTML()+ylHTML();hvHTML();list();detail();
 }
 const ini=s=>(String(s).replace(/\(.*?\)/g,'').trim().split(/\s+/).slice(-2).map(w=>w[0]).join('')||'?').toUpperCase();
 function list(){
   const q=$('q').value.toLowerCase(),r=S.filter(p=>passF(p)&&hayP(p).toLowerCase().includes(q));
   r.sort(cmpF);sumF(r.length);$('it').classList.toggle('stag',stagOn);stagOn=false;
-  $('it').innerHTML=r.length?r.map(p=>{const d=pod(p),h=hs(p),cd=curDays(p);return`<button class="pt ${sc(p)} ${p.id===sel?'sel':''}" data-id="${p.id}"><div class="av">${esc(ini(p.ten))}</div><div class="pm"><b>${esc((p.ten||'').toUpperCase())}</b><div class="d">${esc(p.cd)}</div>${p.mayte?`<div class="d">Mã YT: ${esc(p.mayte)}</div>`:''}<div class="tg"><span class="pill">${p.tt}</span><span class="tag">${p.hd}</span>${p.dung?`<span class="tag r">Dị ứng thuốc</span>`:''}${p.ra&&p.ra.loai!=='Ra viện'?`<span class="tag">${p.ra.loai}</span>`:''}${p.ds&&p.ds.length?`<span class="tag">Lần nhập viện thứ ${p.ds.length+1}</span>`:''}${p.tt==='Đang điều trị'&&p.giuong?`<span class="tag cd">Giường ${esc(p.giuong)}</span>`:''}${cd!==null?`<span class="tag cd">Ngày điều trị thứ ${cd}</span>`:''}${d!==null&&d>=0&&p.tt!=='Đã ra viện'&&isPT(p)?`<span class="tag">Hậu phẫu ngày ${d}</span>`:''}${h?`<span class="tag r">${h==='late'?'Quá hẹn':'Sắp tái khám'}</span>`:''}</div></div></button>`}).join(''):`<div class="empty">${S.length?'Không có bệnh nhân phù hợp.':'Chưa có bệnh nhân. Bấm "Thêm bệnh nhân", hoặc <a href="#" id="seed">nạp bệnh nhân mẫu để thử</a>.'}</div>`;
+  $('it').innerHTML=(HV==='round'&&innerWidth<=800)?roundCards():r.length?r.map(p=>{const d=pod(p),h=hs(p),cd=curDays(p);return`<button class="pt ${sc(p)} ${p.id===sel?'sel':''}" data-id="${p.id}"><div class="av">${esc(ini(p.ten))}</div><div class="pm"><b>${esc((p.ten||'').toUpperCase())}</b><div class="d">${esc(p.cd)}</div>${p.mayte?`<div class="d">Mã YT: ${esc(p.mayte)}</div>`:''}<div class="tg"><span class="pill">${p.tt}</span><span class="tag">${p.hd}</span>${p.dung?`<span class="tag r">Dị ứng thuốc</span>`:''}${p.ra&&p.ra.loai!=='Ra viện'?`<span class="tag">${p.ra.loai}</span>`:''}${p.ds&&p.ds.length?`<span class="tag">Lần nhập viện thứ ${p.ds.length+1}</span>`:''}${p.tt==='Đang điều trị'&&p.giuong?`<span class="tag cd">Giường ${esc(p.giuong)}</span>`:''}${cd!==null?`<span class="tag cd">Ngày điều trị thứ ${cd}</span>`:''}${d!==null&&d>=0&&p.tt!=='Đã ra viện'&&isPT(p)?`<span class="tag">Hậu phẫu ngày ${d}</span>`:''}${h?`<span class="tag r">${h==='late'?'Quá hẹn':'Sắp tái khám'}</span>`:''}</div></div></button>`}).join(''):`<div class="empty">${S.length?'Không có bệnh nhân phù hợp.':'Chưa có bệnh nhân. Bấm "Thêm bệnh nhân", hoặc <a href="#" id="seed">nạp bệnh nhân mẫu để thử</a>.'}</div>`;
   $('ls').classList.toggle('hm',mob);$('app').classList.toggle('mdet',mob);{const cl=document.querySelector('.cols');if(cl)cl.classList.toggle('home',sel===null)}if(sel===null)homeTable();
 }
 const isPT=p=>p.hd!=='Nội khoa',vao=p=>p.ngayVao||p.ngayMo||'';
 const curDays=p=>p.tt==='Đang điều trị'&&vao(p)?diff(vao(p),today())+1:null;
-let lastD=today();setInterval(()=>{if(K&&today()!==lastD){lastD=today();render()}},6e4);
+let lastD=today();setInterval(()=>{if(K&&today()!==lastD){lastD=today();ylSweep();render()}},6e4);
 async function detail(){
   const el=$('dt'),p0=S.find(x=>x.id===sel);if(p0&&viewEp!==null&&!(p0.ds&&p0.ds[viewEp]))viewEp=null;const p=curP();el.classList.toggle('hm',!mob);
   if(!p){homeTable();if(innerWidth<=800)el.innerHTML=`<div class="panel empty"><div class="ei">${ic('clip')}</div><b>Chưa chọn bệnh nhân</b><div class="sub">Chọn một bệnh nhân ở danh sách để xem hồ sơ.</div></div>`;return}
@@ -479,6 +506,7 @@ async function detail(){
   el.innerHTML=`<button class="btn" id="back" style="margin-bottom:10px;${innerWidth>800?'display:none':''}">${ic('back')}Danh sách</button><div class="panel ${sc(p)}${viewEp!==null?' ro':''}"><div class="pb"></div>${viewEp!==null?`<div class="roB"><span>Đang xem đợt điều trị cũ: <b>${fmt(p.ngayVao)} – ${fmt(p.ngayRa)}</b></span><button class="btn" data-ep="-1">Quay lại đợt hiện tại</button></div>`:''}
   <div class="pha"><button class="ibtn" id="edit2" title="Sửa thông tin">${ic('edit')}</button>${p.sdt?`<button class="ibtn" data-tel="${esc(p.sdt)}" title="Gọi điện, nhắn tin">${ic('phone')}</button>`:''}</div><div class="ph0"><div class="av big">${esc(ini(p.ten))}</div><div><h2>${esc((p.ten||'').toUpperCase())}</h2><div class="sub">${age(p)||'?'} tuổi${p.namSinh?' (sinh '+p.namSinh+')':''} · ${p.gioi}${pt&&p.asa?' · ASA '+esc(p.asa):''}</div><div><span class="pill" style="margin:6px 6px 0 0">${p.tt}</span>${p.mayte?`<span class="chip">${ic('clip')}Mã YT: ${esc(p.mayte)}</span>`:''}${p.sdt?`<button class="chip" data-tel="${esc(p.sdt)}" style="border:0;cursor:pointer">${ic('phone')}${esc(p.sdt)}</button>`:''}</div></div></div>
   ${tabBar(p)}<div class="${tpc('ov')}" data-t="ov">${algHTML(p)}${cdn}<div class="grid">${tiles}</div>${epHTML(p0)}
+  ${ylSecHTML(p)}
   <h3>${ic('clip')}Ghi chú chung</h3><div>${esc(p.ghi)||'<span class="sub">Chưa có.</span>'}</div></div><div class="${tpc('img')}" data-t="img">${pt?`<h3>${ic('cam')}Ảnh vết mổ</h3><div class="row" style="margin-top:0">${pair('vetmo')}</div>${lib}<div class="ph">${vm.map(th).join('')}</div>
   <h3>${ic('doc')}Tường trình phẫu thuật</h3><div class="row" style="margin-top:0">${pair('tt')}</div>${lib}<div class="ph">${tr.map(th).join('')}</div>`:''}
   <h3>${ic('activity')}Ảnh cận lâm sàng</h3><div id="clsBox">${clsHTML(p)}</div></div><div class="${tpc('rx')}" data-t="rx">${rxHTML(p,pair,th)}</div><div class="${tpc('nt')}" data-t="nt">
@@ -1060,12 +1088,12 @@ function dupCheck(){
   const b=$('dupbox');if(!b)return;const r=dupFind();
   b.innerHTML=r.length?`<div class="dup"><b>${ic('warn')}Bệnh nhân đã có trong sổ</b><div class="sub">Chọn để giữ nguyên thông tin cá nhân và thêm lượt điều trị mới:</div>${r.map(p=>`<button type="button" class="dupi" data-dup="${p.id}"><b>${esc((p.ten||'').toUpperCase())}</b><div class="d">${age(p)||'?'} tuổi${p.namSinh?' · sinh '+p.namSinh:''} · Mã YT: ${esc(p.mayte||'—')} · ${p.tt}</div></button>`).join('')}</div>`:''}
 {const f0=fillPaste;fillPaste=function(){f0();dupCheck()};const q0=qrDone;qrDone=function(t){q0(t);dupCheck()}}
-const TINT=[['Ghi chú','#64748b'],['Ảnh vết mổ','#db2777'],['Tường trình','#7c3aed'],['cận lâm sàng','#2563eb'],['Đơn thuốc','#059669'],['Diễn biến','#ea580c'],['đợt điều trị','#0e7490']];
+const TINT=[['Ghi chú nhanh','#e11d48'],['Ghi chú','#64748b'],['Ảnh vết mổ','#db2777'],['Tường trình','#7c3aed'],['cận lâm sàng','#2563eb'],['Đơn thuốc','#059669'],['Diễn biến','#ea580c'],['đợt điều trị','#0e7490']];
 function tintSec(root){root.querySelectorAll('.panel .tp>h3,.panel .tp>details.sec>summary').forEach(h=>{const t=TINT.find(([k])=>h.textContent.includes(k));if(t)h.style.setProperty('--ic',t[1])})}
 /* ---- nhắc tái khám ---- */
 const remList=()=>S.filter(p=>p.hen&&diff(today(),p.hen)<=1).sort((a,b)=>a.hen.localeCompare(b.hen));
 const remWhen=p=>{const d=diff(today(),p.hen);return d<0?`Quá hẹn ${-d} ngày`:d===0?'Hôm nay':'Ngày mai'};
-function remDlg(){$('dlg').innerHTML=remHTML(true)+'<div class="row" style="justify-content:flex-end"><button class="btn" id="cx">Đóng</button></div>';sd();$('cx').onclick=()=>$('dlg').close()}
+function remDlg(){$('dlg').innerHTML=remHTML(true)+ylHTML(true)+'<div class="row" style="justify-content:flex-end"><button class="btn" id="cx">Đóng</button></div>';sd();$('cx').onclick=()=>$('dlg').close()}
 function khamDlg(id){
   const p=S.find(x=>x.id===id);if(!p)return;
   $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">Đã tái khám: ${esc((p.ten||'').toUpperCase())}</h2><div class="sub">Ghi nhận đã khám hôm nay. Nếu có hẹn lần sau, chọn ngày:</div><label>Ngày hẹn tiếp theo (không bắt buộc)<input type="date" id="kn"></label><div class="row" style="justify-content:flex-end"><button class="btn" id="cx">Hủy</button><button class="btn pri" data-kok="${id}">Lưu</button></div>`;
@@ -1159,8 +1187,8 @@ async function restore(file){
   }catch(e){alert('File sao lưu không hợp lệ.')}
 }
 const seedData=()=>[
-{id:1,ten:'Nguyễn Văn A (mẫu)',mayte:'MYT-0001',sdt:'0900000001',namSinh:1968,dc:'TP Hà Tĩnh',giuong:'12',gioi:'Nam',cd:'Viêm ruột thừa cấp',hd:'Phẫu thuật',pp:'Cắt ruột thừa nội soi',asa:'II',ngayVao:day(-3),ngayMo:day(-2),tt:'Đang điều trị',hen:day(7),ngayRa:'',ghi:'Tăng huyết áp. Không dị ứng thuốc.',nhat:[{ng:day(-1),t:'Tỉnh, đau VAS 3, đã trung tiện.'}],ph:[]},
-{id:2,ten:'Lê Văn C (mẫu)',mayte:'MYT-0002',sdt:'0900000002',namSinh:1959,dc:'Cẩm Xuyên, Hà Tĩnh',giuong:'05',gioi:'Nam',cd:'Viêm tụy cấp nhẹ do sỏi',hd:'Nội khoa',pp:'Nhịn ăn, truyền dịch, giảm đau',asa:'',ngayVao:day(-5),ngayMo:'',tt:'Đang điều trị',hen:day(-1),ngayRa:'',ghi:'',nhat:[],ph:[]},
+{id:1,ten:'Nguyễn Văn A (mẫu)',mayte:'MYT-0001',sdt:'0900000001',namSinh:1968,dc:'TP Hà Tĩnh',giuong:'12',yl:[{id:'s1',d:day(0),yl:'XN máu sáng; thay băng vết mổ',cy:'Theo dõi dẫn lưu, báo nếu sốt',ok:false}],gioi:'Nam',cd:'Viêm ruột thừa cấp',hd:'Phẫu thuật',pp:'Cắt ruột thừa nội soi',asa:'II',ngayVao:day(-3),ngayMo:day(-2),tt:'Đang điều trị',hen:day(7),ngayRa:'',ghi:'Tăng huyết áp. Không dị ứng thuốc.',nhat:[{ng:day(-1),t:'Tỉnh, đau VAS 3, đã trung tiện.'}],ph:[]},
+{id:2,ten:'Lê Văn C (mẫu)',mayte:'MYT-0002',sdt:'0900000002',namSinh:1959,dc:'Cẩm Xuyên, Hà Tĩnh',giuong:'05',yl:[{id:'s2',d:day(0),yl:'Nhịn ăn, truyền dịch',cy:'Đau bụng tăng thì báo ngay',ok:false},{id:'s3',d:day(1),yl:'Siêu âm bụng',cy:'',ok:false}],gioi:'Nam',cd:'Viêm tụy cấp nhẹ do sỏi',hd:'Nội khoa',pp:'Nhịn ăn, truyền dịch, giảm đau',asa:'',ngayVao:day(-5),ngayMo:'',tt:'Đang điều trị',hen:day(-1),ngayRa:'',ghi:'',nhat:[],ph:[]},
 {id:3,ten:'Trần Thị B (mẫu)',mayte:'MYT-0003',sdt:'0900000003',namSinh:1981,dc:'Thạch Hà, Hà Tĩnh',gioi:'Nữ',cd:'Sỏi túi mật',hd:'Phẫu thuật',pp:'Cắt túi mật nội soi',asa:'I',ngayVao:day(-16),ngayMo:day(-14),tt:'Ngoại trú',hen:day(1),ngayRa:day(-11),ghi:'',nhat:[],ph:[]},
 {id:4,ten:'Phạm Thị D (mẫu)',mayte:'MYT-0004',sdt:'0900000004',namSinh:1992,dc:'Nghi Xuân, Hà Tĩnh',gioi:'Nữ',cd:'Thoát vị bẹn phải',hd:'Phẫu thuật',pp:'Mổ mở đặt lưới',asa:'I',ngayVao:day(-41),ngayMo:day(-40),tt:'Đã ra viện',hen:'',ngayRa:day(-37),ghi:'',nhat:[],ph:[]},
 {id:5,ten:'Hoàng Văn E (mẫu)',mayte:'MYT-0005',sdt:'0900000005',namSinh:1974,dc:'Hồng Lĩnh, Hà Tĩnh',gioi:'Nam',cd:'Viêm dạ dày xuất huyết',hd:'Nội khoa',pp:'PPI truyền tĩnh mạch',asa:'',ngayVao:day(-9),ngayMo:'',tt:'Đã ra viện',hen:'',ngayRa:day(-4),ghi:'',nhat:[],ph:[]}];
@@ -1200,6 +1228,16 @@ document.addEventListener('click',async e=>{
   else if(id==='homeb'){sel=null;viewEp=null;mob=false;render()}
   else if(b.dataset.tedit){const p=S.find(x=>x.id===+b.dataset.tedit);if(p)form(p)}
   else if(b.dataset.tdel)delPt(+b.dataset.tdel);
+  else if(b.dataset.hv){HV=b.dataset.hv;hvHTML();list();homeTable()}
+  else if(b.dataset.qb){TS={k:'giuong',d:1};homeTable()}
+  else if(b.dataset.yladd)ylDlg(+b.dataset.yladd,null);
+  else if(b.dataset.yle){const[a,i]=b.dataset.yle.split('|');ylDlg(+a,i)}
+  else if(b.dataset.qk){const t=$('yl_y');if(t){const v=t.value.trim();t.value=v+(v?'; ':'')+b.dataset.qk}}
+  else if(b.dataset.yok){const[a,i]=b.dataset.yok.split('|'),p=S.find(x=>x.id===+a),it=p&&(p.yl||[]).find(x=>x.id===i);if(it){it.ok=!it.ok;await save();render()}}
+  else if(b.dataset.ylsave!==undefined){const[a,i]=b.dataset.ylsave.split('|'),p=S.find(x=>x.id===+a),d=$('yl_d').value,y=($('yl_y').value||'').trim(),c=($('yl_c').value||'').trim();
+    if(!d)return alert('Cần chọn ngày áp dụng.');if(d<today())return alert('Ngày áp dụng phải từ hôm nay trở đi, vì ghi chú tự mất khi qua ngày.');if(!y&&!c)return alert('Nhập y lệnh hoặc nội dung cần chú ý.');
+    p.yl=p.yl||[];const it=i&&p.yl.find(x=>x.id===i);if(it){it.d=d;it.yl=y;it.cy=c}else p.yl.push({id:ylId(),d,yl:y,cy:c,ok:false});await save();$('dlg').close();render();toast('Đã lưu ghi chú nhanh')}
+  else if(b.dataset.yldel){const[a,i]=b.dataset.yldel.split('|');if(!confirm('Xóa ghi chú nhanh này (y lệnh, lưu ý)? Thao tác này không thể hoàn tác.'))return;const p=S.find(x=>x.id===+a);p.yl=(p.yl||[]).filter(x=>x.id!==i);await save();$('dlg').close();render();toast('Đã xóa ghi chú nhanh')}
   else if(id==='syb')syncDlg();
   else if(id==='syc')syncConnect();
   else if(id==='syn'){syncNow(false).then(syncDlg)}
@@ -1276,8 +1314,9 @@ function countUps(root){root.querySelectorAll('b[data-n]').forEach((b,i)=>{const
   const t0=performance.now(),f=t=>{const k=Math.min(1,(t-t0)/650),e=1-Math.pow(1-k,3);b.textContent=Math.round(from+(to-from)*e);if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)})}
 function remHTML(open){
   const r=remList();if(!r.length)return'';const od=r.filter(p=>diff(today(),p.hen)<0).length,op=open===true||(open===undefined&&remOpen);
-  return`<details class="rem"${op?' open':''}><summary>${ic('bell')}<span class="rt">Nhắc tái khám</span><span class="rb">${r.length}</span>${od?`<span class="rb red">${od} quá hẹn</span>`:''}<i class="chev"></i></summary><div class="rbody">${r.map(p=>`<div class="ri ${diff(today(),p.hen)<0?'al':'ng'}"><div><b>${esc((p.ten||'').toUpperCase())}</b><div class="d">Hẹn ${fmt(p.hen)} · ${remWhen(p)}${p.mayte?' · Mã YT: '+esc(p.mayte):''}</div></div><div class="ra"><button class="btn ok" data-kham="${p.id}">${ic('check')}Đã khám</button>${p.sdt?`<button class="btn" data-tel="${esc(p.sdt)}">${ic('phone')}Liên hệ</button>`:''}</div></div>`).join('')}</div></details>`}
-document.addEventListener('click',e=>{const s=e.target.closest('.rem>summary');if(s)remOpen=!s.parentElement.open});
+  return`<details class="rem" data-k="rem"${op?' open':''}><summary>${ic('bell')}<span class="rt">Nhắc tái khám</span><span class="rb">${r.length}</span>${od?`<span class="rb red">${od} quá hẹn</span>`:''}<i class="chev"></i></summary><div class="rbody">${r.map(p=>`<div class="ri ${diff(today(),p.hen)<0?'al':'ng'}"><div><b>${esc((p.ten||'').toUpperCase())}</b><div class="d">Hẹn ${fmt(p.hen)} · ${remWhen(p)}${p.mayte?' · Mã YT: '+esc(p.mayte):''}</div></div><div class="ra"><button class="btn ok" data-kham="${p.id}">${ic('check')}Đã khám</button>${p.sdt?`<button class="btn" data-tel="${esc(p.sdt)}">${ic('phone')}Liên hệ</button>`:''}</div></div>`).join('')}</div></details>`}
+document.addEventListener('click',e=>{const s=e.target.closest('.rem>summary');if(s){const v=!s.parentElement.open;if(s.parentElement.dataset.k==='yl')ylOpen=v;else remOpen=v;return}
+  if(innerWidth>800&&!e.target.closest('#rem')&&(remOpen||ylOpen)){remOpen=false;ylOpen=false;document.querySelectorAll('#rem details[open]').forEach(d=>d.open=false)}});
 
 /* ---- bộ biểu tượng hai tông (duotone) thống nhất ---- */
 {const D=p=>`<path class="d" d="${p}"/><path d="${p}"/>`,
@@ -1323,14 +1362,14 @@ let TS={k:'vao',d:1};
 const TSK={ten:p=>(p.ten||'').toLowerCase(),mayte:p=>p.mayte||'',tuoi:p=>age(p)||0,vao:p=>vao(p)||'',dt:p=>curDays(p)||0,giuong:p=>parseFloat(p.giuong)||0,cd:p=>(p.cd||'').toLowerCase()};
 const hayP=p=>(p.ten+' '+p.cd+' '+(p.mayte||'')+' '+(p.sdt||'')+' '+(p.dc||'')+' '+(p.ds||[]).map(e=>e.cd).join(' ')).toLowerCase();
 function homeTable(){
-  const el=$('dt');if(!el||innerWidth<=800||sel!==null)return;
+  const el=$('dt');if(!el||innerWidth<=800||sel!==null)return;if(HV==='round')return roundTable(el);
   const q=($('q')?$('q').value:'').toLowerCase(),f=TSK[TS.k];
-  const r=S.filter(p=>passF(p)&&hayP(p).includes(q)).sort((a,b)=>{const x=f(a),y=f(b);return(x<y?-1:x>y?1:0)*TS.d});
+  const r=S.filter(p=>passF(p)&&hayP(p).includes(q)).sort((a,b)=>{if(TS.k==='giuong')return bedCmp(a,b)*TS.d;const x=f(a),y=f(b);return(x<y?-1:x>y?1:0)*TS.d});
   const th=(k,t)=>`<th data-ts="${k}">${t}${TS.k===k?`<i class="so">${TS.d>0?'▲':'▼'}</i>`:''}</th>`;
   const zl=p=>{const d=(p.sdt||'').replace(/[^\d]/g,'');return d?`<a class="zl" href="https://zalo.me/${d}" target="_blank" rel="noopener">${ic('chat')}Zalo</a>`:'—'};
   const rows=r.map((p,i)=>{const c=curDays(p);return`<tr class="${sc(p)}" data-open="${p.id}"><td>${i+1}</td><td class="nm"><b>${esc((p.ten||'').toUpperCase())}</b>${p.dung?`<span class="al" title="Dị ứng thuốc: ${esc(p.dung)}">${ic('warn')}</span>`:''}${p.tt!=='Đang điều trị'?`<div><span class="pill">${p.tt}</span></div>`:''}</td><td class="mono">${esc(p.mayte||'—')}</td><td>${age(p)||'—'}</td><td>${fmt(vao(p))}</td><td>${c!==null?c:'—'}</td><td class="gb">${p.giuong?'Giường '+esc(p.giuong):'—'}</td><td class="cdx">${esc(p.cd)}</td><td>${zl(p)}</td><td class="act"><button class="tb-e" data-tedit="${p.id}">Sửa</button><button class="tb-d" data-tdel="${p.id}">Xóa</button></td></tr>`}).join('');
   el.classList.remove('hm');
-  el.innerHTML=`<div class="wt"><div class="wth"><span class="wti">${ic('bed')}</span><h2>${esc(flt||'Tất cả bệnh nhân')}</h2><span class="cnt">${r.length} bệnh nhân</span><span class="sp"></span><span class="sub">${new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'})}</span></div><div class="wtw"><table class="wtb"><thead><tr><th>STT</th>${th('ten','Họ tên')}${th('mayte','Mã HS')}${th('tuoi','Tuổi')}${th('vao','Ngày vào')}${th('dt','Ngày ĐT')}${th('giuong','Giường')}${th('cd','Chẩn đoán')}<th>Zalo</th><th>Hành động</th></tr></thead><tbody>${rows||'<tr><td colspan="10" class="emp">Không có bệnh nhân phù hợp với bộ lọc hiện tại.</td></tr>'}</tbody></table></div></div>`}
+  el.innerHTML=`<div class="wt"><div class="wth"><span class="wti">${ic('bed')}</span><h2>${esc(flt||'Tất cả bệnh nhân')}</h2><span class="cnt">${r.length} bệnh nhân</span><button class="chipb${TS.k==='giuong'?' on':''}" data-qb="1">${ic('bed')}Xếp theo giường</button><span class="sp"></span><span class="sub">${new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'})}</span></div><div class="wtw"><table class="wtb"><thead><tr><th>STT</th>${th('ten','Họ tên')}${th('mayte','Mã HS')}${th('tuoi','Tuổi')}${th('vao','Ngày vào')}${th('dt','Ngày ĐT')}${th('giuong','Giường')}${th('cd','Chẩn đoán')}<th>Zalo</th><th>Hành động</th></tr></thead><tbody>${rows||'<tr><td colspan="10" class="emp">Không có bệnh nhân phù hợp với bộ lọc hiện tại.</td></tr>'}</tbody></table></div></div>`}
 function openPt(id){sel=id;viewEp=null;dtab='ov';mob=true;render();algWarn(S.find(x=>x.id===id))}
 async function delPt(id){
   const p=S.find(x=>x.id===id);if(!p)return;
@@ -1338,9 +1377,50 @@ async function delPt(id){
   for(const x of[...(p.ph||[]),...(p.ds||[]).flatMap(e=>e.ph||[])])await tx('readwrite',s=>s.delete(x.id));
   S=S.filter(x=>x!==p);addTomb(p.id);if(sel===id){sel=null;mob=false}await save();render();toast('Đã xóa hồ sơ')}
 document.addEventListener('click',e=>{
+  const rdh=e.target.closest('th[data-rd]');if(rdh){RD=-RD;homeTable();return}
   const t=e.target.closest('th[data-ts]');
   if(t){const k=t.dataset.ts;TS=TS.k===k?{k,d:-TS.d}:{k,d:1};homeTable();return}
-  const tr=e.target.closest('tr[data-open]');if(tr&&!e.target.closest('button,a'))openPt(+tr.dataset.open)});
+  const tr=e.target.closest('[data-open]');if(tr&&!e.target.closest('button,a'))openPt(+tr.dataset.open)});
+
+/* ---- ghi chú nhanh: y lệnh, lưu ý theo ngày; đi buồng theo giường ---- */
+let HV='table',RD=1,ylOpen=false;
+const bedKey=p=>{const b=String(p.giuong||'').trim();if(!b)return[2,0,''];const n=parseFloat(b);return isNaN(n)?[1,0,b.toLowerCase()]:[0,n,b.toLowerCase()]};
+const bedCmp=(a,b)=>{const x=bedKey(a),y=bedKey(b);return x[0]-y[0]||x[1]-y[1]||(x[2]<y[2]?-1:x[2]>y[2]?1:0)};
+const ylId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const ylToday=()=>S.filter(p=>p.tt==='Đang điều trị').sort(bedCmp).flatMap(p=>(p.yl||[]).filter(i=>i.d===today()).map(i=>({p,i})));
+function ylPurge(){let c=0;const t=today();S.forEach(p=>{if(p.yl&&p.yl.length){const k=p.yl.filter(i=>i.d>=t);if(k.length!==p.yl.length){p.yl=k;c++}}});return c}
+async function ylSweep(){if(ylPurge()){await save();if(!$('dlg').open)render()}}
+const ylWhen=d=>d===today()?'Hôm nay':d===day(1)?'Ngày mai':fmt(d);
+const ylLine=(i)=>`${i.yl?`<div><b>Y lệnh:</b> ${esc(i.yl)}</div>`:''}${i.cy?`<div class="cy"><b>Chú ý:</b> ${esc(i.cy)}</div>`:''}`;
+function ylHTML(open){
+  const L=ylToday();if(!L.length)return'';const pend=L.filter(x=>!x.i.ok).length,op=open===true||(open===undefined&&ylOpen);
+  const g=[];L.forEach(x=>{let e=g.find(y=>y.p===x.p);if(!e){e={p:x.p,l:[]};g.push(e)}e.l.push(x.i)});
+  return`<details class="rem yl" data-k="yl"${op?' open':''}><summary>${ic('clip')}<span class="rt">Y lệnh, lưu ý hôm nay</span><span class="rb">${pend?pend+' chưa xong':'đã xong hết'}</span><i class="chev"></i></summary><div class="rbody">${g.map(e=>`<div class="yg"><div class="yh"><span class="bd2">${esc(e.p.giuong||'—')}</span><b>${esc((e.p.ten||'').toUpperCase())}</b><span class="d">${age(e.p)||'?'} tuổi · ${esc(e.p.cd)}</span></div>${e.l.map(i=>`<div class="yi${i.ok?' ok':''}"><button class="yck" data-yok="${e.p.id}|${i.id}" title="Đánh dấu đã làm">${ic('check')}</button><button class="yedit" data-yle="${e.p.id}|${i.id}">${ylLine(i)}</button></div>`).join('')}</div>`).join('')}</div></details>`}
+function ylSecHTML(p){
+  const L=(p.yl||[]).slice().sort((a,b)=>a.d.localeCompare(b.d));
+  return`<h3>${ic('bell')}Ghi chú nhanh: y lệnh, lưu ý</h3><div class="sub">Theo từng ngày, tự mất khi qua ngày.</div><div class="ylc">${L.map(i=>`<div class="yi${i.ok?' ok':''}"><button class="yck" data-yok="${p.id}|${i.id}" title="Đánh dấu đã làm">${ic('check')}</button><button class="yedit" data-yle="${p.id}|${i.id}"><span class="ywh${i.d===today()?' now':''}">${ylWhen(i.d)}</span>${ylLine(i)}</button></div>`).join('')||'<div class="sub" style="margin:6px 0">Chưa có ghi chú nào cho các ngày sắp tới.</div>'}</div><div class="row" style="margin-top:6px"><button class="btn pri" data-yladd="${p.id}">${ic('plus')}Thêm y lệnh, lưu ý</button></div>`}
+function ylDlg(pid,id){
+  const p=S.find(x=>x.id===pid);if(!p)return;const it=id?(p.yl||[]).find(x=>x.id===id):null;
+  const QK=['XN máu sáng','Nhịn ăn','Thay băng','Rút dẫn lưu','Siêu âm','Chụp CT','Truyền dịch','Đo sinh hiệu 4 giờ/lần'];
+  $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">${it?'Sửa ghi chú nhanh':'Thêm ghi chú nhanh'}</h2><div class="sub">${esc((p.ten||'').toUpperCase())}${p.giuong?' · Giường '+esc(p.giuong):''}</div>
+  <label>Ngày áp dụng<input type="date" id="yl_d" value="${it?it.d:today()}" min="${today()}"><div class="qd" data-for="yl_d"><button type="button" class="lnk" data-qd="0">Hôm nay</button> · <button type="button" class="lnk" data-qd="-1">Ngày mai</button></div></label>
+  <label>Y lệnh<textarea id="yl_y" rows="3" placeholder="VD: XN máu sáng, thay băng vết mổ">${esc(it?it.yl:'')}</textarea></label>
+  <div class="cchips">${QK.map(k=>`<button type="button" class="cc" data-qk="${esc(k)}" style="--k:#0e6b6e">${esc(k)}</button>`).join('')}</div>
+  <label>Cần chú ý<textarea id="yl_c" rows="2" placeholder="VD: theo dõi dẫn lưu, báo nếu sốt">${esc(it?it.cy:'')}</textarea></label>
+  <div class="sub" style="margin-top:6px">Ghi chú tự mất khi qua ngày để nhẹ dữ liệu.</div>
+  <div class="row" style="justify-content:space-between"><div>${it?`<button class="btn del" data-yldel="${pid}|${id}">${ic('trash')}Xóa</button>`:''}</div><div class="row" style="margin:0"><button class="btn" id="cx">Hủy</button><button class="btn pri" data-ylsave="${pid}|${id||''}">Lưu</button></div></div>`;
+  sd();$('cx').onclick=()=>$('dlg').close()}
+function roundTable(el){
+  const q=($('q')?$('q').value:'').toLowerCase(),t=today(),L=S.filter(p=>p.tt==='Đang điều trị'&&hayP(p).includes(q)).sort((a,b)=>bedCmp(a,b)*RD);
+  const all=L.flatMap(p=>(p.yl||[]).filter(i=>i.d===t)),done=all.filter(i=>i.ok).length;
+  const rows=L.map(p=>{const it=(p.yl||[]).filter(i=>i.d===t),c=curDays(p);
+    return`<tr class="${sc(p)}" data-open="${p.id}"><td class="gb2"><span class="bd2">${esc(p.giuong||'—')}</span></td><td class="nm"><b>${esc((p.ten||'').toUpperCase())}</b>${p.dung?`<span class="al" title="Dị ứng thuốc: ${esc(p.dung)}">${ic('warn')}</span>`:''}<div class="d">${age(p)||'?'} tuổi · ngày điều trị thứ ${c??'—'}${isPT(p)&&p.ngayMo&&diff(p.ngayMo,t)>=0?' · hậu phẫu ngày '+diff(p.ngayMo,t):''}</div></td><td class="cdx">${esc(p.cd)}</td><td class="ylx">${it.length?it.map(i=>`<div class="yi${i.ok?' ok':''}"><button class="yck" data-yok="${p.id}|${i.id}" title="Đánh dấu đã làm">${ic('check')}</button><button class="yedit" data-yle="${p.id}|${i.id}">${ylLine(i)}</button></div>`).join(''):'<span class="d">Chưa có y lệnh hôm nay</span>'}</td><td class="act"><button class="tb-e" data-yladd="${p.id}">+ Thêm</button></td></tr>`}).join('');
+  el.classList.remove('hm');
+  el.innerHTML=`<div class="wt"><div class="wth"><span class="wti">${ic('clip')}</span><h2>Đi buồng hôm nay</h2><span class="cnt">${L.length} bệnh nhân</span><span class="cnt ok">${done}/${all.length} việc đã xong</span><span class="sp"></span><span class="sub">${new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'})}</span></div><div class="wtw"><table class="wtb"><thead><tr><th data-rd="1" style="width:84px">Giường<i class="so">${RD>0?'▲':'▼'}</i></th><th>Bệnh nhân</th><th>Chẩn đoán</th><th>Y lệnh, lưu ý hôm nay</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="emp">Không có bệnh nhân đang điều trị.</td></tr>'}</tbody></table></div></div>`}
+function roundCards(){
+  const q=($('q')?$('q').value:'').toLowerCase(),t=today(),L=S.filter(p=>p.tt==='Đang điều trị'&&hayP(p).includes(q)).sort(bedCmp);
+  return L.length?L.map(p=>{const it=(p.yl||[]).filter(i=>i.d===t),c=curDays(p);return`<div class="rc ${sc(p)}" data-open="${p.id}"><div class="rch"><span class="bd2">${esc(p.giuong||'—')}</span><div style="min-width:0;flex:1"><b>${esc((p.ten||'').toUpperCase())}</b>${p.dung?`<span class="al">${ic('warn')}</span>`:''}<div class="d">${age(p)||'?'} tuổi · ngày điều trị thứ ${c??'—'}</div></div></div><div class="d" style="margin:4px 0">${esc(p.cd)}</div>${it.map(i=>`<div class="yi${i.ok?' ok':''}"><button class="yck" data-yok="${p.id}|${i.id}">${ic('check')}</button><button class="yedit" data-yle="${p.id}|${i.id}">${ylLine(i)}</button></div>`).join('')||'<div class="d">Chưa có y lệnh hôm nay</div>'}<button class="btn" style="margin-top:6px" data-yladd="${p.id}">${ic('plus')}Thêm y lệnh</button></div>`}).join(''):'<div class="empty">Không có bệnh nhân đang điều trị.</div>'}
+function hvHTML(){const b=(k,i,t)=>`<button class="${HV===k?'on':''}" data-hv="${k}">${ic(i)}${t}</button>`;const ap=$('app');if(ap)ap.classList.toggle('hvr',HV==='round');const e=$('hv');if(e)e.innerHTML=b('table','bed','Danh sách')+b('round','clip','Đi buồng')}
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 lockScreen();
