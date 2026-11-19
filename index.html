@@ -356,6 +356,50 @@ details.rem.yl>summary{color:#e11d48}details.rem.yl .rb{background:#ffe4ea;color
 details.rem>.rbody{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:25;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 50px -18px rgba(15,34,48,.45);max-height:56vh;overflow:auto;padding:8px 14px 12px}
 .cols:not(.home) .hv{display:none}.cols.home .hv{order:2}}
 @media(max-width:800px){.hv{margin:0 0 10px}.hv button{flex:1;justify-content:center}}
+/* ===== màn hình khóa: đèn bàn ===== */
+.lp{--lc:255,176,56;--gx:30%;--gy:40%;position:fixed;inset:0;z-index:30;display:flex;overflow-x:hidden;overflow-y:auto;color:#e9eef2;background:radial-gradient(1000px 640px at 50% 62%,#141c22,#06090c 72%)}
+.lp-stage{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.lp-glow{position:absolute;inset:0;opacity:0;transition:opacity 1s ease;background:radial-gradient(560px 480px at var(--gx) var(--gy),rgba(var(--lc),.36),transparent 70%),radial-gradient(1100px 800px at 55% 55%,rgba(var(--lc),.11),transparent 75%)}
+.lp.on .lp-glow{opacity:1}
+.lp-cone{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .9s ease;filter:blur(16px)}.lp.on .lp-cone{opacity:1}
+.lp-cone .s0{stop-color:rgb(var(--lc));stop-opacity:.52}.lp-cone .s1{stop-color:rgb(var(--lc));stop-opacity:0}
+.lp.flick .lp-glow,.lp.flick .lp-cone{animation:lpFlick .9s both}
+.lp-dust i{position:absolute;width:var(--s);height:var(--s);border-radius:50%;background:rgb(var(--lc));opacity:0;box-shadow:0 0 6px rgb(var(--lc));animation:lpDrift var(--t) ease-in-out var(--w) infinite alternate}
+.lp.on .lp-dust i{opacity:.55;transition:opacity 1.2s}
+.lp-scene{position:relative;margin:auto;display:flex;align-items:center;gap:6px;padding:28px;width:100%;max-width:900px;justify-content:center}
+.lp-lampw{position:relative;width:250px;flex:none;animation:lpIn .9s cubic-bezier(.2,.8,.2,1) both}
+.lp-lamp{display:block;width:100%;height:auto;overflow:visible;touch-action:none}
+.lp-bulb{fill:#14171b;transition:fill .6s}.lp.on .lp-bulb{fill:rgb(var(--lc));filter:drop-shadow(0 0 9px rgb(var(--lc)))}
+.lp-halo{fill:transparent;transition:fill .8s}.lp.on .lp-halo{fill:rgba(var(--lc),.3);filter:blur(16px)}
+#lpb:focus-visible circle:last-child{stroke:#fff;stroke-width:2}
+.lp-hint{position:absolute;left:50%;top:49%;display:flex;align-items:center;gap:7px;white-space:nowrap;padding:5px 11px 5px 9px;border-radius:9px;background:rgba(20,26,32,.9);border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:600;color:#d7dee5;transition:opacity .6s;pointer-events:none}
+.lp-hint i{width:7px;height:7px;border-radius:50%;background:rgb(var(--lc));box-shadow:0 0 8px rgb(var(--lc));animation:lpBlink 1.4s ease-in-out infinite}.lp-hint.dim{opacity:.0}
+.lp-card{position:relative;z-index:2;width:370px;max-width:100%;padding:26px 24px 20px;border-radius:24px;background:linear-gradient(160deg,rgba(255,255,255,.075),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.1);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);box-shadow:0 40px 70px -28px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.1);opacity:0;filter:blur(12px);transform:translateY(18px) scale(.97);pointer-events:none;transition:opacity .9s ease .1s,filter .9s ease .1s,transform .9s cubic-bezier(.2,.8,.2,1) .1s,box-shadow .9s}
+.lp.on .lp-card{opacity:1;filter:none;transform:none;pointer-events:auto;box-shadow:0 40px 70px -28px rgba(0,0,0,.85),0 0 90px -24px rgba(var(--lc),.45),inset 0 1px 0 rgba(255,255,255,.14)}
+.lp-top{display:flex;justify-content:space-between;align-items:center}.lp-ey{font-size:10px;letter-spacing:.22em;font-weight:800;color:rgb(var(--lc));transition:color .6s}.lp-dot{width:7px;height:7px;border-radius:50%;background:rgb(var(--lc));box-shadow:0 0 10px rgb(var(--lc))}
+.lp-h{margin:14px 0 4px;font:500 34px/1.1 Georgia,"Times New Roman",serif;color:#fff;letter-spacing:-.01em}
+.lp-sub{margin:0 0 14px;font-size:13px;color:rgba(233,238,242,.66)}
+.lp-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:14px}.lp-tabs span{font-size:12px;font-weight:700;padding:0 2px 9px;border-bottom:2px solid rgb(var(--lc));margin-bottom:-1px;transition:border-color .6s}
+.lp-f{position:relative;margin-top:10px}.lp-f>.i{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:rgba(233,238,242,.5);pointer-events:none}
+.lp-f input{width:100%;height:48px;padding:0 46px 0 42px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#fff;font-size:16px;text-align:left;transition:border-color .25s,box-shadow .25s,background .25s}
+.lp-f input::placeholder{color:rgba(233,238,242,.4)}.lp-f input:focus{outline:0;border-color:rgb(var(--lc));background:rgba(255,255,255,.08);box-shadow:0 0 0 3px rgba(var(--lc),.2)}
+.lp-eyb{position:absolute;right:5px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;border-radius:10px;background:none;color:rgba(233,238,242,.55);display:flex;align-items:center;justify-content:center;cursor:pointer}.lp-eyb.on{color:rgb(var(--lc))}
+.lp-warn{margin-top:10px;padding:9px 11px;border-radius:12px;font-size:12px;text-align:left;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.35);color:#fde68a}
+.lp-card .err{margin-top:8px;min-height:18px;color:#fca5a5;font-size:13px;font-weight:600;text-align:left}
+.lp-btn{position:relative;overflow:hidden;width:100%;height:50px;margin-top:4px;border:0;border-radius:12px;font:inherit;font-size:15px;font-weight:800;color:#0a0d10;background:rgb(var(--lc));box-shadow:0 12px 28px -10px rgba(var(--lc),.8);cursor:pointer;transition:background .6s,transform .15s,box-shadow .3s}
+.lp-btn b{display:inline-block;transition:transform .25s}.lp-btn:hover b{transform:translateX(4px)}.lp-btn:active{transform:scale(.98)}
+.lp-btn:after{content:'';position:absolute;top:0;left:-60%;width:36%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:lpShine 4s ease-in-out infinite}
+.lp-sp{display:none;position:absolute;inset:0;margin:auto;width:22px;height:22px;border:3px solid rgba(10,13,16,.25);border-top-color:#0a0d10;border-radius:50%;animation:lpSpin .8s linear infinite}
+.lp-card.busy .lp-t{opacity:0}.lp-card.busy .lp-sp{display:block}.lp-card.busy .lp-btn:after{display:none}
+.lp-sepl{display:flex;align-items:center;gap:10px;margin:16px 0 10px;font-size:9px;letter-spacing:.2em;color:rgba(233,238,242,.4)}.lp-sepl:before,.lp-sepl:after{content:'';flex:1;height:1px;background:rgba(255,255,255,.1)}
+.lp-chips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}.lp-chips span{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:6px 10px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:rgba(233,238,242,.7)}.lp-chips .i{width:14px;height:14px;color:rgb(var(--lc))}
+.lp-imp{margin:12px 0 0;font-size:12px;text-align:center}.lp-imp a{color:rgb(var(--lc))}
+.lp-card.shake{animation:lpShake .5s}
+@keyframes lpIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}@keyframes lpBlink{50%{opacity:.35}}
+@keyframes lpFlick{0%{opacity:0}12%{opacity:.9}20%{opacity:.25}32%{opacity:1}42%{opacity:.5}100%{opacity:1}}
+@keyframes lpDrift{from{transform:translate(0,0)}to{transform:translate(22px,-34px)}}@keyframes lpShine{0%,55%{left:-60%}100%{left:130%}}@keyframes lpSpin{to{transform:rotate(360deg)}}
+@keyframes lpShake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-8px)}40%,60%{transform:translateX(8px)}}
+@media(max-width:800px){.lp-scene{flex-direction:column;gap:0;padding:12px 16px 22px;justify-content:flex-start}.lp-lampw{width:168px;margin-right:auto;margin-left:6px}.lp-card{margin-top:-8px}.lp-h{font-size:30px}}
 </style>
 </head>
 <body>
@@ -394,16 +438,28 @@ const tx=async(m,f)=>{const d=await idb();return new Promise((ok,no)=>{const t=d
 function lockScreen(note){if(K){if(skipSnap){uiSnap=null;try{sessionStorage.removeItem('sobn_ui')}catch(e){}}else snapLock()}skipSnap=false;
   K=null;S=[];sel=null;viewEp=null;mob=false;clearTimeout(idle);$('dlg').open&&$('dlg').close();if($('dq').open){qrStop();$('dq').close()}
   const first=!LG('sobn_meta');
-  $('app').innerHTML=`<div class="lk"><div class="lk-bg"><i class="o1"></i><i class="o2"></i><i class="o3"></i><svg class="ecg" viewBox="0 0 1200 140" preserveAspectRatio="none"><path class="b" d="M0 70H260l18-6 14 12 16-58 22 112 18-62 14 12 24 0H700l18-6 14 12 16-58 22 112 18-62 14 12 24 0H1200"/><path class="a" pathLength="1000" d="M0 70H260l18-6 14 12 16-58 22 112 18-62 14 12 24 0H700l18-6 14 12 16-58 22 112 18-62 14 12 24 0H1200"/></svg></div>
-  <form class="lk-card" id="lf"><div class="lk-logo"><span class="ring"></span><span class="ring r2"></span>${LOGO}</div><h1>Sổ bệnh nhân</h1><div class="lk-hello">${first?'Chào mừng bác sĩ':esc(greet().split(' · ')[0])}</div><div class="lk-clock"><b id="lkc"></b></div><p class="lk-sub">${first?'Tạo mật khẩu để bảo vệ toàn bộ dữ liệu':'Nhập mật khẩu để mở sổ'}</p>
-  <div class="lk-f">${ic('lock')}<input id="pw" type="password" placeholder="Mật khẩu" autocomplete="${first?'new-password':'current-password'}"><button type="button" class="lk-eye" id="eye" aria-label="Hiện hoặc ẩn mật khẩu">${ic('eye')}</button></div>
-  ${first?`<div class="lk-f">${ic('lock')}<input id="pw2" type="password" placeholder="Nhập lại mật khẩu" autocomplete="new-password"></div><div class="lk-warn">Mật khẩu này dùng để mã hóa dữ liệu. Nếu quên, không ai khôi phục được, kể cả người làm app. Hãy ghi lại ở nơi an toàn.</div>`:''}
-  <div class="err" id="msg">${esc(note||'')}</div><button class="lk-btn"><span class="lk-t">${first?'Tạo và mở sổ':'Mở khóa'}</span><span class="lk-sp"></span></button>
-  <div class="lk-foot">${ic('check')}Mã hóa AES-256 ngay trên thiết bị này</div>${first?'<p class="lk-imp"><a href="#" id="imp0">Đã có file sao lưu? Nhập tại đây</a></p>':''}</form></div>`;
+  $('app').innerHTML=`<div class="lp" id="lp"><div class="lp-stage"><div class="lp-glow"></div><svg class="lp-cone"><defs><linearGradient id="lpcg" gradientUnits="userSpaceOnUse"><stop offset="0" class="s0"/><stop offset="1" class="s1"/></linearGradient></defs><polygon id="lpcp" fill="url(#lpcg)"/></svg><div class="lp-dust" id="lpd"></div></div>
+  <div class="lp-scene"><div class="lp-lampw"><svg class="lp-lamp" viewBox="0 0 220 330" aria-label="Đèn bàn: kéo dây để bật đèn">
+  <defs><linearGradient id="lpsh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#454b55"/><stop offset=".45" stop-color="#1e2229"/><stop offset="1" stop-color="#0b0d10"/></linearGradient><linearGradient id="lpar" x1="0" x2="1"><stop offset="0" stop-color="#323841"/><stop offset="1" stop-color="#0e1115"/></linearGradient><radialGradient id="lpgd" cx=".35" cy=".3"><stop offset="0" stop-color="#ffeeb5"/><stop offset=".6" stop-color="#d6a03a"/><stop offset="1" stop-color="#7d5514"/></radialGradient></defs>
+  <ellipse cx="100" cy="314" rx="56" ry="11" fill="#07090b"/><ellipse cx="100" cy="310" rx="52" ry="10" fill="#14171c"/><ellipse cx="100" cy="307" rx="40" ry="6" fill="#20252c"/><ellipse cx="100" cy="307" rx="40" ry="6" fill="none" stroke="#b8862d" stroke-width="1.4"/>
+  <line x1="100" y1="304" x2="64" y2="208" stroke="url(#lpar)" stroke-width="8" stroke-linecap="round"/><line x1="64" y1="208" x2="116" y2="104" stroke="url(#lpar)" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="100" cy="304" r="6" fill="url(#lpgd)"/><circle cx="64" cy="208" r="6.5" fill="url(#lpgd)"/>
+  <circle class="lp-halo" cx="134" cy="108" r="58"/>
+  <g transform="rotate(-22 134 104)"><path d="M79 104C79 60 104 38 134 38C164 38 189 60 189 104Z" fill="url(#lpsh)"/><path d="M92 90C96 66 112 50 134 48" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="3" stroke-linecap="round"/><ellipse cx="134" cy="104" rx="55" ry="9" fill="#0a0c0f"/><ellipse class="lp-bulb" cx="134" cy="104" rx="49" ry="6.4"/><circle cx="134" cy="36" r="4.5" fill="url(#lpgd)"/></g>
+  <circle id="lpm1" cx="83" cy="125" r="1" fill="none"/><circle id="lpm2" cx="185" cy="83" r="1" fill="none"/>
+  <line id="lpcl" x1="90" y1="122" x2="90" y2="170" stroke="#c99a3c" stroke-width="1.8"/>
+  <g id="lpb" tabindex="0" role="button" aria-label="Kéo dây để bật hoặc đổi màu đèn" style="cursor:grab"><circle cx="90" cy="172" r="20" fill="transparent"/><circle cx="90" cy="173" r="6" fill="url(#lpgd)"/></g></svg>
+  <div class="lp-hint" id="lph"><i></i><span>Kéo dây để bật đèn</span></div></div>
+  <form class="lp-card" id="lf"><div class="lp-top"><span class="lp-ey">SỔ BỆNH NHÂN</span><i class="lp-dot"></i></div><h1 class="lp-h">${first?'Tạo sổ':'Mở khóa'}</h1><p class="lp-sub">${first?'Tạo mật khẩu để bảo vệ toàn bộ dữ liệu':esc(greet().split(' · ')[0])+'. Nhập mật khẩu để tiếp tục'}</p>
+  <div class="lp-tabs"><span>${first?'Mật khẩu mới':'Mật khẩu'}</span></div>
+  <div class="lp-f">${ic('lock')}<input id="pw" type="password" placeholder="Nhập mật khẩu" autocomplete="${first?'new-password':'current-password'}"><button type="button" class="lp-eyb" id="eye" aria-label="Hiện hoặc ẩn mật khẩu">${ic('eye')}</button></div>
+  ${first?`<div class="lp-f">${ic('lock')}<input id="pw2" type="password" placeholder="Nhập lại mật khẩu" autocomplete="new-password"></div><div class="lp-warn">Mật khẩu này dùng để mã hóa dữ liệu. Nếu quên, không ai khôi phục được, kể cả người làm app. Hãy ghi lại ở nơi an toàn.</div>`:''}
+  <div class="err" id="msg">${esc(note||'')}</div><button class="lp-btn"><span class="lp-t">${first?'Tạo và mở sổ':'Mở khóa'} <b>→</b></span><span class="lp-sp"></span></button>
+  <div class="lp-sepl"><span>BẢO MẬT</span></div><div class="lp-chips"><span>${ic('shield')}AES-256</span><span>${ic('lock')}Lưu trên máy</span><span>${ic('clock')}Tự khóa</span></div>${first?'<p class="lp-imp"><a href="#" id="imp0">Đã có file sao lưu? Nhập tại đây</a></p>':''}</form></div></div>`;
   $('lf').onsubmit=e=>{e.preventDefault();go()};
   const i=$('imp0');if(i)i.onclick=e=>{e.preventDefault();$('imp').click()};
   $('eye').onclick=()=>{const t=$('pw').type==='password';$('pw').type=t?'text':'password';if($('pw2'))$('pw2').type=t?'text':'password';$('eye').classList.toggle('on',t)};
-  clearTimeout(lkT);lkClock();setTimeout(()=>{const p=$('pw');if(p)p.focus({preventScroll:true})},700);
+  lampInit();
 }
 let lkT;
 function lkClock(){const e=$('lkc');if(!e)return;const n=new Date();e.textContent=n.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});lkT=setTimeout(lkClock,15000)}
@@ -471,7 +527,7 @@ let flt='';
 function chips(){stagOn=true;$('chips').innerHTML=[['','Tất cả','']].concat(Object.keys(SC).map(k=>[k,k,SC[k]])).map(([v,t,c])=>`<button class="fc ${c} ${flt===v&&!(v===''&&F.hen==='can')?'on':''}" data-f="${v}">${t}</button>`).join('')+`<button class="fc al ${F.hen==='can'?'on':''}" data-fhen="1">Cần tái khám</button>`}
 function start(){
   flt='Đang điều trị';F=F0();
-  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">${greet()} · v26</div></div></div><div class="hb"><button class="hbtn" id="homeb" title="Bảng bệnh nhân">${ic('bed')}<span>Bảng</span></button><button class="hbtn" id="toolb" title="Tiện ích">${ic('tool')}<span>Tiện ích</span></button><button class="hbtn" id="setb" title="Cài đặt">${ic('gear')}<span>Cài đặt</span></button><button class="hbtn" id="stbtn" title="Thống kê">${ic('chart')}<span>Thống kê</span></button><button class="hbtn" id="bk" title="Sao lưu dữ liệu">${ic('down')}<span>Sao lưu</span></button><button class="hbtn" id="imp1" title="Nhập file sao lưu">${ic('up')}<span>Nhập</span></button><button class="hbtn" id="lk" title="Khóa ngay">${ic('lock')}<span>Khóa</span></button></div></div>
+  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">${greet()} · v27</div></div></div><div class="hb"><button class="hbtn" id="homeb" title="Bảng bệnh nhân">${ic('bed')}<span>Bảng</span></button><button class="hbtn" id="toolb" title="Tiện ích">${ic('tool')}<span>Tiện ích</span></button><button class="hbtn" id="setb" title="Cài đặt">${ic('gear')}<span>Cài đặt</span></button><button class="hbtn" id="stbtn" title="Thống kê">${ic('chart')}<span>Thống kê</span></button><button class="hbtn" id="bk" title="Sao lưu dữ liệu">${ic('down')}<span>Sao lưu</span></button><button class="hbtn" id="imp1" title="Nhập file sao lưu">${ic('up')}<span>Nhập</span></button><button class="hbtn" id="lk" title="Khóa ngay">${ic('lock')}<span>Khóa</span></button></div></div>
   <div class="stats" id="st"></div><div id="rem"></div>
   <div class="cols"><section id="ls"><div class="lsh"><div class="bar2"><div class="sw">${ic('search')}<input id="q" placeholder="Tìm tên, chẩn đoán, mã y tế, SĐT"></div><button class="btn" id="fbtn">${ic('filter')}Bộ lọc<span id="fbd" class="bd" style="display:none"></span></button></div><div class="fcs" id="chips"></div><div class="rs" id="rs"></div><div class="hv" id="hv"></div><button class="btn pri" id="add" style="width:100%;margin-bottom:12px;justify-content:center">${ic('plus')}Thêm bệnh nhân</button></div><div id="it"></div></section><section id="dt" class="hm"></section></div>
   <nav class="bn"><button class="on" data-nav="list">${ic('home')}Bệnh nhân</button><button data-nav="tool">${ic('tool')}Tiện ích</button><button class="plus" data-nav="add" aria-label="Thêm bệnh nhân">${ic('plus')}</button><button data-nav="stats">${ic('chart')}Thống kê</button><button data-nav="lock">${ic('lock')}Khóa</button></nav>`;
@@ -1421,6 +1477,48 @@ function roundCards(){
   const q=($('q')?$('q').value:'').toLowerCase(),t=today(),L=S.filter(p=>p.tt==='Đang điều trị'&&hayP(p).includes(q)).sort(bedCmp);
   return L.length?L.map(p=>{const it=(p.yl||[]).filter(i=>i.d===t),c=curDays(p);return`<div class="rc ${sc(p)}" data-open="${p.id}"><div class="rch"><span class="bd2">${esc(p.giuong||'—')}</span><div style="min-width:0;flex:1"><b>${esc((p.ten||'').toUpperCase())}</b>${p.dung?`<span class="al">${ic('warn')}</span>`:''}<div class="d">${age(p)||'?'} tuổi · ngày điều trị thứ ${c??'—'}</div></div></div><div class="d" style="margin:4px 0">${esc(p.cd)}</div>${it.map(i=>`<div class="yi${i.ok?' ok':''}"><button class="yck" data-yok="${p.id}|${i.id}">${ic('check')}</button><button class="yedit" data-yle="${p.id}|${i.id}">${ylLine(i)}</button></div>`).join('')||'<div class="d">Chưa có y lệnh hôm nay</div>'}<button class="btn" style="margin-top:6px" data-yladd="${p.id}">${ic('plus')}Thêm y lệnh</button></div>`}).join(''):'<div class="empty">Không có bệnh nhân đang điều trị.</div>'}
 function hvHTML(){const b=(k,i,t)=>`<button class="${HV===k?'on':''}" data-hv="${k}">${ic(i)}${t}</button>`;const ap=$('app');if(ap)ap.classList.toggle('hvr',HV==='round');const e=$('hv');if(e)e.innerHTML=b('table','bed','Danh sách')+b('round','clip','Đi buồng')}
+
+/* ---- màn hình khóa: đèn bàn, kéo dây bật đèn, ánh sáng đổi màu ---- */
+const LAMP=[null,'255,176,56','34,224,208','46,230,110','220,232,255'];
+let lampI=0,lampTouched=false,lampAuto,lampHintT;
+function lampGeom(){
+  const lp=$('lp'),m1=$('lpm1'),cd=$('lf');if(!lp||!m1||!cd)return;
+  const st=lp.querySelector('.lp-stage').getBoundingClientRect(),a=m1.getBoundingClientRect(),b=$('lpm2').getBoundingClientRect(),c=cd.getBoundingClientRect();
+  const p1=[a.left-st.left,a.top-st.top],p2=[b.left-st.left,b.top-st.top],o=[(p1[0]+p2[0])/2,(p1[1]+p2[1])/2],t=[c.left+c.width*.45-st.left,c.top+c.height*.55-st.top];
+  let dx=t[0]-o[0],dy=t[1]-o[1];const L=Math.hypot(dx,dy)||1;dx/=L;dy/=L;const nx=-dy,ny=dx,len=Math.max(innerWidth,innerHeight)*1.15,w=Math.min(len*.34,460);
+  let f1=[o[0]+dx*len+nx*w,o[1]+dy*len+ny*w],f2=[o[0]+dx*len-nx*w,o[1]+dy*len-ny*w];
+  const d=(p,q)=>Math.hypot(p[0]-q[0],p[1]-q[1]);if(d(p1,f1)>d(p1,f2))[f1,f2]=[f2,f1];
+  $('lpcp').setAttribute('points',[p1,p2,f2,f1].map(x=>x.join(',')).join(' '));
+  const g=$('lpcg');g.setAttribute('x1',o[0]);g.setAttribute('y1',o[1]);g.setAttribute('x2',o[0]+dx*len*.85);g.setAttribute('y2',o[1]+dy*len*.85);
+  lp.style.setProperty('--gx',o[0]+'px');lp.style.setProperty('--gy',o[1]+'px')}
+function lampSet(i){
+  const lp=$('lp');if(!lp)return;lampI=i;lp.classList.toggle('on',i>0);
+  if(i>0){lp.style.setProperty('--lc',LAMP[i]);lp.classList.remove('flick');void lp.offsetWidth;lp.classList.add('flick')}
+  const h=$('lph');if(h){h.classList.remove('dim');h.lastChild.textContent=i===0?'Kéo dây để bật đèn':'Kéo để đổi màu';clearTimeout(lampHintT);if(i>0)lampHintT=setTimeout(()=>h.classList.add('dim'),4500)}
+  try{localStorage.setItem('sobn_lamp',i)}catch(e){}
+  lampGeom();setTimeout(lampGeom,950);
+  if(i>0&&matchMedia('(hover:hover)').matches)setTimeout(()=>{const p=$('pw');if($('lp')&&p&&document.activeElement!==p)p.focus({preventScroll:true})},950)}
+function lampInit(){
+  const lp=$('lp');if(!lp)return;
+  lampTouched=false;lampI=0;clearTimeout(lampAuto);clearTimeout(lampHintT);
+  const d=$('lpd');for(let k=0;k<32;k++){const e=document.createElement('i');e.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--s:${1+Math.random()*2.2}px;--t:${6+Math.random()*9}s;--w:${-Math.random()*8}s`;d.appendChild(e)}
+  let pos=0,vel=0,raf=0,drag=false,sy=0;const bead=$('lpb'),line=$('lpcl'),draw=()=>{line.setAttribute('y2',170+pos);bead.setAttribute('transform','translate(0,'+pos+')')};
+  const step=()=>{vel+=(-190*pos-11*vel)/60;pos+=vel/60;draw();if(Math.abs(vel)>.04||Math.abs(pos)>.04)raf=requestAnimationFrame(step);else{pos=0;draw()}};
+  const spring=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(step)};
+  const next=()=>{lampTouched=true;clearTimeout(lampAuto);lampSet((lampI+1)%LAMP.length)};
+  window.__lampPull=()=>{next();pos=Math.max(pos,24);vel=0;spring()};
+  const sc=()=>($('lpb').ownerSVGElement.getBoundingClientRect().width/220)||1;
+  bead.addEventListener('pointerdown',e=>{e.preventDefault();drag=true;sy=e.clientY;bead.setPointerCapture(e.pointerId);cancelAnimationFrame(raf);clearTimeout(lampAuto)});
+  bead.addEventListener('pointermove',e=>{if(drag){pos=Math.max(0,Math.min(40,(e.clientY-sy)/sc()));draw()}});
+  bead.addEventListener('pointerup',()=>{if(drag){drag=false;next();vel=0;spring()}});
+  bead.addEventListener('pointercancel',()=>{drag=false;spring()});
+  bead.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();window.__lampPull()}});
+  lp.addEventListener('keydown',e=>{if(e.key==='Enter'&&lampI===0&&e.target===document.body)window.__lampPull()});
+  lampGeom();addEventListener('resize',lampGeom);
+  let last=0;try{last=+(localStorage.getItem('sobn_lamp')||0)}catch(e){}
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)lampSet(last||1);
+  else if(last>0)setTimeout(()=>{if(!lampTouched&&$('lp'))lampSet(last)},550);
+  else lampAuto=setTimeout(()=>{if(!lampTouched&&lampI===0&&$('lp'))window.__lampPull()},3400)}
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 lockScreen();
