@@ -527,7 +527,7 @@ let flt='';
 function chips(){stagOn=true;$('chips').innerHTML=[['','Tất cả','']].concat(Object.keys(SC).map(k=>[k,k,SC[k]])).map(([v,t,c])=>`<button class="fc ${c} ${flt===v&&!(v===''&&F.hen==='can')?'on':''}" data-f="${v}">${t}</button>`).join('')+`<button class="fc al ${F.hen==='can'?'on':''}" data-fhen="1">Cần tái khám</button>`}
 function start(){
   flt='Đang điều trị';F=F0();
-  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">${greet()} · v27</div></div></div><div class="hb"><button class="hbtn" id="homeb" title="Bảng bệnh nhân">${ic('bed')}<span>Bảng</span></button><button class="hbtn" id="toolb" title="Tiện ích">${ic('tool')}<span>Tiện ích</span></button><button class="hbtn" id="setb" title="Cài đặt">${ic('gear')}<span>Cài đặt</span></button><button class="hbtn" id="stbtn" title="Thống kê">${ic('chart')}<span>Thống kê</span></button><button class="hbtn" id="bk" title="Sao lưu dữ liệu">${ic('down')}<span>Sao lưu</span></button><button class="hbtn" id="imp1" title="Nhập file sao lưu">${ic('up')}<span>Nhập</span></button><button class="hbtn" id="lk" title="Khóa ngay">${ic('lock')}<span>Khóa</span></button></div></div>
+  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">${greet()} · v28</div></div></div><div class="hb"><button class="hbtn" id="homeb" title="Bảng bệnh nhân">${ic('bed')}<span>Bảng</span></button><button class="hbtn" id="toolb" title="Tiện ích">${ic('tool')}<span>Tiện ích</span></button><button class="hbtn" id="setb" title="Cài đặt">${ic('gear')}<span>Cài đặt</span></button><button class="hbtn" id="stbtn" title="Thống kê">${ic('chart')}<span>Thống kê</span></button><button class="hbtn" id="bk" title="Sao lưu dữ liệu">${ic('down')}<span>Sao lưu</span></button><button class="hbtn" id="imp1" title="Nhập file sao lưu">${ic('up')}<span>Nhập</span></button><button class="hbtn" id="lk" title="Khóa ngay">${ic('lock')}<span>Khóa</span></button></div></div>
   <div class="stats" id="st"></div><div id="rem"></div>
   <div class="cols"><section id="ls"><div class="lsh"><div class="bar2"><div class="sw">${ic('search')}<input id="q" placeholder="Tìm tên, chẩn đoán, mã y tế, SĐT"></div><button class="btn" id="fbtn">${ic('filter')}Bộ lọc<span id="fbd" class="bd" style="display:none"></span></button></div><div class="fcs" id="chips"></div><div class="rs" id="rs"></div><div class="hv" id="hv"></div><button class="btn pri" id="add" style="width:100%;margin-bottom:12px;justify-content:center">${ic('plus')}Thêm bệnh nhân</button></div><div id="it"></div></section><section id="dt" class="hm"></section></div>
   <nav class="bn"><button class="on" data-nav="list">${ic('home')}Bệnh nhân</button><button data-nav="tool">${ic('tool')}Tiện ích</button><button class="plus" data-nav="add" aria-label="Thêm bệnh nhân">${ic('plus')}</button><button data-nav="stats">${ic('chart')}Thống kê</button><button data-nav="lock">${ic('lock')}Khóa</button></nav>`;
@@ -830,7 +830,7 @@ const losOf=(v,r,loai)=>{if(!v||!r)return null;const d=diff(v,r);return d<=0?1:(
 const losDays=p=>losOf(vao(p),p.ngayRa,p.ra&&p.ra.loai);
 function disPrev(){
   const p=S.find(x=>x.id===sel),e=$('dpv');if(!p||!e)return;
-  const r=$('rd').value,n=losOf(vao(p),r,raSel);$('rdx').style.display=raSel==='Ra viện'?'none':'';
+  const r=$('rd').value,n=losOf(vao(p),r,raSel);$('rdx').style.display=raSel==='Ra viện'?'none':'';{const rx=$('rhx');if(rx)rx.style.display=raSel==='Ra viện'?'':'none'}hnPrev();
   e.innerHTML=n===null?'Chưa có ngày vào viện nên chưa tính được số ngày nằm viện.':`Số ngày nằm viện: <b>${n} ngày</b><div class="sub">${diff(vao(p),r)<=0?'Ra vào trong ngày: tính 1 ngày':raSel==='Chuyển tuyến'?'Ngày ra − ngày vào + 1 (chuyển tuyến)':'Ngày ra − ngày vào'}</div>`}
 function disDlg(){
   const p=S.find(x=>x.id===sel);if(!p)return;raSel='Ra viện';
@@ -839,8 +839,13 @@ function disDlg(){
   <label>Ngày ra viện (chọn theo lịch)<input type="date" id="rd" value="${today()}"${vao(p)?` min="${vao(p)}"`:''}></label>
   <label id="rdx" style="display:none">Chuyển đến (khoa hoặc bệnh viện)<input id="rt"></label>
   <div class="dpv" id="dpv"></div>
+  <div id="rhx"><label>Hẹn tái khám (không bắt buộc)<input type="date" id="rh" value="${p.hen&&p.hen>=today()?p.hen:''}"></label>
+  <div class="cchips"><button type="button" class="cc" data-hq="7" style="--k:#16a34a">1 tuần</button><button type="button" class="cc" data-hq="14" style="--k:#16a34a">2 tuần</button><button type="button" class="cc" data-hq="m" style="--k:#16a34a">1 tháng</button><button type="button" class="cc" data-hq="0" style="--k:#6b8088">Không hẹn</button></div><div class="sub" id="hnote" style="margin-top:6px"></div></div>
   <div class="row" style="justify-content:flex-end"><button class="btn" id="cx">Hủy</button><button class="btn pri" data-dok="${p.id}">${ic('check')}Xác nhận</button></div>`;
-  sd();$('cx').onclick=()=>$('dlg').close();$('rd').onchange=disPrev;disPrev()}
+  sd();$('cx').onclick=()=>$('dlg').close();$('rd').onchange=disPrev;$('rh').onchange=hnPrev;disPrev()}
+function hnPrev(){const e=$('hnote'),h=$('rh'),d=$('rd');if(!e||!h)return;const v=h.value;if(!v){e.textContent='Không đặt lịch hẹn tái khám.';return}
+  if(d&&d.value&&v<d.value){e.innerHTML='<span style="color:var(--red)">Ngày hẹn không được trước ngày ra viện.</span>';return}
+  const x=new Date(v+'T12:00:00');x.setDate(x.getDate()-1);e.innerHTML='Hẹn <b>'+fmt(v)+'</b>. App sẽ nhắc liên hệ bệnh nhân vào <b>'+fmt(ld(x))+'</b> (trước ngày hẹn 1 ngày).'}
 function setDlg(){
   const mk=(id,o,cur)=>`<select id="${id}">${o.map(([v,t])=>`<option value="${v}"${+cur===v?' selected':''}>${t}</option>`).join('')}</select>`;
   $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">Cài đặt tự khóa</h2>
@@ -1264,8 +1269,9 @@ document.addEventListener('click',async e=>{
   else if(b.dataset.ra){raSel=b.dataset.ra;document.querySelectorAll('[data-ra]').forEach(x=>x.classList.toggle('on',x===b));disPrev()}
   else if(b.dataset.dok){const p=S.find(x=>x.id===+b.dataset.dok),d=$('rd').value||today(),v=vao(p);
     if(v&&d<v)return alert('Ngày ra viện không được trước ngày vào viện ('+fmt(v)+').');
+    const hn=raSel==='Ra viện'?($('rh').value||''):null;if(hn&&hn<d)return alert('Ngày hẹn tái khám không được trước ngày ra viện.');
     const den=raSel==='Ra viện'?'':($('rt').value||'').trim();p.tt='Đã ra viện';p.ngayRa=d;p.ra={loai:raSel,den};
-    (p.nhat=p.nhat||[]).push({ng:d,t:raSel+(den?' → '+den:'')+' ngày '+fmt(d)});await save();$('dlg').close();render();toast('Đã ghi nhận: '+raSel)}
+    (p.nhat=p.nhat||[]).push({ng:d,t:raSel+(den?' → '+den:'')+' ngày '+fmt(d)});if(hn!==null){p.hen=hn;if(hn)p.nhat.push({ng:d,t:'Hẹn tái khám ngày '+fmt(hn)})}await save();$('dlg').close();render();toast('Đã ghi nhận: '+raSel+(hn?'. Sẽ nhắc liên hệ bệnh nhân trước ngày hẹn 1 ngày':''))}
   else if(b.dataset.qd!==undefined){const t=b.closest('.qd').dataset.for;$(t).value=day(-(+b.dataset.qd));$(t).dispatchEvent(new Event('change'))}
   else if(b.dataset.rx!==undefined)rxDlg(+b.dataset.rx);
   else if(b.dataset.rxadd)rxDlg(-1);
@@ -1294,6 +1300,7 @@ document.addEventListener('click',async e=>{
     if(!d)return alert('Cần chọn ngày áp dụng.');if(d<today())return alert('Ngày áp dụng phải từ hôm nay trở đi, vì ghi chú tự mất khi qua ngày.');if(!y&&!c)return alert('Nhập y lệnh hoặc nội dung cần chú ý.');
     p.yl=p.yl||[];const it=i&&p.yl.find(x=>x.id===i);if(it){it.d=d;it.yl=y;it.cy=c}else p.yl.push({id:ylId(),d,yl:y,cy:c,ok:false});await save();$('dlg').close();render();toast('Đã lưu ghi chú nhanh')}
   else if(b.dataset.yldel){const[a,i]=b.dataset.yldel.split('|');if(!confirm('Xóa ghi chú nhanh này (y lệnh, lưu ý)? Thao tác này không thể hoàn tác.'))return;const p=S.find(x=>x.id===+a);p.yl=(p.yl||[]).filter(x=>x.id!==i);await save();$('dlg').close();render();toast('Đã xóa ghi chú nhanh')}
+  else if(b.dataset.hq!==undefined){const v=b.dataset.hq,base=$('rd').value||today();let r='';if(v==='7'||v==='14'){const x=new Date(base+'T12:00:00');x.setDate(x.getDate()+(+v));r=ld(x)}else if(v==='m'){const x=new Date(base+'T12:00:00'),dd=x.getDate();x.setDate(1);x.setMonth(x.getMonth()+1);x.setDate(Math.min(dd,new Date(x.getFullYear(),x.getMonth()+1,0).getDate()));r=ld(x)}$('rh').value=r;hnPrev()}
   else if(id==='syb')syncDlg();
   else if(id==='syc')syncConnect();
   else if(id==='syn'){syncNow(false).then(syncDlg)}
@@ -1369,8 +1376,8 @@ const tpc=k=>`tp${dtab===k?' on':''}`;
 function countUps(root){root.querySelectorAll('b[data-n]').forEach((b,i)=>{const to=+b.dataset.n,from=lastN[i]??0;lastN[i]=to;if(from===to){b.textContent=to;return}
   const t0=performance.now(),f=t=>{const k=Math.min(1,(t-t0)/650),e=1-Math.pow(1-k,3);b.textContent=Math.round(from+(to-from)*e);if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)})}
 function remHTML(open){
-  const r=remList();if(!r.length)return'';const od=r.filter(p=>diff(today(),p.hen)<0).length,op=open===true||(open===undefined&&remOpen);
-  return`<details class="rem" data-k="rem"${op?' open':''}><summary>${ic('bell')}<span class="rt">Nhắc tái khám</span><span class="rb">${r.length}</span>${od?`<span class="rb red">${od} quá hẹn</span>`:''}<i class="chev"></i></summary><div class="rbody">${r.map(p=>`<div class="ri ${diff(today(),p.hen)<0?'al':'ng'}"><div><b>${esc((p.ten||'').toUpperCase())}</b><div class="d">Hẹn ${fmt(p.hen)} · ${remWhen(p)}${p.mayte?' · Mã YT: '+esc(p.mayte):''}</div></div><div class="ra"><button class="btn ok" data-kham="${p.id}">${ic('check')}Đã khám</button>${p.sdt?`<button class="btn" data-tel="${esc(p.sdt)}">${ic('phone')}Liên hệ</button>`:''}</div></div>`).join('')}</div></details>`}
+  const r=remList();if(!r.length)return'';const od=r.filter(p=>diff(today(),p.hen)<0).length,tm=r.filter(p=>diff(today(),p.hen)===1).length,td=r.filter(p=>diff(today(),p.hen)===0).length,op=open===true||(open===undefined&&remOpen);
+  return`<details class="rem" data-k="rem"${op?' open':''}><summary>${ic('bell')}<span class="rt">Nhắc tái khám</span>${tm?`<span class="rb">${tm} ngày mai</span>`:''}${td?`<span class="rb">${td} hôm nay</span>`:''}${od?`<span class="rb red">${od} quá hẹn</span>`:''}<i class="chev"></i></summary><div class="rbody">${r.map(p=>`<div class="ri ${diff(today(),p.hen)<0?'al':'ng'}"><div><b>${esc((p.ten||'').toUpperCase())}</b><div class="d">Hẹn ${fmt(p.hen)} · ${remWhen(p)}${p.mayte?' · Mã YT: '+esc(p.mayte):''}</div></div><div class="ra"><button class="btn ok" data-kham="${p.id}">${ic('check')}Đã khám</button>${p.sdt?`<button class="btn" data-tel="${esc(p.sdt)}">${ic('phone')}Liên hệ</button>`:''}</div></div>`).join('')}</div></details>`}
 document.addEventListener('click',e=>{const s=e.target.closest('.rem>summary');if(s){const v=!s.parentElement.open;if(s.parentElement.dataset.k==='yl')ylOpen=v;else remOpen=v;return}
   if(innerWidth>800&&!e.target.closest('#rem')&&(remOpen||ylOpen)){remOpen=false;ylOpen=false;document.querySelectorAll('#rem details[open]').forEach(d=>d.open=false)}});
 
