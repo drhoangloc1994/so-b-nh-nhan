@@ -400,6 +400,16 @@ details.rem>.rbody{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index
 @keyframes lpDrift{from{transform:translate(0,0)}to{transform:translate(22px,-34px)}}@keyframes lpShine{0%,55%{left:-60%}100%{left:130%}}@keyframes lpSpin{to{transform:rotate(360deg)}}
 @keyframes lpShake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-8px)}40%,60%{transform:translateX(8px)}}
 @media(max-width:800px){.lp-scene{flex-direction:column;gap:0;padding:12px 16px 22px;justify-content:flex-start}.lp-lampw{width:168px;margin-right:auto;margin-left:6px}.lp-card{margin-top:-8px}.lp-h{font-size:30px}}
+/* ===== quản lý dung lượng ===== */
+.stk{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:10px 0}
+.stk .k{background:var(--bg);border-radius:14px;padding:12px 14px}.stk .k b{font-size:24px;letter-spacing:-.02em;display:block}.stk .k span{font-size:12px;color:var(--mute)}
+table.stt{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+.stt th{text-align:left;font-size:12px;font-weight:800;color:var(--mute);background:var(--bg);padding:10px 12px;white-space:nowrap}.stt th:first-child{border-radius:10px 0 0 10px}.stt th:last-child{border-radius:0 10px 10px 0}
+.stt td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.sbar{position:relative;height:20px;min-width:140px;border-radius:99px;background:var(--bg);overflow:hidden}.sbar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,#16a34a,#34d399);transition:width .8s cubic-bezier(.2,.8,.2,1);animation:sbIn .9s both}
+.sbar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+.stt td.ar{color:var(--mute)}.chg{font-style:normal;font-size:11px;font-weight:700;padding:1px 8px;border-radius:99px;background:var(--as);color:var(--amb)}
+@keyframes sbIn{from{width:0}}
 </style>
 </head>
 <body>
@@ -480,7 +490,7 @@ async function go0(){
       try{await open(unb(meta.chk))}catch(e){K=null;return say('Sai mật khẩu.')}
       const d=LG('sobn_data');S=d?JSON.parse(D.decode(await open(unb(d)))):[];
     }
-    sigInit();if(ylPurge())await save();start();await restoreUI().catch(()=>{});syncNow(true);
+    sigInit();if(ylPurge())await save();start();await restoreUI().catch(()=>{});syncNow(true);stoSweep();
   }catch(e){K=null;say('Có lỗi: '+e.message)}
 }
 const CFG=(()=>{try{return Object.assign({hide:180,idle:300},JSON.parse(localStorage.getItem('sobn_cfg')||'{}'))}catch(e){return{hide:180,idle:300}}})();
@@ -527,7 +537,7 @@ let flt='';
 function chips(){stagOn=true;$('chips').innerHTML=[['','Tất cả','']].concat(Object.keys(SC).map(k=>[k,k,SC[k]])).map(([v,t,c])=>`<button class="fc ${c} ${flt===v&&!(v===''&&F.hen==='can')?'on':''}" data-f="${v}">${t}</button>`).join('')+`<button class="fc al ${F.hen==='can'?'on':''}" data-fhen="1">Cần tái khám</button>`}
 function start(){
   flt='Đang điều trị';F=F0();
-  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">${greet()} · v28</div></div></div><div class="hb"><button class="hbtn" id="homeb" title="Bảng bệnh nhân">${ic('bed')}<span>Bảng</span></button><button class="hbtn" id="toolb" title="Tiện ích">${ic('tool')}<span>Tiện ích</span></button><button class="hbtn" id="setb" title="Cài đặt">${ic('gear')}<span>Cài đặt</span></button><button class="hbtn" id="stbtn" title="Thống kê">${ic('chart')}<span>Thống kê</span></button><button class="hbtn" id="bk" title="Sao lưu dữ liệu">${ic('down')}<span>Sao lưu</span></button><button class="hbtn" id="imp1" title="Nhập file sao lưu">${ic('up')}<span>Nhập</span></button><button class="hbtn" id="lk" title="Khóa ngay">${ic('lock')}<span>Khóa</span></button></div></div>
+  $('app').innerHTML=`<div class="hero"><div class="hl">${LOGO}<div><h1>Sổ bệnh nhân</h1><div class="hs">${greet()} · v29</div></div></div><div class="hb"><button class="hbtn" id="homeb" title="Bảng bệnh nhân">${ic('bed')}<span>Bảng</span></button><button class="hbtn" id="toolb" title="Tiện ích">${ic('tool')}<span>Tiện ích</span></button><button class="hbtn" id="setb" title="Cài đặt">${ic('gear')}<span>Cài đặt</span></button><button class="hbtn" id="stbtn" title="Thống kê">${ic('chart')}<span>Thống kê</span></button><button class="hbtn" id="bk" title="Sao lưu dữ liệu">${ic('down')}<span>Sao lưu</span></button><button class="hbtn" id="imp1" title="Nhập file sao lưu">${ic('up')}<span>Nhập</span></button><button class="hbtn" id="lk" title="Khóa ngay">${ic('lock')}<span>Khóa</span></button></div></div>
   <div class="stats" id="st"></div><div id="rem"></div>
   <div class="cols"><section id="ls"><div class="lsh"><div class="bar2"><div class="sw">${ic('search')}<input id="q" placeholder="Tìm tên, chẩn đoán, mã y tế, SĐT"></div><button class="btn" id="fbtn">${ic('filter')}Bộ lọc<span id="fbd" class="bd" style="display:none"></span></button></div><div class="fcs" id="chips"></div><div class="rs" id="rs"></div><div class="hv" id="hv"></div><button class="btn pri" id="add" style="width:100%;margin-bottom:12px;justify-content:center">${ic('plus')}Thêm bệnh nhân</button></div><div id="it"></div></section><section id="dt" class="hm"></section></div>
   <nav class="bn"><button class="on" data-nav="list">${ic('home')}Bệnh nhân</button><button data-nav="tool">${ic('tool')}Tiện ích</button><button class="plus" data-nav="add" aria-label="Thêm bệnh nhân">${ic('plus')}</button><button data-nav="stats">${ic('chart')}Thống kê</button><button data-nav="lock">${ic('lock')}Khóa</button></nav>`;
@@ -547,7 +557,7 @@ function list(){
 }
 const isPT=p=>p.hd!=='Nội khoa',vao=p=>p.ngayVao||p.ngayMo||'';
 const curDays=p=>p.tt==='Đang điều trị'&&vao(p)?diff(vao(p),today())+1:null;
-let lastD=today();setInterval(()=>{if(K&&today()!==lastD){lastD=today();ylSweep();render()}},6e4);
+let lastD=today();setInterval(()=>{if(K&&today()!==lastD){lastD=today();ylSweep();stoSweep();render()}},6e4);
 async function detail(){
   const el=$('dt'),p0=S.find(x=>x.id===sel);if(p0&&viewEp!==null&&!(p0.ds&&p0.ds[viewEp]))viewEp=null;const p=curP();el.classList.toggle('hm',!mob);
   if(!p){homeTable();if(innerWidth<=800)el.innerHTML=`<div class="panel empty"><div class="ei">${ic('clip')}</div><b>Chưa chọn bệnh nhân</b><div class="sub">Chọn một bệnh nhân ở danh sách để xem hồ sơ.</div></div>`;return}
@@ -852,7 +862,8 @@ function setDlg(){
   <label>Khi chuyển sang cửa sổ hoặc app khác, tự khóa sau${mk('cfh',[[0,'Ngay lập tức'],[60,'1 phút'],[180,'3 phút'],[300,'5 phút'],[600,'10 phút']],CFG.hide)}</label>
   <label>Khi không thao tác, tự khóa sau${mk('cfi',[[300,'5 phút'],[600,'10 phút'],[900,'15 phút'],[1800,'30 phút']],CFG.idle)}</label>
   <div class="sub" style="margin-top:8px">Thời gian càng dài càng tiện nhưng càng kém an toàn khi để máy ở nơi đông người. Nút Khóa luôn khóa ngay.</div>
-  <div class="row" style="margin-top:14px"><button class="btn" id="syb">${ic('cloud')}Đồng bộ Supabase${SB?' (đang bật)':''}</button></div>
+  <div class="row" style="margin-top:14px"><button class="btn" id="stob">${ic('db')}Quản lý dung lượng</button></div>
+  <div class="row" style="margin-top:8px"><button class="btn" id="syb">${ic('cloud')}Đồng bộ Supabase${SB?' (đang bật)':''}</button></div>
   <div class="row" style="justify-content:flex-end"><button class="btn pri" id="cfok">Xong</button></div>`;
   sd();$('cfh').onchange=$('cfi').onchange=()=>{CFG.hide=+$('cfh').value;CFG.idle=+$('cfi').value;try{localStorage.setItem('sobn_cfg',JSON.stringify(CFG))}catch(e){}bump();toast('Đã lưu cài đặt')}}
 /* ---- tiện ích: mức lọc cầu thận, tra liều thuốc ---- */
@@ -1236,14 +1247,14 @@ async function addPhoto(file){
     (p.ph=p.ph||[]).push({id,ng:today(),loai:pend.loai||'vetmo',nhan:pend.nhan||'Vết mổ'});await save();render();toast('Đã lưu ảnh');
   }catch(e){alert('Không lưu được ảnh: '+e.message)}
 }
-async function backup(){
-  const ph=await tx('readonly',s=>s.getAll()),o={v:1,meta:JSON.parse(LG('sobn_meta')),data:LG('sobn_data'),ph:(ph||[]).map(x=>({id:x.id,d:b64(x.d)}))};
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:'application/json'}));a.download='sao-luu-'+today()+'.sobn';a.click();toast('Đã tạo file sao lưu');
+async function backup(np){
+  const ph=np?[]:((await tx('readonly',s=>s.getAll()))||[]),o={v:1,meta:JSON.parse(LG('sobn_meta')),data:LG('sobn_data'),nop:!!np,ph:ph.map(x=>({id:x.id,d:b64(x.d)}))};
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:'application/json'}));a.download='sao-luu-'+(np?'khong-anh-':'')+today()+'.sobn';a.click();toast(np?'Đã tạo file sao lưu không ảnh':'Đã tạo file sao lưu cả ảnh');
 }
 async function restore(file){
   try{const o=JSON.parse(await file.text());if(!o.meta||!o.data)throw 0;
     if(!confirm('Nhập sao lưu sẽ THAY THẾ toàn bộ dữ liệu hiện có trên máy này. Tiếp tục?'))return;
-    await tx('readwrite',s=>s.clear());for(const x of o.ph)await tx('readwrite',s=>s.put({id:x.id,d:unb(x.d)}));
+    if(!o.nop)await tx('readwrite',s=>s.clear());for(const x of (o.ph||[]))await tx('readwrite',s=>s.put({id:x.id,d:unb(x.d)}));
     LS('sobn_meta',JSON.stringify(o.meta));LS('sobn_data',o.data);SY=SY0();syState();skipSnap=true;lockScreen('Đã nhập xong. Mở khóa bằng mật khẩu của bản sao lưu.');
   }catch(e){alert('File sao lưu không hợp lệ.')}
 }
@@ -1301,6 +1312,17 @@ document.addEventListener('click',async e=>{
     p.yl=p.yl||[];const it=i&&p.yl.find(x=>x.id===i);if(it){it.d=d;it.yl=y;it.cy=c}else p.yl.push({id:ylId(),d,yl:y,cy:c,ok:false});await save();$('dlg').close();render();toast('Đã lưu ghi chú nhanh')}
   else if(b.dataset.yldel){const[a,i]=b.dataset.yldel.split('|');if(!confirm('Xóa ghi chú nhanh này (y lệnh, lưu ý)? Thao tác này không thể hoàn tác.'))return;const p=S.find(x=>x.id===+a);p.yl=(p.yl||[]).filter(x=>x.id!==i);await save();$('dlg').close();render();toast('Đã xóa ghi chú nhanh')}
   else if(b.dataset.hq!==undefined){const v=b.dataset.hq,base=$('rd').value||today();let r='';if(v==='7'||v==='14'){const x=new Date(base+'T12:00:00');x.setDate(x.getDate()+(+v));r=ld(x)}else if(v==='m'){const x=new Date(base+'T12:00:00'),dd=x.getDate();x.setDate(1);x.setMonth(x.getMonth()+1);x.setDate(Math.min(dd,new Date(x.getFullYear(),x.getMonth()+1,0).getDate()));r=ld(x)}$('rh').value=r;hnPrev()}
+  else if(id==='stob')stoDlg();
+  else if(id==='stor')stoDlg(null);
+  else if(b.dataset.stobk!==undefined)backup(b.dataset.stobk==='1');
+  else if(b.dataset.arc)arDlg(b.dataset.arc);
+  else if(b.dataset.arback)stoDlg(stoRows);
+  else if(b.dataset.arsave){const k=b.dataset.arsave,m=+$('ar_m').value,o=stoScan({...AR,[k]:m}),n=m?(k==='hs'?o.recs.length:stoCount(o)):0;
+    if(n&&!confirm('Quy tắc này sẽ XÓA NGAY '+n+' mục và không thể khôi phục. Bác sĩ đã sao lưu chưa? Tiếp tục?'))return;
+    AR[k]=m;try{localStorage.setItem('sobn_ar',JSON.stringify(AR))}catch(e){}
+    if(m){await stoSweep()}stoDlg(null)}
+  else if(b.dataset.stoclr){const k=b.dataset.stoclr;if(!confirm('Xóa '+(k==='cache'?'bộ nhớ bảng liều thuốc (sẽ tải lại khi cần)':'danh mục xã, phường (sẽ tải lại khi cần)')+'?'))return;
+    try{if(k==='cache'){for(const n of await caches.keys()){const c=await caches.open(n);for(const r of await c.keys())if(r.url.includes('ksimg.js'))await c.delete(r)}}else localStorage.removeItem('sobn_addr')}catch(e){}stoDlg(null)}
   else if(id==='syb')syncDlg();
   else if(id==='syc')syncConnect();
   else if(id==='syn'){syncNow(false).then(syncDlg)}
@@ -1526,6 +1548,74 @@ function lampInit(){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)lampSet(last||1);
   else if(last>0)setTimeout(()=>{if(!lampTouched&&$('lp'))lampSet(last)},550);
   else lampAuto=setTimeout(()=>{if(!lampTouched&&lampI===0&&$('lp'))window.__lampPull()},3400)}
+
+/* ---- quản lý dung lượng, tự xóa dữ liệu cũ theo quy tắc ---- */
+IC.db='<ellipse class="d" cx="12" cy="6" rx="8" ry="3"/><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>';
+let AR=Object.assign({},sjson('sobn_ar',{})),stoSz=new Map();
+const fb=n=>n<1024?Math.round(n)+' B':n<1048576?(n/1024).toFixed(1).replace('.',',')+' KB':(n/1048576).toFixed(1).replace('.',',')+' MB';
+const photoKey=x=>x.loai==='cls'?'cls':x.loai==='tt'?'tt':x.loai==='dt'?'dt':'vetmo';
+const STO=[['cls','Ảnh cận lâm sàng'],['vetmo','Ảnh vết mổ'],['tt','Ảnh tường trình phẫu thuật'],['dt','Ảnh đơn thuốc'],['nhat','Diễn biến'],['dthuoc','Đơn thuốc ra viện (chữ)'],['gl','Lịch sử đổi giường'],['hs','Hồ sơ bệnh nhân (thông tin, các đợt)'],['yl','Y lệnh, lưu ý theo ngày'],['cache','Bảng liều thuốc (bộ nhớ tra cứu)'],['addr','Danh mục xã, phường']];
+const STOD={cls:'Chỉ xóa ảnh của bệnh nhân đã ra viện hoặc của các đợt điều trị cũ, tính theo ngày chụp.',vetmo:'Chỉ xóa ảnh của bệnh nhân đã ra viện hoặc của các đợt điều trị cũ, tính theo ngày chụp.',tt:'Chỉ xóa ảnh của bệnh nhân đã ra viện hoặc của các đợt điều trị cũ, tính theo ngày chụp.',dt:'Chỉ xóa ảnh của bệnh nhân đã ra viện hoặc của các đợt điều trị cũ, tính theo ngày chụp.',nhat:'Chỉ xóa diễn biến của bệnh nhân đã ra viện hoặc của các đợt điều trị cũ, tính theo ngày ghi.',dthuoc:'Xóa danh sách thuốc ra viện của các đợt đã ra viện, tính theo ngày ra viện.',gl:'Xóa lịch sử chuyển giường cũ của bệnh nhân đã ra viện hoặc các đợt cũ.',hs:'Xóa TOÀN BỘ hồ sơ (kể cả ảnh, các đợt điều trị) của bệnh nhân đã ra viện quá mốc. Không xóa người còn lịch hẹn tái khám. Rất nguy hiểm, hãy sao lưu trước.'};
+const arOpts=k=>k==='hs'?[[0,'Giữ lâu dài'],[12,'Cũ hơn 1 năm'],[24,'Cũ hơn 2 năm'],[36,'Cũ hơn 3 năm'],[60,'Cũ hơn 5 năm']]:[[0,'Giữ lâu dài'],[1,'Cũ hơn 1 tháng'],[3,'Cũ hơn 3 tháng'],[6,'Cũ hơn 6 tháng'],[12,'Cũ hơn 12 tháng'],[24,'Cũ hơn 24 tháng']];
+const arTxt=k=>{const m=+AR[k]||0;if(!m)return'Giữ lâu dài';return k==='hs'?'Tự xóa khi ra viện quá '+m/12+' năm':'Tự xóa khi cũ hơn '+m+' tháng'};
+async function idbSizes(){const d=await idb(),m=new Map();return new Promise(ok=>{const t=d.transaction('ph','readonly'),c=t.objectStore('ph').openCursor();c.onsuccess=()=>{const cur=c.result;if(cur){m.set(cur.key,(cur.value.d&&cur.value.d.length)||0);cur.continue()}};t.oncomplete=()=>ok(m);t.onerror=()=>ok(m)})}
+async function stoCalc(){
+  const enc=new TextEncoder(),by=o=>enc.encode(JSON.stringify(o)).length;stoSz=await idbSizes();
+  const R={};STO.forEach(([k])=>R[k]={n:0,b:0});
+  for(const p of S){let parts=0;
+    for(const c of[p,...(p.ds||[])]){
+      for(const x of c.ph||[]){const r=R[photoKey(x)];r.n++;r.b+=(stoSz.get(x.id)||0)+by(x)}
+      parts+=by(c.ph||[]);
+      for(const[k,f]of[['nhat','nhat'],['dthuoc','dthuoc'],['gl','gl']]){const a=c[f]||[];if(a.length){const b=by(a);R[k].n+=a.length;R[k].b+=b;parts+=b}}}
+    if((p.yl||[]).length){const b=by(p.yl);R.yl.n+=p.yl.length;R.yl.b+=b;parts+=b}
+    R.hs.n++;R.hs.b+=Math.max(0,by(p)-parts)}
+  try{const r=await caches.match('ksimg.js',{ignoreSearch:true});if(r){const bl=await r.clone().blob();R.cache={n:1,b:bl.size}}}catch(e){}
+  const ad=LG('sobn_addr');if(ad){R.addr={n:ad.split('","').length,b:ad.length*2}}
+  return R}
+function stoScan(cfg){
+  const o={pics:[],nhat:[],rx:[],gl:[],recs:[]},cut=m=>{const d=new Date();d.setHours(12);d.setMonth(d.getMonth()-m);return ld(d)};
+  for(const p of S){const dead=p.tt!=='Đang điều trị';
+    if(cfg.hs&&dead&&p.ngayRa&&p.ngayRa<cut(cfg.hs)&&!(p.hen&&p.hen>=today())){o.recs.push(p);continue}
+    [p,...(p.ds||[])].forEach((c,i)=>{if(i===0&&!dead)return;
+      for(const x of c.ph||[]){const m=cfg[photoKey(x)]||0;if(m&&x.ng&&x.ng<cut(m))o.pics.push({c,x})}
+      if(cfg.nhat){const k=cut(cfg.nhat);for(const n of c.nhat||[])if(n.ng&&n.ng<k)o.nhat.push({c,n})}
+      if(cfg.dthuoc&&(c.dthuoc||[]).length&&c.ngayRa&&c.ngayRa<cut(cfg.dthuoc))o.rx.push({c});
+      if(cfg.gl){const k=cut(cfg.gl);for(const g of c.gl||[])if(g.ng&&g.ng<k)o.gl.push({c,g})}})}
+  return o}
+const stoCount=o=>o.pics.length+o.nhat.length+o.rx.length+o.gl.length+o.recs.length;
+function stoBytes(o){const by=x=>JSON.stringify(x).length;let b=0;o.pics.forEach(({x})=>b+=(stoSz.get(x.id)||0)+by(x));o.nhat.forEach(({n})=>b+=by(n));o.rx.forEach(({c})=>b+=by(c.dthuoc));o.gl.forEach(({g})=>b+=by(g));o.recs.forEach(p=>b+=by(p)+[...(p.ph||[]),...(p.ds||[]).flatMap(e=>e.ph||[])].reduce((s,x)=>s+(stoSz.get(x.id)||0),0));return b}
+async function stoApply(cfg){
+  const o=stoScan(cfg);let n=0;
+  for(const{c,x}of o.pics){c.ph=c.ph.filter(y=>y!==x);await tx('readwrite',s=>s.delete(x.id));n++}
+  for(const{c,n:nn}of o.nhat){c.nhat=c.nhat.filter(y=>y!==nn);n++}
+  for(const{c}of o.rx){c.dthuoc=[];n++}
+  for(const{c,g}of o.gl){c.gl=c.gl.filter(y=>y!==g);n++}
+  for(const p of o.recs){for(const x of[...(p.ph||[]),...(p.ds||[]).flatMap(e=>e.ph||[])])await tx('readwrite',s=>s.delete(x.id));S=S.filter(x=>x!==p);addTomb(p.id);n++}
+  return n}
+async function stoSweep(){if(!Object.values(AR).some(v=>+v))return 0;const n=await stoApply(AR);if(n){await save();if(!$('dlg').open)render();toast('Tự dọn dữ liệu cũ: đã xóa '+n+' mục theo quy tắc')}return n}
+async function stoDlg(rows){
+  $('dlg').classList.add('wide');
+  if(!rows){$('dlg').innerHTML=`<div class="lbh"><b style="font-size:16px;letter-spacing:.02em">DUNG LƯỢNG DỮ LIỆU ĐANG LƯU TRỮ</b><button class="btn" id="cx">Đóng</button></div><div class="empty">Đang tính dung lượng...</div>`;sd();$('cx').onclick=()=>$('dlg').close();rows=await stoCalc()}
+  const T=Object.values(rows).reduce((s,r)=>s+r.b,0),N=Object.values(rows).reduce((s,r)=>s+r.n,0),ph=['cls','vetmo','tt','dt'].reduce((s,k)=>({n:s.n+rows[k].n,b:s.b+rows[k].b}),{n:0,b:0}),npb=T-ph.b-rows.cache.b-rows.addr.b;
+  let est='';try{const e=await navigator.storage.estimate();est=`Trình duyệt đã dùng cho app: ${fb(e.usage||0)} trên hạn mức khoảng ${fb(e.quota||0)}.`}catch(e){}
+  const list=STO.map(([k,t])=>({k,t,...rows[k]})).sort((a,b)=>b.b-a.b);
+  $('dlg').innerHTML=`<div class="lbh" style="flex-wrap:wrap;gap:8px"><b style="font-size:16px;letter-spacing:.02em">DUNG LƯỢNG DỮ LIỆU ĐANG LƯU TRỮ</b><div class="row" style="margin:0"><button class="btn" data-stobk="1">Sao lưu (không ảnh)</button><button class="btn" data-stobk="0">Sao lưu cả ảnh</button><button class="btn" id="stor">Tính lại</button><button class="btn" id="cx">Đóng</button></div></div>
+  <div class="stk"><div class="k"><b style="color:var(--dt)">${fb(T)}</b><span>Tổng dung lượng dữ liệu</span></div><div class="k"><b>${N}</b><span>Tổng số bản ghi</span></div><div class="k"><b style="color:var(--rv)">${S.length?fb(npb/S.length):'—'}</b><span>Trung bình mỗi hồ sơ bệnh nhân (chữ)</span></div><div class="k"><b style="color:var(--amb)">${ph.n?fb(ph.b/ph.n):'—'}</b><span>Trung bình mỗi ảnh</span></div></div>
+  <div class="sub" style="margin:6px 2px">${est}</div>
+  <div style="overflow-x:auto"><table class="stt"><thead><tr><th>Mục dữ liệu</th><th>Số bản ghi</th><th>Dung lượng</th><th>Tỷ lệ</th><th>Quy tắc tự xóa</th></tr></thead><tbody>${list.map(r=>{const pc=T?r.b*100/T:0,ed=!['yl','cache','addr'].includes(r.k),on=+AR[r.k]>0;
+    return`<tr><td><b>${esc(r.t)}</b></td><td>${r.n}</td><td>${fb(r.b)}</td><td><div class="sbar"><i style="width:${Math.max(pc,0.6)}%"></i><span>${pc.toFixed(1).replace('.',',')}%</span></div></td><td class="ar">${r.k==='yl'?'Tự xóa khi qua ngày (cố định)':ed?`${arTxt(r.k)}${on?' <em class="chg">đã chỉnh</em>':''} <button class="lnk" data-arc="${r.k}">Chỉnh</button>`:`Giữ lâu dài (xóa thủ công)${r.n?` <button class="lnk" data-stoclr="${r.k}">Xóa</button>`:''}`}</td></tr>`}).join('')}</tbody></table></div>
+  <div class="sub" style="margin-top:10px">Dung lượng tính trên bản đã mã hóa lưu trong máy này. Quy tắc tự xóa chạy mỗi lần mở khóa và khi sang ngày mới, chỉ áp dụng cho bệnh nhân đã ra viện hoặc các đợt điều trị cũ, không đụng tới người đang điều trị.</div>`;
+  sd();$('cx').onclick=()=>$('dlg').close();stoRows=rows}
+let stoRows=null;
+async function arDlg(k){
+  const t=(STO.find(x=>x[0]===k)||[k,k])[1];
+  $('dlg').innerHTML=`<h2 style="margin:0;font-size:18px">Quy tắc tự xóa: ${esc(t)}</h2><div class="sub" style="margin-top:4px">${esc(STOD[k]||'')}</div>
+  <label>Tự xóa khi dữ liệu<select id="ar_m">${arOpts(k).map(([v,l])=>`<option value="${v}"${(+AR[k]||0)===v?' selected':''}>${l}</option>`).join('')}</select></label>
+  <div class="dpv" id="ar_pv" style="margin-top:10px"></div>
+  <div class="row" style="justify-content:flex-end"><button class="btn" data-arback="1">Hủy</button><button class="btn pri" data-arsave="${k}">Lưu quy tắc</button></div>`;
+  sd();$('ar_m').onchange=()=>arPrev(k);arPrev(k)}
+function arPrev(k){const m=+$('ar_m').value,e=$('ar_pv');if(!m){e.textContent='Giữ lâu dài: không tự xóa mục này.';return}const o=stoScan({...AR,[k]:m}),mine=k==='hs'?o.recs.length:{nhat:o.nhat,dthuoc:o.rx,gl:o.gl}[k]?.length??o.pics.filter(({x})=>photoKey(x)===k).length;
+  e.innerHTML=mine?`Nếu bật ngay sẽ xóa <b>${mine} mục</b>, không khôi phục được.`:'Hiện chưa có mục nào cũ đến mức đó. Quy tắc sẽ áp dụng từ các lần sau.'}
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 lockScreen();
